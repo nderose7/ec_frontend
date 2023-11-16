@@ -3,14 +3,17 @@
     class="xl:w-full mx-auto px-5 xl:px-10 bg-slate-100 dark:bg-midnight-900 sticky top-0 z-50"
   >
     <div class="flex justify-between items-center">
-      <div class="flex items-center gap-10 font-bold">
+      <div class="flex items-center gap-10 font-bold py-3 lg:py-0">
         <div class="flex items-end lg:mr-16">
-          <Logo />
-          <NuxtLink to="https://www.drinkclassy.com" class="link">
-            &nbsp;/&nbsp; DrinkClassy</NuxtLink
-          >
+          <div class="pt-1">
+            <Logo />
+
+            <NuxtLink to="https://www.drinkclassy.com" class="link hidden">
+              &nbsp;/&nbsp; DrinkClassy</NuxtLink
+            >
+          </div>
         </div>
-        <div class="flex items-center main-nav gap-10">
+        <div class="items-center main-nav gap-10 hidden lg:flex">
           <NuxtLink to="/">Create Recipes</NuxtLink>
           <NuxtLink to="/recipes">Browse Recipes</NuxtLink>
           <NuxtLink to="/recipes/favorites" v-if="userValue"
@@ -26,7 +29,6 @@
         class="text-right lg:flex items-center gap-3"
         :class="route.path === '/sign-up' ? 'hidden lg:hidden' : ''"
       >
-        <span class="block text-sm md:text-base pr-3"><CreditsAnon /></span>
         <NuxtLink
           to="/sign-up"
           class="btn-primary btn-responsive font-bold inline-block mt-1 mb-1"

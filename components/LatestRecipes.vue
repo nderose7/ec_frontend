@@ -2,8 +2,18 @@
   <div v-if="recipes && recipes.length" class="xl:mt-32">
     <ul class="dark:border-midnight-600 pt-5">
       <h5 class="text-sm text-slate-500 mb-4">COMMUNITY CREATIONS</h5>
-      <div class="lg:grid grid-cols-3 gap-x-10">
+      <div
+        class="lg:grid grid-cols-3 gap-x-10 xl:grid-cols-2 min-[1600px]:grid-cols-3"
+      >
         <li v-for="recipe in recipes" :key="recipe.id" class="card">
+          <div v-if="recipe.attributes.image?.data" class="mb-4">
+            <NuxtLink :to="`/recipes/${recipe.attributes.uid}`">
+              <img
+                :src="`${strapiURL}${recipe.attributes.image?.data.attributes.url}`"
+                class="rounded-lg mb-6 lg:mb-0"
+              />
+            </NuxtLink>
+          </div>
           <NuxtLink :to="`/recipes/${recipe.attributes.uid}`">
             <h2 class="dark:text-slate-300 text-left mb-4 hover:text-brand-500">
               {{ truncateString(recipe.attributes.recipe_name, 60) }}
@@ -39,12 +49,19 @@ import { truncateString } from "~/utils/truncateString.js";
 const { find } = useStrapi();
 const recipes = ref(null);
 
+const {
+  public: { strapiURL },
+} = useRuntimeConfig();
+
 const fetchRecipes = async () => {
   try {
-    const response = await find("recipes");
+    const response = await find("recipes", {
+      populate: "image",
+      sort: { id: "desc" },
+    });
     if (response.data) {
       // Assuming response.data is an array and can be reversed
-      recipes.value = response.data.reverse().slice(0, 6); // This will reverse the array
+      recipes.value = response.data.slice(0, 6); // This will reverse the array
     }
   } catch (error) {
     // Handle errors, e.g., log them or show a user-friendly message

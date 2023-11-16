@@ -1,6 +1,6 @@
 <template>
   <div class="inline font-medium">
-    <span class="text-xl pr-1"
+    <span class=""
       ><b>{{ realCredits }}</b></span
     >
     free {{ realCredits === 1 ? "credit" : "credits" }} left

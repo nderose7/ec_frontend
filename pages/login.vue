@@ -121,7 +121,7 @@ const loginUser = async (e) => {
       identifier: email.value,
       password: password.value,
     });
-    router.push("/tutorials");
+    router.push("/");
   } catch (error) {
     console.log(error);
     Toast.fire({

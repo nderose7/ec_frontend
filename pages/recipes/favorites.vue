@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto mt-10">
+  <div class="container mx-auto mt-10 xl:pr-96">
     <h1 class="font-bold my-4">Your Favorite Recipes</h1>
     <form
       @submit.prevent="fetchRecipes"
@@ -29,27 +29,48 @@
         :key="recipe.id"
         class="mb-6 p-4 card"
       >
-        <nuxt-link
-          :to="`/recipes/${recipe.uid}`"
-          class="text-brand-500 hover:underline"
-          ><h2 class="mb-2">{{ recipe.recipe_name }}</h2></nuxt-link
-        >
-        <div class="flex gap-5 text-base mb-4">
-          <p><b>Course:</b> {{ recipe.course }}</p>
-          <p><b>Cuisine:</b> {{ recipe.cuisine }}</p>
-        </div>
-        <div class="flex gap-5 text-base mb-4">
-          <p>
-            <Icon name="bx:time" class="icon-style" />
-            {{ recipe.total_time }}
-          </p>
+        <div class="lg:flex justify-between gap-10">
+          <div v-if="recipe.image" class="lg:w-1/3">
+            <img
+              :src="`${strapiURL}${recipe.image}`"
+              class="rounded-lg mb-6 lg:mb-0"
+            />
+          </div>
+          <div class="lg:w-full">
+            <nuxt-link
+              :to="`/recipes/${recipe.uid}`"
+              class="text-brand-500 hover:underline"
+              ><h2 class="mb-2">{{ recipe.recipe_name }}</h2></nuxt-link
+            >
+            <div class="flex gap-5 text-base mb-4">
+              <p><b>Course:</b> {{ recipe.course }}</p>
+              <p><b>Cuisine:</b> {{ recipe.cuisine }}</p>
+              <p
+                v-if="
+                  recipe.diet_type_if_set &&
+                  recipe.diet_type_if_set != 'None' &&
+                  recipe.diet_type_if_set != 'N/A' &&
+                  recipe.diet_type_if_set != 'n/a'
+                "
+              >
+                <b>Cuisine:</b> {{ recipe.recipe.diet_type_if_set }}
+              </p>
+            </div>
+            <div class="flex gap-5 text-base mb-4">
+              <p>
+                <Icon name="bx:time" class="icon-style" />
+                {{ recipe.total_time }}
+              </p>
 
-          <p>
-            <Icon name="material-symbols:bar-chart" class="icon-style" />
-            {{ recipe.calories }}
-          </p>
+              <p>
+                <Icon name="material-symbols:bar-chart" class="icon-style" />
+                {{ recipe.calories }}
+              </p>
+            </div>
+
+            <p>{{ recipe.paragraph_description }}</p>
+          </div>
         </div>
-        <p>{{ recipe.paragraph_description }}</p>
       </div>
     </div>
   </div>
@@ -61,37 +82,47 @@ const { find } = useStrapi();
 const user = useStrapiUser();
 const favoriteRecipes = ref([]);
 
+const ingredientInput = ref("");
+const isInputFocused = ref(false);
+
+const {
+  public: { strapiURL },
+} = useRuntimeConfig();
+
 const fetchFavoriteRecipes = async () => {
   if (!user.value) {
-    // User is not logged in
     return;
   }
 
   try {
-    // Fetch the userdata that includes favorite recipes
-    const response = await find("userdatas", {
-      populate: ["recipes"],
+    const response = await find("userfavorites", {
       filters: {
-        owner: user.value.id,
+        user: user.value.id,
       },
+      populate: {
+        recipe: {
+          populate: "image",
+        },
+      },
+      sort: ["favoritedAt:desc"], // Sort by favorited time
     });
 
-    if (response.data && response.data.length > 0) {
-      // Flatten and store the favorite recipes
-      favoriteRecipes.value = response.data[0].attributes.recipes.data.map(
-        (fav) => {
-          return {
-            id: fav.id, // The ID of the recipe, if needed
-            recipe_name: fav.attributes.recipe_name,
-            paragraph_description: fav.attributes.paragraph_description,
-            uid: fav.attributes.uid, // Assuming uid is the unique identifier used in URL slugs
-            total_time: fav.attributes.total_time,
-            calories: fav.attributes.calories,
-            cuisine: fav.attributes.cuisine,
-            course: fav.attributes.course,
-          };
-        }
-      );
+    if (response.data) {
+      favoriteRecipes.value = response.data.map((fav) => {
+        const recipe = fav.attributes.recipe.data.attributes;
+        return {
+          id: recipe.id,
+          recipe_name: recipe.recipe_name,
+          paragraph_description: recipe.paragraph_description,
+          uid: recipe.uid,
+          total_time: recipe.total_time,
+          calories: recipe.calories,
+          cuisine: recipe.cuisine,
+          course: recipe.course,
+          image: recipe.image?.data?.attributes?.url,
+          favoritedAt: fav.attributes.favoritedAt, // Store the favorited time if needed
+        };
+      });
     }
   } catch (error) {
     console.error("Failed to fetch favorite recipes:", error);

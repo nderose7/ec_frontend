@@ -1,6 +1,6 @@
 <template>
-  <div class="offer mt-20 mb-10 sm:text-center">
-    <h2>Sign up for a membership</h2>
+  <div class="offer lg:mt-20 mt-16 mb-10 sm:text-center">
+    <h2 class="lg:text-3xl mb-1">Sign up for a membership</h2>
     <p class="pt-1 mb-2 min-[1600px]:w-1/3 xl:w-1/2 mx-auto">
       Create and save unlimited recipes on both EatClassy and DrinkClassy for
       only $4.99/month.

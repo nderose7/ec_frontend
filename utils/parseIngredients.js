@@ -1,6 +1,6 @@
 // utils/parseIngredients.js
 export function parseDashesToHTML(ingredientListString) {
-  console.log('Received in parseDashesToHTML:', ingredientListString);
+  //console.log('Received in parseDashesToHTML:', ingredientListString);
 
   if (!ingredientListString) {
     console.log('ingredientListString is null or undefined');

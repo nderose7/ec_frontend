@@ -1,13 +1,14 @@
 <template>
   <div class="xl:flex h-full">
-    <Recipes :recipes="recipes" />
+    <RecipesLoggedIn v-if="user" :triggerUpdate="triggerUpdate" />
+    <Recipes v-else :recipes="recipes" />
     <div class="w-full px-5 xl:px-10 pb-48 min-[1600px]:flex gap-10">
       <div
         class="recipe-search w-full xl:px-16"
         :class="recipes.length ? '' : 'min-[1600px]:px-48 xl:px-48'"
       >
-        <div class="text-center mb-10 pt-12">
-          <h1 class="text-center mb-5 mt-5 text-5xl dark:text-slate-300">
+        <div class="text-center mb-10 lg:pt-12 pt-4">
+          <h1 class="text-center mb-5 mt-5 xl:text-5xl dark:text-slate-300">
             Insanely good recipes in an instant.
           </h1>
           <p class="lead">
@@ -99,7 +100,25 @@
                   value="courseAppetizers"
                 />
                 <span class="radio-circle"></span>
-                Appetizers
+                Appetizer
+              </label>
+              <label class="custom-radio">
+                <input
+                  type="radio"
+                  v-model="selectedCourseOption"
+                  value="courseSide"
+                />
+                <span class="radio-circle"></span>
+                Side
+              </label>
+              <label class="custom-radio">
+                <input
+                  type="radio"
+                  v-model="selectedCourseOption"
+                  value="courseDessert"
+                />
+                <span class="radio-circle"></span>
+                Dessert
               </label>
             </div>
           </div>
@@ -232,144 +251,209 @@
         </div>
         <form
           @submit.prevent="fetchRecipes"
-          class="search-bar form-control mt-5 flex mb-0 min-[1600px]:px-32"
+          class="search-bar form-control mt-5 mb-0 min-[1600px]:px-32"
         >
-          <input
-            type="text"
-            placeholder="Recipe, ingredients, or cuisine..."
-            class="rounded-l-lg"
-            v-model="ingredientInput"
-          />
-          <button
-            type="submit"
-            class="bg-brand-500 text-white mb-1 rounded-r-lg border-brand-500 border-r border-t border-b"
-          >
-            <div class="px-4">
-              <Icon
-                name="mdi:arrow-right"
-                class="icon-style text-white"
-                size="1.5rem"
+          <div class="flex w-full items-center">
+            <div class="w-full">
+              <input
+                type="text"
+                placeholder="Create a recipe..."
+                class="rounded-l-lg"
+                v-model="ingredientInput"
               />
             </div>
-          </button>
-        </form>
 
-        <div class="min-[1600px]:px-32 text-base font-medium text-right pt-1">
-          <span class="pl-1">{{ freeCreditsLeft }} free credits left</span>
+            <div>
+              <button
+                type="submit"
+                class="bg-brand-500 text-white mb-1 rounded-r-lg border-brand-500 border-r border-t border-b inline-block py-3"
+              >
+                <div class="px-4">
+                  <Icon
+                    name="mdi:arrow-right"
+                    class="icon-style text-white"
+                    size="1.5rem"
+                  />
+                </div>
+              </button>
+            </div>
+          </div>
+        </form>
+        <div class="xl:pb-20 pb-10">
+          <div class="md:flex min-[1600px]:px-32 justify-between">
+            <p class="text-base italic pt-1 pl-1 text-slate-500">
+              Try a recipe name, ingredients, cuisine, or surprise me...
+            </p>
+            <div class="text-base font-medium lg:text-right pb-3 pt-2 md:pt-1">
+              <span class="pl-1"
+                ><span v-if="user">{{ freeCreditsLeft }} free credits left</span
+                ><CreditsAnon v-else />
+              </span>
+            </div>
+          </div>
+
+          <div
+            v-if="createRecipesError"
+            class="text-red-600 min-[1600px]:px-32 font-medium"
+          >
+            <Icon
+              name="material-symbols:error-outline-rounded"
+              class="icon-style"
+            />
+            {{ createRecipesError }}
+          </div>
         </div>
         <div
           v-if="isLoadingRecipes"
-          class="mb-3 px-5 xl:px-0 pl-1 min-[1600px]:px-32"
+          class="mb-5 px-5 xl:px-0 pl-1 min-[1600px]:px-32"
         >
           <b>Creating your recipe...</b>
           <Icon name="svg-spinners:3-dots-bounce" size="2rem" class="ml-3" />
         </div>
-        <div
-          v-if="createRecipesError"
-          class="text-red-600 min-[1600px]:px-32 font-medium"
-        >
-          <Icon
-            name="material-symbols:error-outline-rounded"
-            class="icon-style"
-          />
-          {{ createRecipesError }}
-        </div>
-        <div
-          class="pb-10 min-[1600px]:px-32"
-          :class="!data > 0 ? 'xl:px-48' : ''"
-        >
-          <div v-if="!existingRecipeData">
-            <h1
-              @click="toggleDetails = !toggleDetails"
-              class="mb-4 cursor-pointer text-brand-500"
-            >
-              {{ newRecipe.recipe_name }}
-            </h1>
 
-            <div class="mt-6 mb-5">
-              <div class="flex gap-5 mt-2">
-                <div v-if="newRecipe.prep_time">
-                  <Icon name="bx:time" class="icon-style" />
-                </div>
-                <div>
-                  <b>{{
-                    isLoadingRecipes || newRecipe.prep_time ? "Prep:" : ""
-                  }}</b>
-                  <span v-if="isLoadingRecipes && !newRecipe.prep_time"
-                    ><Icon
-                      name="svg-spinners:3-dots-bounce"
-                      size="1rem"
-                      class="ml-3"
-                  /></span>
-                  {{ newRecipe.prep_time ? newRecipe.prep_time : "" }}
-                </div>
-                <div>
-                  <b>{{
-                    isLoadingRecipes || newRecipe.cook_time ? "Cook:" : ""
-                  }}</b>
-                  <span v-if="isLoadingRecipes && !newRecipe.cook_time"
-                    ><Icon
-                      name="svg-spinners:3-dots-bounce"
-                      size="1rem"
-                      class="ml-3"
-                  /></span>
-                  {{ newRecipe.cook_time ? newRecipe.cook_time : "" }}
-                </div>
-                <div>
-                  <b>{{
-                    isLoadingRecipes || newRecipe.total_time ? "Total:" : ""
-                  }}</b>
-                  <span v-if="isLoadingRecipes && !newRecipe.total_time"
-                    ><Icon
-                      name="svg-spinners:3-dots-bounce"
-                      size="1rem"
-                      class="ml-3"
-                  /></span>
-                  {{ newRecipe.total_time ? newRecipe.total_time : "" }}
-                </div>
+        <div class="min-[1600px]:px-32">
+          <div v-if="!existingRecipeData" class="">
+            <div class="lg:flex items-top justify-between gap-16">
+              <div class="lg:order-2 lg:w-1/3 text-center mb-5 lg:mb-0">
+                <img
+                  v-if="newRecipe.image_url"
+                  :src="newRecipe.image_url"
+                  class="lg:max-w-full rounded-lg cropped-image"
+                />
+                <Icon
+                  v-if="!newRecipe.image_url && isLoadingRecipes"
+                  name="svg-spinners:blocks-wave"
+                  size="4rem"
+                  class="ml-3 text-slate-300 dark:text-midnight-200"
+                />
               </div>
-              <div class="flex gap-5 mt-2">
-                <div v-if="newRecipe.servings">
-                  <Icon name="mdi:silverware" class="icon-style" />
+              <div class="lg:w-2/3">
+                <h1
+                  @click="toggleDetails = !toggleDetails"
+                  class="mb-4 cursor-pointer text-brand-500 leading-tight"
+                >
+                  {{ newRecipe.recipe_name }}
+                </h1>
+
+                <div class="mt-6 mb-5">
+                  <div class="md:flex gap-5 mt-2">
+                    <div v-if="newRecipe.prep_time" class="hidden md:block">
+                      <Icon name="bx:time" class="icon-style" />
+                    </div>
+                    <div>
+                      <b>{{
+                        isLoadingRecipes || newRecipe.prep_time ? "Prep:" : ""
+                      }}</b>
+                      <span v-if="isLoadingRecipes && !newRecipe.prep_time"
+                        ><Icon
+                          name="svg-spinners:3-dots-bounce"
+                          size="1rem"
+                          class="ml-3"
+                      /></span>
+                      {{ newRecipe.prep_time ? newRecipe.prep_time : "" }}
+                    </div>
+                    <div>
+                      <b>{{
+                        isLoadingRecipes || newRecipe.cook_time ? "Cook:" : ""
+                      }}</b>
+                      <span v-if="isLoadingRecipes && !newRecipe.cook_time"
+                        ><Icon
+                          name="svg-spinners:3-dots-bounce"
+                          size="1rem"
+                          class="ml-3"
+                      /></span>
+                      {{ newRecipe.cook_time ? newRecipe.cook_time : "" }}
+                    </div>
+                    <div>
+                      <b>{{
+                        isLoadingRecipes || newRecipe.total_time ? "Total:" : ""
+                      }}</b>
+                      <span v-if="isLoadingRecipes && !newRecipe.total_time"
+                        ><Icon
+                          name="svg-spinners:3-dots-bounce"
+                          size="1rem"
+                          class="ml-3"
+                      /></span>
+                      {{ newRecipe.total_time ? newRecipe.total_time : "" }}
+                    </div>
+                  </div>
+                  <div class="md:flex gap-5 mt-2">
+                    <div v-if="newRecipe.servings" class="hidden md:block">
+                      <Icon name="mdi:silverware" class="icon-style" />
+                    </div>
+                    <div>
+                      <b>{{
+                        isLoadingRecipes || newRecipe.servings
+                          ? "Servings:"
+                          : ""
+                      }}</b>
+                      <span v-if="isLoadingRecipes && !newRecipe.servings"
+                        ><Icon
+                          name="svg-spinners:3-dots-bounce"
+                          size="1rem"
+                          class="ml-3"
+                      /></span>
+                      {{ newRecipe.servings ? newRecipe.servings : "" }}
+                    </div>
+                    <div>
+                      <b>{{
+                        isLoadingRecipes || newRecipe.calories
+                          ? "Calories:"
+                          : ""
+                      }}</b>
+                      <span v-if="isLoadingRecipes && !newRecipe.calories"
+                        ><Icon
+                          name="svg-spinners:3-dots-bounce"
+                          size="1rem"
+                          class="ml-3"
+                      /></span>
+                      {{ newRecipe.calories ? newRecipe.calories : "" }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="
+                      newRecipe.diet_type_if_set &&
+                      newRecipe.diet_type_if_set != 'None' &&
+                      newRecipe.diet_type_if_set != 'N/A' &&
+                      newRecipe.diet_type_if_set != 'n/a'
+                    "
+                    class="md:flex gap-5 mt-2"
+                  >
+                    <div class="hidden md:block">
+                      <Icon
+                        name="pepicons-pop:line-slant-up-circle"
+                        class="icon-style p-[2px]"
+                      />
+                    </div>
+                    <div>
+                      <b>Diet:</b>
+                      {{
+                        newRecipe.diet_type_if_set
+                          ? newRecipe.diet_type_if_set
+                          : ""
+                      }}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <b>{{
-                    isLoadingRecipes || newRecipe.servings ? "Servings:" : ""
-                  }}</b>
-                  <span v-if="isLoadingRecipes && !newRecipe.servings"
-                    ><Icon
-                      name="svg-spinners:3-dots-bounce"
-                      size="1rem"
-                      class="ml-3"
-                  /></span>
-                  {{ newRecipe.servings ? newRecipe.servings : "" }}
-                </div>
-                <div>
-                  <b>{{
-                    isLoadingRecipes || newRecipe.calories ? "Servings:" : ""
-                  }}</b>
-                  <span v-if="isLoadingRecipes && !newRecipe.calories"
-                    ><Icon
-                      name="svg-spinners:3-dots-bounce"
-                      size="1rem"
-                      class="ml-3"
-                  /></span>
-                  {{ newRecipe.calories ? newRecipe.calories : "" }}
-                </div>
+                <p v-if="newRecipe.paragraph_description">
+                  {{ newRecipe.paragraph_description }}
+                </p>
+
+                <p
+                  v-else-if="
+                    !newRecipe.paragraph_description && isLoadingRecipes
+                  "
+                >
+                  <Icon
+                    name="svg-spinners:3-dots-bounce"
+                    size="1rem"
+                    class="ml-3"
+                  />
+                </p>
               </div>
             </div>
-            <p v-if="newRecipe.paragraph_description">
-              {{ newRecipe.paragraph_description }}
-            </p>
-            <p v-else-if="!newRecipe.paragraph_description && isLoadingRecipes">
-              <Icon
-                name="svg-spinners:3-dots-bounce"
-                size="1rem"
-                class="ml-3"
-              />
-            </p>
 
-            <div v-if="toggleDetails">
+            <div v-if="toggleDetails" class="xl:pb-16">
               <div>
                 <h2
                   class="mt-8 mb-4"
@@ -482,142 +566,115 @@
 
           <!-- Insert recipe from strapi -->
           <div v-else>
-            <div>
-              <h1
-                @click="toggleDetails = !toggleDetails"
-                class="mb-4 cursor-pointer text-brand-500"
-              >
-                {{ existingRecipeData.recipe_name }}
-              </h1>
-
-              <div class="mt-6 mb-5">
-                <div class="flex gap-5 mt-2">
-                  <div v-if="newRecipe.prep_time">
-                    <Icon name="bx:time" class="icon-style" />
-                  </div>
-                  <div><b>Prep:</b> {{ existingRecipeData.prep_time }}</div>
-                  <div><b>Cook:</b> {{ existingRecipeData.cook_time }}</div>
-                  <div><b>Totalk:</b> {{ existingRecipeData.total_time }}</div>
-                </div>
-                <div class="flex gap-5 mt-2">
-                  <div v-if="newRecipe.servings">
-                    <Icon name="mdi:silverware" class="icon-style" />
-                  </div>
-                  <div><b>Servings:</b> {{ existingRecipeData.servings }}</div>
-                  <div><b>Calories:</b> {{ existingRecipeData.calories }}</div>
-                </div>
+            <div class="lg:flex items-top justify-between gap-16">
+              <div class="lg:order-2 lg:w-1/3 text-center mb-5 lg:mb-0">
+                <img
+                  v-if="existingRecipeData.attributes.image"
+                  :src="`${strapiURL}${existingRecipeData.attributes.image?.data?.attributes?.url}`"
+                  class="lg:max-w-full rounded-lg cropped-image"
+                />
+                <Icon
+                  v-if="
+                    !existingRecipeData.attributes.image_url && isLoadingRecipes
+                  "
+                  name="svg-spinners:blocks-wave"
+                  size="4rem"
+                  class="ml-3 text-slate-300 dark:text-midnight-200"
+                />
               </div>
-              <p>
-                {{ existingRecipeData.paragraph_description }}
-              </p>
-
-              <div v-if="toggleDetails">
-                <div>
-                  <h2 class="mt-8 mb-4">Ingredients</h2>
-
-                  <ul class="list-disc ml-8">
-                    <li v-for="ingredient in existingFormattedIngredients">
-                      {{ ingredient }}
-                    </li>
-                  </ul>
-                </div>
-                <div>
-                  <h2 class="mt-8 mb-4">Cooking Instructions</h2>
-
-                  <ol class="list-decimal ml-8">
-                    <li v-for="instruction in existingFormattedInstructions">
-                      {{ instruction }}
-                    </li>
-                  </ol>
-                </div>
-
-                <div>
-                  <h2 class="mt-8 mb-4">Cooking Notes</h2>
-
-                  <ul class="list-disc ml-8">
-                    <li v-for="note in existingFormattedNotes">
-                      {{ note }}
-                    </li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h2 class="mt-8 mb-4">Beer, Wine, & Cocktail Pairings</h2>
-
-                  <ul class="list-disc ml-8">
-                    <li>
-                      <b>Beer Pairing:</b> {{ existingRecipeData.beer_pairing }}
-                    </li>
-                    <li>
-                      <b>Wine Pairing:</b> {{ existingRecipeData.wine_pairing }}
-                    </li>
-                    <li>
-                      <b>Cocktail Pairing:</b>
-                      {{ existingRecipeData.cocktail_pairing }}
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <!--
-
-            <div class="mt-6">
-              <div class="flex gap-5 mt-2">
-                <div>
-                  <Icon name="bx:time" class="icon-style" />
-                </div>
-                <div><b>Prep:</b> {{ recipe?.prep_time }}</div>
-                <div><b>Cook:</b> {{ recipe?.cook_time }}</div>
-                <div><b>Total:</b> {{ recipe?.total_time }}</div>
-              </div>
-              <div class="flex gap-5 mt-2">
-                <div>
-                  <Icon name="mdi:silverware" class="icon-style" />
-                </div>
-                <div><b>Servings:</b> {{ recipe?.servings }}</div>
-                <div><b>Calories:</b> {{ recipe?.calories }}</div>
-              </div>
-            </div>
-
-            <div v-if="visibleDetails.includes(recipeIndex)">
-              <h2 class="mt-8 mb-4">Ingredients</h2>
-              <ul class="list-disc ml-5 mb-10">
-                <li
-                  v-for="(ingredient, ingredientIndex) in formattedIngredients[
-                    recipeIndex
-                  ]"
-                  :key="`ingredient-${ingredientIndex}`"
+              <div class="lg:w-2/3">
+                <h1
+                  @click="toggleDetails = !toggleDetails"
+                  class="mb-4 cursor-pointer text-brand-500"
                 >
-                  {{ ingredient }}
-                </li>
-              </ul>
+                  {{ existingRecipeData.attributes.recipe_name }}
+                </h1>
 
-              <h2 class="mt-5 mb-4">Instructions</h2>
-              <ol class="ml-2 mb-10">
-                <li
-                  v-for="(
-                    instruction, instructionIndex
-                  ) in formattedInstructions[recipeIndex]"
-                  :key="`instruction-${instructionIndex}`"
-                >
-                  {{ instruction }}
-                </li>
-              </ol>
-
-              <h2 class="mt-5 mb-4">Cooking Notes</h2>
-              {{ recipe.cooking_notes }}
-
-              <h2 class="mt-10 mb-4">Beer / Wine / Cocktail Pairings</h2>
-              {{ recipe.alcohol }}
-              <div class="flex gap-5 mt-8">
-                <div><b>Course:</b> {{ recipe?.course }}</div>
-                <div><b>Cuisine:</b> {{ recipe?.cuisine_type }}</div>
+                <div class="mt-6 mb-5">
+                  <div class="flex gap-5 mt-2">
+                    <div v-if="existingRecipeData.attributes.prep_time">
+                      <Icon name="bx:time" class="icon-style" />
+                    </div>
+                    <div>
+                      <b>Prep:</b> {{ existingRecipeData.attributes.prep_time }}
+                    </div>
+                    <div>
+                      <b>Cook:</b> {{ existingRecipeData.attributes.cook_time }}
+                    </div>
+                    <div>
+                      <b>Total:</b>
+                      {{ existingRecipeData.attributes.total_time }}
+                    </div>
+                  </div>
+                  <div class="flex gap-5 mt-2">
+                    <div v-if="existingRecipeData.attributes.servings">
+                      <Icon name="mdi:silverware" class="icon-style" />
+                    </div>
+                    <div>
+                      <b>Servings:</b>
+                      {{ existingRecipeData.attributes.servings }}
+                    </div>
+                    <div>
+                      <b>Calories:</b>
+                      {{ existingRecipeData.attributes.calories }}
+                    </div>
+                  </div>
+                </div>
+                <p>
+                  {{ existingRecipeData.attributes.paragraph_description }}
+                </p>
               </div>
             </div>
-            -->
+
+            <div v-if="toggleDetails">
+              <div>
+                <h2 class="mt-8 mb-4">Ingredients</h2>
+
+                <ul class="list-disc ml-8">
+                  <li v-for="ingredient in existingFormattedIngredients">
+                    {{ ingredient }}
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h2 class="mt-8 mb-4">Cooking Instructions</h2>
+
+                <ol class="list-decimal ml-8">
+                  <li v-for="instruction in existingFormattedInstructions">
+                    {{ instruction }}
+                  </li>
+                </ol>
+              </div>
+
+              <div>
+                <h2 class="mt-8 mb-4">Cooking Notes</h2>
+
+                <ul class="list-disc ml-8">
+                  <li v-for="note in existingFormattedNotes">
+                    {{ note }}
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h2 class="mt-8 mb-4">Beer, Wine, & Cocktail Pairings</h2>
+
+                <ul class="list-disc ml-8">
+                  <li>
+                    <b>Beer Pairing:</b>
+                    {{ existingRecipeData.attributes.beer_pairing }}
+                  </li>
+                  <li>
+                    <b>Wine Pairing:</b>
+                    {{ existingRecipeData.attributes.wine_pairing }}
+                  </li>
+                  <li>
+                    <b>Cocktail Pairing:</b>
+                    {{ existingRecipeData.attributes.cocktail_pairing }}
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
         <SignUpOffer v-if="!user" />
@@ -639,6 +696,10 @@ import {
   updateCreditsOnMounted,
 } from "~/composables/useCredits.js";
 
+const {
+  public: { strapiURL },
+} = useRuntimeConfig();
+
 const showFilters = ref(false);
 const showCourseOptions = ref(false);
 const selectedCourseOption = ref("Any");
@@ -649,6 +710,7 @@ const showDietOptions = ref(false);
 const dietOption = ref("");
 const cuisineOption = ref("");
 const ingredientInput = ref("");
+const triggerUpdate = ref(0);
 
 const showImagination = ref(false);
 const paidMemberTierOne = ref(false);
@@ -665,75 +727,10 @@ const credits = ref(0);
 const controller = new AbortController();
 const { signal } = controller;
 
-/* Test data
-const data = ref({
-  recipes: [
-    {
-      recipe_number: "1",
-      recipe_name: "Coq au Vin",
-      prep_time: "20 minutes",
-      cook_time: "1 hour 30 minutes",
-      total_time: "1 hour 50 minutes",
-      servings: "4",
-      calories: "420",
-      short_description:
-        "Coq au Vin is a classic French dish that features tender chicken braised in red wine, bacon, and aromatic vegetables. This rich and flavorful dish is perfect for a gourmet dinner.",
-      ingredients: [
-        "4 chicken legs or thighs\n- 4 slices of bacon, diced\n- 1 onion, chopped\n- 2 carrots, chopped\n- 2 garlic cloves, minced\n- 8 ounces mushrooms, sliced\n- 2 cups red wine\n- 1 cup chicken broth\n- 2 tablespoons tomato paste\n- 2 teaspoons fresh thyme leaves\n- Salt and pepper, to taste\n- 2 tablespoons all-purpose flour\n- 2 tablespoons butter\n- Fresh parsley, chopped (for garnish)",
-      ],
-      cooking_instructions:
-        "1. In a large skillet, cook the bacon over medium heat until crispy. Remove the bacon and set aside, leaving the bacon fat in the skillet.\n2. Season the chicken with salt and pepper, then brown it in the skillet with the bacon fat over medium-high heat. Remove the chicken and set aside.\n3. In the same skillet, sauté the onion, carrots, garlic, and mushrooms until softened.\n4. Stir in the tomato paste and cook for an additional minute.\n5. Slowly add the red wine and chicken broth, stirring well to combine.\n6. Return the chicken and bacon to the skillet, and sprinkle with thyme leaves.\n7. Cover the skillet and simmer for about 1 hour, or until the chicken is cooked through and tender.\n8. In a small bowl, mix together the flour and butter to form a paste. Stir this paste into the skillet and cook for another 10 minutes, or until the sauce thickens.\n9. Serve the Coq au Vin over mashed potatoes or crusty bread, and garnish with fresh parsley.",
-      cooking_notes:
-        "- For best results, use a good quality red wine such as Burgundy or Pinot Noir.\n- This dish tastes even better when prepared a day in advance and reheated before serving.",
-      course: "Main Course",
-      cuisine_type: "French",
-    },
-    {
-      recipe_number: "2",
-      recipe_name: "Chicken Piccata",
-      prep_time: "15 minutes",
-      cook_time: "15 minutes",
-      total_time: "30 minutes",
-      servings: "4",
-      calories: "380",
-      short_description:
-        "Chicken Piccata is an elegant Italian dish made with tender chicken cutlets cooked in a tangy, lemony sauce. This gourmet recipe is quick and easy to make, yet it's bursting with bright and fresh flavors.",
-      ingredients: [
-        "4 chicken cutlets\n- Salt and pepper, to taste\n- 1/2 cup all-purpose flour\n- 2 tablespoons olive oil\n- 2 tablespoons butter\n- 1/4 cup lemon juice\n- 1/2 cup chicken broth\n- 2 tablespoons capers, drained\n- 2 tablespoons fresh parsley, chopped",
-      ],
-      cooking_instructions:
-        "1. Season the chicken cutlets with salt and pepper, then dredge them in flour, shaking off any excess.\n2. In a large skillet, heat the olive oil and butter over medium-high heat.\n3. Add the chicken cutlets to the skillet and cook for about 3-4 minutes per side, until golden brown.\n4. Remove the chicken from the skillet and set aside.\n5. In the same skillet, add the lemon juice, chicken broth, and capers. Bring the mixture to a simmer and cook for a couple of minutes to let the flavors meld together.\n6. Return the chicken to the skillet and cook for an additional 2-3 minutes, until the sauce has thickened slightly.\n7. Sprinkle the chicken piccata with fresh parsley and serve immediately.",
-      cooking_notes:
-        "- Serve the chicken piccata with pasta, rice, or a side of roasted vegetables for a complete meal.\n- Add a splash of white wine to the sauce for an extra layer of complexity.",
-      course: "Main Course",
-      cuisine_type: "Italian",
-    },
-    {
-      recipe_number: "3",
-      recipe_name: "Moroccan Chicken Tagine",
-      prep_time: "20 minutes",
-      cook_time: "1 hour 30 minutes",
-      total_time: "1 hour 50 minutes",
-      servings: "4",
-      calories: "420",
-      short_description:
-        "Moroccan Chicken Tagine is a fragrant and exotic dish that combines tender chicken with warm spices, sweet dried fruits, and savory olives. This gourmet recipe will transport your taste buds to the vibrant streets of Morocco.",
-      ingredients: [
-        "4 chicken thighs\n- Salt and pepper, to taste\n- 2 tablespoons olive oil\n- 1 onion, finely chopped\n- 2 garlic cloves, minced\n- 1 teaspoon ground cumin\n- 1 teaspoon ground coriander\n- 1 teaspoon ground ginger\n- 1/2 teaspoon ground cinnamon\n- 1/2 teaspoon turmeric\n- 1/2 teaspoon paprika\n- 1/4 teaspoon cayenne pepper (optional)\n- 1 cup chicken broth\n- 1/2 cup dried apricots, halved\n- 1/2 cup pitted green olives\n- 2 tablespoons fresh cilantro, chopped",
-      ],
-      cooking_instructions:
-        "1. Season the chicken thighs with salt and pepper.\n2. Heat the olive oil in a tagine or a large skillet over medium heat.\n3. Brown the chicken thighs on all sides, then remove them from the skillet and set aside.\n4. In the same skillet, sauté the onion and garlic until softened.\n5. Add the cumin, coriander, ginger, cinnamon, turmeric, paprika, and cayenne pepper (if using), stirring well to coat the onions and garlic.\n6. Pour in the chicken broth and bring the mixture to a simmer.\n7. Return the chicken thighs to the skillet, cover, and cook for about 1 hour, or until the chicken is tender and cooked through.\n8. Add the dried apricots and green olives to the skillet and continue cooking for 15 minutes, allowing the flavors to meld together.\n9. Sprinkle the Moroccan Chicken Tagine with fresh cilantro before serving.",
-      cooking_notes:
-        "- Serve the tagine with couscous or warm crusty bread to soak up the flavorful sauce.\n- Feel free to add other dried fruits such as raisins or prunes for extra sweetness.",
-      course: "Main Course",
-      cuisine_type: "Moroccan",
-    },
-  ],
-});
-*/
-
 onMounted(() => {
-  loadUserData();
+  if (user.value) {
+    loadUserData();
+  }
   updateCreditsOnMounted();
   checkCredits();
   loadRecipes();
@@ -749,6 +746,8 @@ const createRecipesError = ref("");
 const fullRecipe = ref("");
 
 let isError = false;
+
+//const user_recipes = await find("user_recipes");
 
 async function loadUserData() {
   try {
@@ -794,17 +793,27 @@ const newRecipe = ref({});
 const fetchRecipes = async () => {
   createRecipesError.value = false;
   existingRecipeData.value = false;
-  if ((!user.value && realCredits.value <= 0) || freeCreditsLeft.value <= 0) {
-    console.log("No credits left!");
-    Toast.fire({
-      icon: "error",
-      title: "You're out of credits!",
-      text: "Please sign up for more credits.",
-    });
+  newRecipe.value = {};
+  if (
+    (!user.value && realCredits.value <= 0) ||
+    (user.value && freeCreditsLeft.value <= 0)
+  ) {
+    if (user.value) {
+      Toast.fire({
+        icon: "error",
+        title: "You're out of credits!",
+        text: "Please upgrade or pay for more credits.",
+      });
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "You're out of credits!",
+        text: "Please sign up for more credits.",
+      });
+    }
     return;
   }
   isLoadingRecipes.value = true;
-  newRecipe.value = {};
   // Transform 'value' strings to match expected API format if needed
   // Example: 'courseBreakfast' to 'Breakfast'
   const course = selectedCourseOption.value.replace("course", "") || "Any";
@@ -813,14 +822,16 @@ const fetchRecipes = async () => {
   const diet = dietOption.value || "Any";
   const uniqueness = String(sliderValue.value) || "3";
 
+  //console.log("IngredientInput: ", ingredientInput.value);
+
   // Format ingredients as an array of strings
-  const ingredients = ingredientInput.value
-    .split(",")
-    .map((ingredient) => ingredient.trim());
+  const ingredients = ingredientInput.value;
+
+  //console.log("Ingredients: ", ingredients[0]);
 
   // Construct the payload object to match RecipeRequest model in Python
   const payload = {
-    ingredients: ingredients || "Any",
+    ingredients: ingredients === "" ? "Surprise me" : ingredients,
     course: course === "Any" ? "Any" : course,
     cuisine: cuisine || "Any",
     difficulty: difficulty === "Any" ? "Any" : difficulty,
@@ -840,7 +851,7 @@ const fetchRecipes = async () => {
         updateUIAfterStream();
       }
       isLoadingRecipes.value = false;
-      console.log("Finished receiving stream.");
+      //console.log("Finished receiving stream.");
       return;
     }
 
@@ -907,7 +918,7 @@ const processChunk = async (chunk) => {
       return; // Skip processing this chunk
     }
 
-    console.log("data: ", data);
+    //console.log("data: ", data);
 
     if (data.recipe_name) {
       console.log("data.recipe_name found from GPT: ", data.recipe_name);
@@ -923,13 +934,41 @@ const processChunk = async (chunk) => {
     }
 
     if (existingRecipe.value) {
-      console.log("Recipe already exists in Strapi. Using existing recipe.");
       controller.abort();
       existingRecipeData.value = existingRecipe.value; // Use the existing recipe from Strapi
+      console.log(
+        "Recipe already exists in Strapi. Using existing recipe:",
+        existingRecipeData.value
+      );
       isLoadingRecipes.value = false;
       updateLocalStorage();
       loadRecipes();
       decrementLoggedInCredits();
+      decrementCredits();
+      console.log(
+        "Trying to connect user to existing recipe with id",
+        existingRecipeData.value.id
+      );
+      /*
+      await update("recipes", existingRecipeData.value.id, {
+        created_by_user: {
+          connect: [user.value?.id || null],
+        },
+      });*/
+      if (user.value) {
+        console.log("User exists, attempting to create userrecipes data");
+        await create("userrecipes", {
+          user: {
+            connect: [user.value.id],
+          },
+          recipe: {
+            connect: [existingRecipeData.value.id],
+          },
+          addedAt: new Date().toISOString(),
+        });
+        triggerUpdate.value++;
+      }
+      console.log("Userrecipes complete...");
       return;
     } else {
       // If the recipe does not exist in Strapi, use the OpenAI generated recipe
@@ -938,16 +977,17 @@ const processChunk = async (chunk) => {
   } catch (e) {
     isLoadingRecipes.value = false;
     console.error("Error parsing chunk:", chunk, e);
-    createRecipesError.value =
+    /*createRecipesError.value =
       "An error has occurred. Please try to create another recipe.";
     // Handle parsing error or ignore the chunk
+    */
   }
 };
 
 const fetchExistingRecipeFromStrapi = async (slug) => {
   try {
     const response = await fetch(
-      `http://localhost:1337/api/recipes?filters[uid][$eq]=${slug}`
+      `http://localhost:1337/api/recipes?filters[uid][$eq]=${slug}&populate=*`
     );
     console.log("Response value:", response);
     const recipes = await response.json();
@@ -963,9 +1003,9 @@ const fetchExistingRecipeFromStrapi = async (slug) => {
     console.log("Recipes.length? ", recipesLength);
 
     console.log("Response data attributes:", recipes.data[0].attributes);
-    return recipesLength ? recipes.data[0].attributes : null;
+    return recipesLength ? recipes.data[0] : null;
   } catch (error) {
-    console.error("Error fetching recipe from Strapi:", error);
+    //console.error("Error fetching recipe from Strapi:", error);
     return null;
   }
 };
@@ -979,6 +1019,8 @@ const updateUIAfterStream = () => {
   createRecipes();
   loadRecipes();
   decrementLoggedInCredits();
+  //decrementLoggedOutCredits();
+  decrementCredits();
   //let recipeObject = parseFullRecipeText(newRecipe.value.full_recipe);
   //fullRecipe.value.push(recipeObject);
 };
@@ -992,22 +1034,34 @@ function updateLocalStorage() {
 
   let updatedRecipes;
 
-  if (!existingRecipe.value) {
+  if (!existingRecipe.value && newRecipe.value.recipe_name) {
+    console.log("Updating local storage with new recipe", newRecipe.value);
     updatedRecipes = existingRecipes.concat(newRecipe.value);
-  } else {
+    localStorage.setItem(
+      "recipes",
+      JSON.stringify({ recipes: updatedRecipes })
+    );
+    data.value = { recipes: updatedRecipes };
+  }
+  if (existingRecipe.value) {
     console.log(
       "Updating local storage with existing recipe",
       existingRecipe.value
     );
-    updatedRecipes = existingRecipes.concat(existingRecipe.value);
+    updatedRecipes = existingRecipes.concat(existingRecipe.value.attributes);
+    localStorage.setItem(
+      "recipes",
+      JSON.stringify({ recipes: updatedRecipes })
+    );
+    data.value = { recipes: updatedRecipes };
   }
 
   // Store the updated array back into localStorage
-  localStorage.setItem("recipes", JSON.stringify({ recipes: updatedRecipes }));
-  console.log("Updated recipes in localStorage:", updatedRecipes);
+  //.setItem("recipes", JSON.stringify({ recipes: updatedRecipes }));
+  //console.log("Updated recipes in localStorage:", updatedRecipes);
 
   // Update your reactive property to trigger the UI update
-  data.value = { recipes: updatedRecipes };
+  //data.value = { recipes: updatedRecipes };
 }
 
 // Computed property to create a list of ingredients from the string
@@ -1024,11 +1078,11 @@ const formattedIngredients = computed(() => {
 
 // Computed property to create a list of ingredients from the string
 const existingFormattedIngredients = computed(() => {
-  if (!existingRecipeData.value.ingredients) {
+  if (!existingRecipeData.value.attributes.ingredients) {
     return [];
   }
   // Split the ingredients string into an array, trim each item to remove extra spaces
-  return existingRecipeData.value.ingredients
+  return existingRecipeData.value.attributes.ingredients
     .split(/(?<=^|\s)-\s*/)
     .map((ingredient) => ingredient.trim())
     .filter(Boolean);
@@ -1046,11 +1100,11 @@ const formattedNotes = computed(() => {
 });
 
 const existingFormattedNotes = computed(() => {
-  if (!existingRecipeData.value.cooking_notes) {
+  if (!existingRecipeData.value.attributes.cooking_notes) {
     return [];
   }
   // Split the ingredients string into an array, trim each item to remove extra spaces
-  return existingRecipeData.value.cooking_notes
+  return existingRecipeData.value.attributes.cooking_notes
     .split("-")
     .map((note) => note.trim())
     .filter(Boolean);
@@ -1069,11 +1123,11 @@ const formattedInstructions = computed(() => {
 });
 
 const existingFormattedInstructions = computed(() => {
-  if (!existingRecipeData.value.cooking_instructions) {
+  if (!existingRecipeData.value.attributes.cooking_instructions) {
     return [];
   }
   // Split the instructions into steps based on number patterns
-  return existingRecipeData.value.cooking_instructions
+  return existingRecipeData.value.attributes.cooking_instructions
     .split(/\d+\./)
     .map((step) => step.trim())
     .filter(Boolean);
@@ -1110,6 +1164,14 @@ async function decrementLoggedInCredits() {
   await loadUserData();
 }
 
+async function decrementLoggedOutCredits() {
+  if (!user.value) {
+    realCredits.value--;
+    //console.log("Realcredits.value: ", realCredits.value);
+    localStorage.setItem("ec_credits", realCredits.value.toString());
+  }
+}
+
 // Slider for Uniquness Level
 const slider = ref(null);
 const sliderValue = ref(2); // Default value
@@ -1128,47 +1190,75 @@ const updateSliderFill = () => {
 watch(sliderValue, updateSliderFill, { immediate: true });
 
 const createRecipes = async () => {
-  const creationPromises = [];
+  if (newRecipe.value?.recipe_name) {
+    const creationPromises = [];
 
-  if (newRecipe.value?.cooking_instructions?.startsWith(" ")) {
-    newRecipe.value.cooking_instructions =
-      newRecipe.value.cooking_instructions.trim();
-  }
+    if (newRecipe.value?.cooking_instructions?.startsWith(" ")) {
+      newRecipe.value.cooking_instructions =
+        newRecipe.value.cooking_instructions.trim();
+    }
 
-  creationPromises.push(
-    create("recipes", {
-      recipe_name: newRecipe.value.recipe_name,
-      paragraph_description: newRecipe.value.paragraph_description,
-      prep_time: newRecipe.value.prep_time,
-      cook_time: newRecipe.value.cook_time,
-      total_time: newRecipe.value.total_time,
-      servings: newRecipe.value.servings,
-      calories: newRecipe.value.calories,
-      ingredients: newRecipe.value.ingredients, // Use the joined string for ingredients
-      cooking_instructions: newRecipe.value.cooking_instructions,
-      cooking_notes: newRecipe.value.cooking_notes,
-      course: newRecipe.value.course,
-      cuisine: newRecipe.value.cuisine_type,
-      beer_pairing: newRecipe.value.beer_pairing,
-      wine_pairing: newRecipe.value.wine_pairing,
-      cocktail_pairing: newRecipe.value.cocktail_pairing,
-    })
-      .then((result) => {
-        console.log(`Recipe created:`, result);
-        return result;
+    creationPromises.push(
+      create("recipes", {
+        recipe_name: newRecipe.value.recipe_name,
+        paragraph_description: newRecipe.value.paragraph_description,
+        prep_time: newRecipe.value.prep_time,
+        cook_time: newRecipe.value.cook_time,
+        total_time: newRecipe.value.total_time,
+        servings: newRecipe.value.servings,
+        calories: newRecipe.value.calories,
+        ingredients: newRecipe.value.ingredients, // Use the joined string for ingredients
+        cooking_instructions: newRecipe.value.cooking_instructions,
+        cooking_notes: newRecipe.value.cooking_notes,
+        course: newRecipe.value.course,
+        cuisine: newRecipe.value.cuisine_type,
+        beer_pairing: newRecipe.value.beer_pairing,
+        wine_pairing: newRecipe.value.wine_pairing,
+        cocktail_pairing: newRecipe.value.cocktail_pairing,
+        image_url: newRecipe.value.image_url,
+        diet_type_if_set: newRecipe.value.diet_type_if_set,
+        created_by_user: {
+          connect: [user.value?.id || null],
+        },
       })
-      .catch((error) => {
-        console.error(`Error creating recipe ${recipe.recipe_name}:`, error);
-        throw error;
-      })
-  );
+        .then((result) => {
+          console.log(`Recipe created:`, result);
+          return result;
+        })
+        .catch((error) => {
+          console.error(
+            `Error creating recipe ${newRecipe.recipe_name}:`,
+            error
+          );
+          throw error;
+        })
+    );
 
-  try {
-    const createdRecipes = await Promise.all(creationPromises);
-    console.log(`All recipes created successfully:`, createdRecipes);
-    return createdRecipes;
-  } catch (error) {
-    console.error(`An error occurred during recipe creation:`, error);
+    try {
+      const createdRecipe = await Promise.all(creationPromises);
+      console.log(`All recipes created successfully:`, createdRecipe[0]);
+      if (user.value) {
+        console.log("User exists, attempting to create userrecipes data");
+        try {
+          await create("userrecipes", {
+            user: {
+              connect: [user.value.id],
+            },
+            recipe: {
+              connect: [createdRecipe[0].data.id],
+            },
+            addedAt: new Date().toISOString(),
+          });
+        } catch (error) {
+          console.log("Error creating userrecipe: ", error);
+        }
+      }
+      console.log("Userrecipes complete...");
+      triggerUpdate.value++;
+      return createdRecipe;
+    } catch (error) {
+      console.error(`An error occurred during recipe creation:`, error);
+    }
   }
 };
 </script>
@@ -1368,5 +1458,11 @@ label.block {
 
 ::placeholder {
   @apply italic;
+}
+.cropped-image {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  object-position: center;
 }
 </style>

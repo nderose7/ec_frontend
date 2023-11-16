@@ -26,6 +26,7 @@ export function decrementCredits() {
   if (process.client && realCredits.value > 0) {
     realCredits.value -= 1;
     localStorage.setItem('8589d68a7d2253bf', encodeCredits(realCredits.value));
+    localStorage.setItem('ec_credits', realCredits.value.toString());
   }
 }
 

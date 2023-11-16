@@ -1,5 +1,5 @@
 <template>
-  <div class="xl:w-3/4 px-5 lg:px-10 xl:px-48 pb-48 pt-5">
+  <div class="xl:w-full px-5 lg:px-10 xl:px-48 pb-48 pt-5">
     <div class="flex">
       <button
         type="button"
@@ -12,54 +12,93 @@
     <div
       v-for="(recipe, recipeIndex) in recipes.data"
       :key="`recipe-${recipeIndex}`"
-      class="pt-5"
+      class="pt-5 pb-10"
     >
-      <div>
-        <h1 class="mb-4 text-5xl leading-tight">
-          {{ recipe?.attributes.recipe_name }}
-        </h1>
-        <div class="mb-5">
-          <button
-            @click="toggleFavorite(recipe)"
-            class="flex items-center gap-2 font-semibold btn-outline"
-            :class="recipe.isFavorited ? 'btn-outline-filled' : 'btn-outline'"
-          >
-            <Icon
-              :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
-              size="1.5rem"
-              class="icon-style"
-              :class="
-                recipe.isFavorited ? ' text-yellow-500' : ' text-brand-500'
-              "
-            />
-            <span v-if="recipe.isFavorited">Remove From</span
-            ><span v-else>Add To</span> Favorites
-          </button>
+      <div class="lg:flex justify-between gap-10">
+        <div v-if="recipe.attributes?.image.data" class="lg:order-2 lg:w-2/3">
+          <img
+            :src="`${strapiURL}${recipe.attributes.image?.data?.attributes?.url}`"
+            class="rounded-lg mb-6 lg:mb-0"
+          />
         </div>
-      </div>
-      <div class="flex gap-5 mt-2 mb-4">
-        <div><b>Course:</b> {{ recipe?.attributes.course }}</div>
-        <div><b>Cuisine:</b> {{ recipe?.attributes.cuisine }}</div>
-      </div>
-      <p>{{ recipe?.attributes.paragraph_description }}</p>
+        <div class="w-full">
+          <div>
+            <h1 class="mb-4 lg:text-5xl leading-tight">
+              {{ recipe?.attributes.recipe_name }}
+            </h1>
+            <div v-if="user" class="mb-5">
+              <button
+                @click="toggleFavorite(recipe)"
+                class="flex items-center gap-2 font-semibold btn-outline"
+                :class="
+                  recipe.isFavorited ? 'btn-outline-filled' : 'btn-outline'
+                "
+              >
+                <Icon
+                  :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                  size="1.5rem"
+                  class="icon-style"
+                  :class="
+                    recipe.isFavorited ? ' text-yellow-500' : ' text-brand-500'
+                  "
+                />
+                <span v-if="recipe.isFavorited">Remove From</span
+                ><span v-else>Add To</span> Favorites
+              </button>
+            </div>
+            <div v-else>
+              <p class="my-4">
+                <NuxtLink to="/login" class="link">Login</NuxtLink> or
+                <NuxtLink to="/sign-up" class="link">Sign Up</NuxtLink> to save
+                recipes.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-5 mt-2 mb-4">
+            <div><b>Course:</b> {{ recipe?.attributes.course }}</div>
+            <div><b>Cuisine:</b> {{ recipe?.attributes.cuisine }}</div>
+          </div>
+          <p>{{ recipe?.attributes.paragraph_description }}</p>
 
-      <div
-        class="mt-6 bg-slate-100 dark:bg-midnight-600 border dark:border-midnight-200 rounded-lg px-5 py-2 pb-3 w-fit"
-      >
-        <div class="flex gap-5 mt-2">
-          <div>
-            <Icon name="bx:time" class="icon-style" />
+          <div
+            class="mt-6 bg-slate-100 dark:bg-midnight-600 border dark:border-midnight-200 rounded-lg px-5 py-2 pb-3 w-fit"
+          >
+            <div class="flex gap-5 mt-2">
+              <div>
+                <Icon name="bx:time" class="icon-style" />
+              </div>
+              <div><b>Prep:</b> {{ recipe?.attributes.prep_time }}</div>
+              <div><b>Cook:</b> {{ recipe?.attributes.cook_time }}</div>
+              <div><b>Total:</b> {{ recipe?.attributes.total_time }}</div>
+            </div>
+            <div class="flex gap-5 mt-2">
+              <div>
+                <Icon name="mdi:silverware" class="icon-style" />
+              </div>
+              <div><b>Servings:</b> {{ recipe?.attributes.servings }}</div>
+              <div><b>Calories:</b> {{ recipe?.attributes.calories }}</div>
+            </div>
+            <div
+              v-if="
+                recipe?.attributes.diet_type_if_set &&
+                recipe?.attributes.diet_type_if_set != 'None' &&
+                recipe?.attributes.diet_type_if_set != 'N/A' &&
+                recipe?.attributes.diet_type_if_set != 'n/a'
+              "
+              class="md:flex gap-5 mt-2"
+            >
+              <div class="hidden md:block">
+                <Icon
+                  name="pepicons-pop:line-slant-up-circle"
+                  class="icon-style p-[2px]"
+                />
+              </div>
+              <div>
+                <b>Diet:</b>
+                {{ recipe?.attributes.diet_type_if_set }}
+              </div>
+            </div>
           </div>
-          <div><b>Prep:</b> {{ recipe?.attributes.prep_time }}</div>
-          <div><b>Cook:</b> {{ recipe?.attributes.cook_time }}</div>
-          <div><b>Total:</b> {{ recipe?.attributes.total_time }}</div>
-        </div>
-        <div class="flex gap-5 mt-2">
-          <div>
-            <Icon name="mdi:silverware" class="icon-style" />
-          </div>
-          <div><b>Servings:</b> {{ recipe?.attributes.servings }}</div>
-          <div><b>Calories:</b> {{ recipe?.attributes.calories }}</div>
         </div>
       </div>
 
@@ -83,6 +122,8 @@
         </ul>
       </div>
     </div>
+    <SignUpOffer v-if="!user" />
+    <MembershipOffer v-if="user && !paidMemberTierOne" />
   </div>
 </template>
 
@@ -98,16 +139,20 @@ import {
   parseNumbersToHTML,
 } from "~/utils/parseIngredients.js";
 const route = useRoute();
-const { update, find } = useStrapi();
+const { update, find, delete: _delete, create } = useStrapi();
 
 const recipeId = ref();
+const user = useStrapiUser();
+const userFavoritesIds = ref([]);
+
+const paidMemberTierOne = ref(false);
 
 const {
   public: { strapiURL },
 } = useRuntimeConfig();
 
 const { data: recipes } = await useFetch(
-  `${strapiURL}/api/recipes?filters[uid][$eq]=${route.params.uid}`
+  `${strapiURL}/api/recipes?filters[uid][$eq]=${route.params.uid}&populate=*`
 );
 
 recipeId.value = recipes.value?.data[0].id;
@@ -116,7 +161,7 @@ recipeId.value = recipes.value?.data[0].id;
 const parsedIngredients = computed(() => {
   if (recipes.value && recipes.value.data && recipes.value.data.length > 0) {
     const firstRecipeIngredients = recipes.value.data[0].attributes.ingredients;
-    console.log(firstRecipeIngredients);
+    //console.log(firstRecipeIngredients);
     return parseDashesToHTML(firstRecipeIngredients);
   }
   return "";
@@ -134,28 +179,24 @@ const parsedNotes = computed(() => {
   return "";
 });
 
-const user = useStrapiUser();
-const userFavoritesIds = ref([]);
-
 // Fetch user's favorite recipes and populate the set for quick lookup
 const fetchUserFavorites = async () => {
   if (user.value?.id) {
     try {
-      const response = await find("userdatas", {
-        populate: ["recipes"],
+      const response = await find("userfavorites", {
         filters: {
-          owner: user.value.id,
+          user: user.value?.id,
+        },
+        populate: {
+          recipe: "id",
         },
       });
 
       if (response.data) {
-        // Set the array of favorite recipe IDs based on the response
-        userFavoritesIds.value = response.data[0].attributes.recipes.data.map(
-          (favorite) => favorite.id
+        userFavoritesIds.value = response.data.map(
+          (userFavorite) => userFavorite.attributes.recipe.data.id
         );
-
-        // Set the isFavorited state for the current recipe
-        //recipe.isFavorited = userFavoritesIds.value.includes(recipeId.value);
+        setUserFavorites(userFavoritesIds.value);
       }
     } catch (error) {
       console.error("Error fetching user favorites:", error);
@@ -174,30 +215,51 @@ const setUserFavorites = (userFavorites) => {
   }
 };
 
+const findUserFavoriteEntry = async (userId, recipeId) => {
+  try {
+    const response = await find("userfavorites", {
+      filters: {
+        user: userId,
+        recipe: recipeId,
+      },
+    });
+    return response.data.length > 0 ? response.data[0] : null;
+  } catch (error) {
+    console.error("Error fetching user favorite entry:", error);
+    return null;
+  }
+};
+
 const toggleFavorite = async (clickedRecipe) => {
-  // Check if the recipe is currently a favorite
   const isFavorited = userFavoritesIds.value.includes(clickedRecipe.id);
 
   try {
-    // Perform the update action based on the current favorite state
-    await update("recipes", clickedRecipe.id, {
-      userdata: isFavorited
-        ? { disconnect: [user.value.id] }
-        : { connect: [user.value.id] },
-    });
-
-    // Update the userFavoritesIds and the isFavorited property after successful update
     if (isFavorited) {
-      // Remove from user favorites
-      userFavoritesIds.value = userFavoritesIds.value.filter(
-        (id) => id !== clickedRecipe.id
+      // Find and delete the userfavorite entry
+      const userFavoriteEntry = await findUserFavoriteEntry(
+        user.value?.id,
+        clickedRecipe.id
       );
+      if (userFavoriteEntry) {
+        await _delete("userfavorites", userFavoriteEntry.id);
+        userFavoritesIds.value = userFavoritesIds.value.filter(
+          (id) => id !== clickedRecipe.id
+        );
+      }
     } else {
-      // Add to user favorites
+      // Create a new userfavorite entry
+      await create("userfavorites", {
+        recipe: {
+          connect: [clickedRecipe.id],
+        },
+        user: {
+          connect: [user.value?.id],
+        },
+        favoritedAt: new Date().toISOString(),
+      });
       userFavoritesIds.value.push(clickedRecipe.id);
     }
 
-    // Update the isFavorited property of the clicked recipe
     clickedRecipe.isFavorited = !isFavorited;
   } catch (error) {
     console.error("Error toggling favorite status:", error);

@@ -94,9 +94,10 @@
 
 <script setup>
 import swalMixins from "~/mixins/swalMixins";
-const { Toast } = swalMixins.data();
+import { slugify } from "~/utils/slugify.js";
 import { object, string, ref as yupRef } from "yup";
 import { configure } from "vee-validate";
+const { Toast } = swalMixins.data();
 
 const {
   public: { strapiURL },
@@ -105,6 +106,7 @@ const {
 const email = ref("");
 const password = ref("");
 const { register } = useStrapiAuth();
+const { update, find } = useStrapi();
 
 const debug = ref(false);
 const showPassword = ref(false);
@@ -218,7 +220,6 @@ const onSubmit = async () => {
     const userId = userRegistered.user.value.id;
 
     // Step 2: Complete the registration by creating a Stripe customer
-
     const response = await fetch(`${strapiURL}/api/auth/register`, {
       method: "POST",
       headers: {
@@ -229,6 +230,36 @@ const onSubmit = async () => {
         userId: userId,
       }),
     });
+
+    const localStorageData = JSON.parse(
+      localStorage.getItem("recipes") || "{}"
+    );
+    const localStorageRecipes = localStorageData.recipes || [];
+
+    if (!Array.isArray(localStorageRecipes)) {
+      console.error(
+        "localStorageRecipes is not an array:",
+        localStorageRecipes
+      );
+      return; // Exit the function or handle this scenario appropriately
+    }
+
+    //console.log("Retrieved localStorageRecipes:", localStorageRecipes);
+
+    const strapiRecipes = await fetchRecipesFromStrapi();
+
+    const strapiRecipesToUpdate = strapiRecipes.filter((strapiRecipe) =>
+      localStorageRecipes.some(
+        (localRecipe) =>
+          slugify(localRecipe.recipe_name) === strapiRecipe.attributes.uid
+      )
+    );
+
+    await Promise.all(
+      strapiRecipesToUpdate.map((recipe) =>
+        updateRecipeInStrapi(recipe.id, userId)
+      )
+    );
 
     navigateTo("/check-email");
   } catch (error) {
@@ -253,6 +284,60 @@ const onSubmit = async () => {
         "An error occurred during registration. Please try again." + error
       );
     }
+  }
+};
+
+const fetchRecipesFromStrapi = async () => {
+  let allRecipes = [];
+  let page = 1;
+  let pageSize = 25; // Adjust the page size if needed
+  let totalRecipes = 0;
+
+  try {
+    do {
+      // Fetching a page of recipes
+      const response = await find("recipes", {
+        pagination: {
+          page: page,
+          pageSize: pageSize,
+        },
+      });
+
+      if (response) {
+        console.log(
+          `Fetched page ${page} with ${response.data.length} recipes.`
+        );
+        allRecipes.push(...response.data);
+        totalRecipes = response.meta.pagination.total; // Total number of recipes
+      } else {
+        break; // Break if no response
+      }
+
+      page++;
+    } while (allRecipes.length < totalRecipes);
+
+    console.log("Total recipes fetched: ", allRecipes.length);
+    return allRecipes;
+  } catch (error) {
+    console.error("There was a problem with the find operation:", error);
+  }
+};
+
+const updateRecipeInStrapi = async (recipeId, userId) => {
+  try {
+    const response = await update("recipes", recipeId, {
+      created_by_user: {
+        connect: [userId],
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("There was a problem with the fetch operation:", error);
   }
 };
 </script>
