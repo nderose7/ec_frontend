@@ -1,13 +1,13 @@
 <template>
   <div
-    v-if="recipesFromStrapi.today"
+    v-if="recipesFromStrapi.today?.length"
     class="min-[1600px]:w-1/4 w-1/3 px-5 pb-4 hidden xl:block sticky top-[82px] h-full border-r dark:border-midnight-600"
   >
     <div>
       <ul class="xl:pr-2 pt-5">
         <div class="h-screen-minus-header overflow-y-scroll xl:pl-5">
           <h5
-            v-if="recipesFromStrapi.today.length"
+            v-if="recipesFromStrapi.today?.length"
             class="text-sm text-slate-500 mb-3"
           >
             TODAY'S CREATIONS
