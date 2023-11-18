@@ -14,7 +14,7 @@
       :key="`recipe-${recipeIndex}`"
       class="pt-5 pb-10"
     >
-      <div class="lg:flex justify-between gap-10">
+      <div class="lg:flex justify-between gap-10 xl:gap-16">
         <div v-if="recipe.attributes?.image.data" class="lg:order-2 lg:w-2/3">
           <img
             :src="`${strapiURL}${recipe.attributes.image?.data?.attributes?.url}`"
@@ -23,7 +23,7 @@
         </div>
         <div class="w-full">
           <div>
-            <h1 class="mb-4 lg:text-5xl leading-tight">
+            <h1 class="mb-4 lg:text-5xl leading-tight lg:leading-tight">
               {{ recipe?.attributes.recipe_name }}
             </h1>
             <div v-if="user" class="mb-5">
@@ -63,19 +63,21 @@
           <div
             class="mt-6 bg-slate-100 dark:bg-midnight-600 border dark:border-midnight-200 rounded-lg px-5 py-2 pb-3 w-fit"
           >
-            <div class="flex gap-5 mt-2">
-              <div>
+            <div class="lg:flex gap-5 mt-2 space-y-1">
+              <div class="hidden lg:block">
                 <Icon name="bx:time" class="icon-style" />
               </div>
               <div><b>Prep:</b> {{ recipe?.attributes.prep_time }}</div>
               <div><b>Cook:</b> {{ recipe?.attributes.cook_time }}</div>
               <div><b>Total:</b> {{ recipe?.attributes.total_time }}</div>
             </div>
-            <div class="flex gap-5 mt-2">
-              <div>
+            <div class="lg:flex gap-5 mt-2 space-y-1">
+              <div class="hidden lg:block">
                 <Icon name="mdi:silverware" class="icon-style" />
               </div>
-              <div><b>Servings:</b> {{ recipe?.attributes.servings }}</div>
+              <div class="lg:w-1/4">
+                <b>Servings:</b> {{ recipe?.attributes.servings }}
+              </div>
               <div><b>Calories:</b> {{ recipe?.attributes.calories }}</div>
             </div>
             <div

@@ -1,13 +1,179 @@
 <template>
   <div
-    v-if="recipesFromStrapi"
+    v-if="recipesFromStrapi.today"
     class="min-[1600px]:w-1/4 w-1/3 px-5 pb-4 hidden xl:block sticky top-[82px] h-full border-r dark:border-midnight-600"
   >
     <div>
       <ul class="xl:pr-2 pt-5">
-        <h5 class="text-sm text-slate-500 mb-3 xl:pl-5">YOUR CREATIONS</h5>
         <div class="h-screen-minus-header overflow-y-scroll xl:pl-5">
-          <li v-for="recipe in recipesFromStrapi" :key="recipe.id" class="">
+          <h5
+            v-if="recipesFromStrapi.today.length"
+            class="text-sm text-slate-500 mb-3"
+          >
+            TODAY'S CREATIONS
+          </h5>
+
+          <li
+            v-for="recipe in recipesFromStrapi.today"
+            :key="recipe.id"
+            class=""
+          >
+            <div :class="user ? 'flex items-top gap-2' : ''">
+              <div v-if="user">
+                <button @click="toggleFavorite(recipe)">
+                  <Icon
+                    :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                    :class="
+                      recipe.isFavorited
+                        ? 'icon-style text-yellow-500'
+                        : 'icon-style text-slate-500'
+                    "
+                  />
+                </button>
+              </div>
+              <div>
+                <NuxtLink :to="`/recipes/${slugify(recipe.recipe_name)}`">
+                  <h2
+                    class="mb-0 text-lg dark:text-slate-300 text-left hover:text-brand-500"
+                  >
+                    {{ truncateString(recipe.recipe_name, 28) }}
+                  </h2>
+                </NuxtLink>
+
+                <div class="flex gap-5 text-base mb-4">
+                  <p>
+                    <Icon name="bx:time" class="icon-style" />
+                    {{ truncateString(recipe.total_time, 16) }}
+                  </p>
+
+                  <p>
+                    <Icon
+                      name="material-symbols:bar-chart"
+                      class="icon-style"
+                    />
+                    {{ truncateString(recipe.calories, 4) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <h5
+            v-if="recipesFromStrapi.yesterday.length"
+            class="text-sm text-slate-500 mb-3"
+          >
+            YESTERDAY
+          </h5>
+
+          <li
+            v-for="recipe in recipesFromStrapi.yesterday"
+            :key="recipe.id"
+            class=""
+          >
+            <div :class="user ? 'flex items-top gap-2' : ''">
+              <div v-if="user">
+                <button @click="toggleFavorite(recipe)">
+                  <Icon
+                    :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                    :class="
+                      recipe.isFavorited
+                        ? 'icon-style text-yellow-500'
+                        : 'icon-style text-slate-500'
+                    "
+                  />
+                </button>
+              </div>
+              <div>
+                <NuxtLink :to="`/recipes/${slugify(recipe.recipe_name)}`">
+                  <h2
+                    class="mb-0 text-lg dark:text-slate-300 text-left hover:text-brand-500"
+                  >
+                    {{ truncateString(recipe.recipe_name, 28) }}
+                  </h2>
+                </NuxtLink>
+
+                <div class="flex gap-5 text-base mb-4">
+                  <p>
+                    <Icon name="bx:time" class="icon-style" />
+                    {{ truncateString(recipe.total_time, 16) }}
+                  </p>
+
+                  <p>
+                    <Icon
+                      name="material-symbols:bar-chart"
+                      class="icon-style"
+                    />
+                    {{ truncateString(recipe.calories, 4) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <h5
+            v-if="recipesFromStrapi.lastSevenDays.length"
+            class="text-sm text-slate-500 mb-3"
+          >
+            Previous 7 Days
+          </h5>
+
+          <li
+            v-for="recipe in recipesFromStrapi.lastSevenDays"
+            :key="recipe.id"
+            class=""
+          >
+            <div :class="user ? 'flex items-top gap-2' : ''">
+              <div v-if="user">
+                <button @click="toggleFavorite(recipe)">
+                  <Icon
+                    :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                    :class="
+                      recipe.isFavorited
+                        ? 'icon-style text-yellow-500'
+                        : 'icon-style text-slate-500'
+                    "
+                  />
+                </button>
+              </div>
+              <div>
+                <NuxtLink :to="`/recipes/${slugify(recipe.recipe_name)}`">
+                  <h2
+                    class="mb-0 text-lg dark:text-slate-300 text-left hover:text-brand-500"
+                  >
+                    {{ truncateString(recipe.recipe_name, 28) }}
+                  </h2>
+                </NuxtLink>
+
+                <div class="flex gap-5 text-base mb-4">
+                  <p>
+                    <Icon name="bx:time" class="icon-style" />
+                    {{ truncateString(recipe.total_time, 16) }}
+                  </p>
+
+                  <p>
+                    <Icon
+                      name="material-symbols:bar-chart"
+                      class="icon-style"
+                    />
+                    {{ truncateString(recipe.calories, 4) }}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>
+
+          <h5
+            v-if="recipesFromStrapi.older.length"
+            class="text-sm text-slate-500 mb-3"
+          >
+            Older
+          </h5>
+
+          <li
+            v-for="recipe in recipesFromStrapi.older"
+            :key="recipe.id"
+            class=""
+          >
             <div :class="user ? 'flex items-top gap-2' : ''">
               <div v-if="user">
                 <button @click="toggleFavorite(recipe)">
@@ -49,7 +215,7 @@
           </li>
         </div>
         <div
-          class="border-b-2 dark:border-midnight-200 w-1/5 mx-auto text-center"
+          class="border-b-2 dark:border-midnight-200 w-1/5 mx-auto text-center pt-4"
         ></div>
         <div v-if="user">
           <p class="mt-5 text-center">
@@ -145,13 +311,16 @@ const fetchRecipesFromStrapi = async () => {
           return {
             ...userRecipe.attributes.recipe.data.attributes,
             id: userRecipe.attributes.recipe.data.id,
+            addedAt: userRecipe.attributes.addedAt,
             isFavorited: userFavoritesIds.value.includes(
               userRecipe.attributes.recipe.data.id
             ),
           };
         });
 
-        recipesFromStrapi.value = recipes;
+        const groupedRecipes = groupRecipesByDate(recipes);
+        recipesFromStrapi.value = groupedRecipes;
+        setUserFavorites(userFavoritesIds.value); // Ensure the isFavorited status is set correctly
       }
     } catch (error) {
       console.error("Error fetching recipes:", error);
@@ -188,11 +357,19 @@ const fetchUserFavorites = async () => {
 };
 
 const setUserFavorites = (userFavorites) => {
-  if (recipesFromStrapi.value && recipesFromStrapi.value.length > 0) {
-    recipesFromStrapi.value = recipesFromStrapi.value.map((recipe) => ({
+  const updateIsFavorited = (recipes) => {
+    return recipes.map((recipe) => ({
       ...recipe,
       isFavorited: userFavorites.includes(recipe.id),
     }));
+  };
+
+  if (recipesFromStrapi.value) {
+    Object.keys(recipesFromStrapi.value).forEach((group) => {
+      recipesFromStrapi.value[group] = updateIsFavorited(
+        recipesFromStrapi.value[group]
+      );
+    });
   }
 };
 
@@ -244,7 +421,7 @@ const toggleFavorite = async (clickedRecipe) => {
       });
       userFavoritesIds.value.push(recipeId);
     }
-
+    setUserFavorites(userFavoritesIds.value);
     clickedRecipe.isFavorited = !isFavorited;
   } catch (error) {
     console.error("Error toggling favorite status:", error);
@@ -277,4 +454,31 @@ watch(
   },
   { immediate: true }
 );
+
+const groupRecipesByDate = (recipes) => {
+  const groups = {
+    today: [],
+    yesterday: [],
+    lastSevenDays: [],
+    older: [],
+  };
+
+  const now = new Date();
+  recipes.forEach((recipe) => {
+    const addedAt = new Date(recipe.addedAt); // Assuming recipe.addedAt is a valid date string
+    const dayDifference = (now - addedAt) / (1000 * 3600 * 24);
+
+    if (dayDifference < 1) {
+      groups.today.push(recipe);
+    } else if (dayDifference < 2) {
+      groups.yesterday.push(recipe);
+    } else if (dayDifference < 7) {
+      groups.lastSevenDays.push(recipe);
+    } else {
+      groups.older.push(recipe);
+    }
+  });
+
+  return groups;
+};
 </script>

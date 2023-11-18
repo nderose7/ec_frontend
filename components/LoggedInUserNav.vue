@@ -71,7 +71,9 @@
             >
               <Icon name="bx:check-circle" class="icon-style" /> Free Account
               &nbsp;
-              <NuxtLink to="/upgrade" class="link text-base">Upgrade</NuxtLink>
+              <NuxtLink to="/membership" class="link text-base"
+                >Upgrade</NuxtLink
+              >
             </div>
           </div>
 

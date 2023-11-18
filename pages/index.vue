@@ -12,8 +12,8 @@
             Insanely good recipes in an instant.
           </h1>
           <p class="lead">
-            Generate unique recipes from any idea, ingredient, region, or
-            dietary need.
+            Create unique recipes from any idea, ingredient, region, or dietary
+            need.
           </p>
         </div>
         <div class="min-[1600px]:px-32">
@@ -143,6 +143,7 @@
                 placeholder="Example: Italy or pasta"
                 class="rounded-lg"
               />
+              <p class="text-base italic">Try Lactose Intolerant,</p>
             </div>
           </div>
 
@@ -250,7 +251,7 @@
           </div>
         </div>
         <form
-          @submit.prevent="fetchRecipes"
+          @submit.prevent="fetchRecipeTitle"
           class="search-bar form-control mt-5 mb-0 min-[1600px]:px-32"
         >
           <div class="flex w-full items-center">
@@ -260,6 +261,7 @@
                 placeholder="Create a recipe..."
                 class="rounded-l-lg"
                 v-model="ingredientInput"
+                ref="inputRef"
               />
             </div>
 
@@ -415,6 +417,8 @@
                       newRecipe.diet_type_if_set &&
                       newRecipe.diet_type_if_set != 'None' &&
                       newRecipe.diet_type_if_set != 'N/A' &&
+                      newRecipe.diet_type_if_set != 'NA' &&
+                      newRecipe.diet_type_if_set != 'Not Available' &&
                       newRecipe.diet_type_if_set != 'n/a'
                     "
                     class="md:flex gap-5 mt-2"
@@ -711,6 +715,7 @@ const dietOption = ref("");
 const cuisineOption = ref("");
 const ingredientInput = ref("");
 const triggerUpdate = ref(0);
+const inputRef = ref(null);
 
 const showImagination = ref(false);
 const paidMemberTierOne = ref(false);
@@ -788,9 +793,9 @@ function loadRecipes() {
   }
 }
 
-const newRecipe = ref({});
+const titleFromFetch = ref("");
 
-const fetchRecipes = async () => {
+const fetchRecipeTitle = async () => {
   createRecipesError.value = false;
   existingRecipeData.value = false;
   newRecipe.value = {};
@@ -814,6 +819,9 @@ const fetchRecipes = async () => {
     return;
   }
   isLoadingRecipes.value = true;
+  if (inputRef.value) {
+    inputRef.value.scrollIntoView({ behavior: "smooth" });
+  }
   // Transform 'value' strings to match expected API format if needed
   // Example: 'courseBreakfast' to 'Breakfast'
   const course = selectedCourseOption.value.replace("course", "") || "Any";
@@ -831,6 +839,108 @@ const fetchRecipes = async () => {
 
   // Construct the payload object to match RecipeRequest model in Python
   const payload = {
+    ingredients: ingredients === "" ? "Surprise me" : ingredients,
+    course: course === "Any" ? "Any" : course,
+    cuisine: cuisine || "Any",
+    difficulty: difficulty === "Any" ? "Any" : difficulty,
+    diet: diet === "Any" ? "Any" : diet,
+    uniqueness: uniqueness,
+  };
+
+  try {
+    const response = await fetch("http://localhost:8000/get-recipe-title/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+
+    console.log("response found from GPT: ", responseData);
+    // Slugify the title from OpenAI's response
+    titleFromFetch.value = responseData.recipe_name;
+    const titleSlug = slugify(responseData.recipe_name); // Assuming data has a title field
+    console.log(
+      "Attempt to fetch the existing recipe from Strapi with uid: ",
+      titleSlug
+    );
+    // Attempt to fetch the existing recipe from Strapi
+    existingRecipe.value = await fetchExistingRecipeFromStrapi(titleSlug);
+    console.log("existingRecipe.value: ", existingRecipe.value);
+
+    if (existingRecipe.value) {
+      controller.abort();
+      existingRecipeData.value = existingRecipe.value; // Use the existing recipe from Strapi
+      console.log(
+        "Recipe already exists in Strapi. Using existing recipe:",
+        existingRecipeData.value
+      );
+      isLoadingRecipes.value = false;
+      updateLocalStorage();
+      loadRecipes();
+      decrementLoggedInCredits();
+      decrementCredits();
+      console.log(
+        "Trying to connect user to existing recipe with id",
+        existingRecipeData.value.id
+      );
+
+      if (user.value) {
+        console.log("User exists, attempting to create userrecipes data");
+        await create("userrecipes", {
+          user: {
+            connect: [user.value.id],
+          },
+          recipe: {
+            connect: [existingRecipeData.value.id],
+          },
+          addedAt: new Date().toISOString(),
+        });
+        triggerUpdate.value++;
+      }
+      console.log("Userrecipes complete...");
+      return;
+    } else {
+      // If the recipe does not exist in Strapi, use the OpenAI generated recipe
+      console.log("No existing recipe value, generating recipe...");
+      fetchRecipes();
+    }
+  } catch (error) {
+    console.error("Error during fetch:", error);
+    isLoadingRecipes.value = false;
+    createRecipesError.value =
+      "An error has occurred. Please try to create another recipe.";
+  }
+};
+
+const newRecipe = ref({});
+
+const fetchRecipes = async () => {
+  // Transform 'value' strings to match expected API format if needed
+  // Example: 'courseBreakfast' to 'Breakfast'
+  const title = titleFromFetch.value;
+  const course = selectedCourseOption.value.replace("course", "") || "Any";
+  const cuisine = cuisineOption.value || "Any";
+  const difficulty = selectedDifficultyOption.value || "Any";
+  const diet = dietOption.value || "Any";
+  const uniqueness = String(sliderValue.value) || "3";
+
+  //console.log("IngredientInput: ", ingredientInput.value);
+
+  // Format ingredients as an array of strings
+  const ingredients = ingredientInput.value;
+
+  //console.log("Ingredients: ", ingredients[0]);
+
+  // Construct the payload object to match RecipeRequest model in Python
+  const payload = {
+    title: title,
     ingredients: ingredients === "" ? "Surprise me" : ingredients,
     course: course === "Any" ? "Any" : course,
     cuisine: cuisine || "Any",
@@ -918,8 +1028,11 @@ const processChunk = async (chunk) => {
       return; // Skip processing this chunk
     }
 
+    Object.assign(newRecipe.value, data);
+
     //console.log("data: ", data);
 
+    /*
     if (data.recipe_name) {
       console.log("data.recipe_name found from GPT: ", data.recipe_name);
       // Slugify the title from OpenAI's response
@@ -931,8 +1044,8 @@ const processChunk = async (chunk) => {
       // Attempt to fetch the existing recipe from Strapi
       existingRecipe.value = await fetchExistingRecipeFromStrapi(titleSlug);
       console.log("existingRecipe.value: ", existingRecipe.value);
-    }
-
+    }*/
+    /*
     if (existingRecipe.value) {
       controller.abort();
       existingRecipeData.value = existingRecipe.value; // Use the existing recipe from Strapi
@@ -955,6 +1068,7 @@ const processChunk = async (chunk) => {
           connect: [user.value?.id || null],
         },
       });*/
+    /*
       if (user.value) {
         console.log("User exists, attempting to create userrecipes data");
         await create("userrecipes", {
@@ -973,7 +1087,7 @@ const processChunk = async (chunk) => {
     } else {
       // If the recipe does not exist in Strapi, use the OpenAI generated recipe
       Object.assign(newRecipe.value, data);
-    }
+    }*/
   } catch (e) {
     isLoadingRecipes.value = false;
     console.error("Error parsing chunk:", chunk, e);
@@ -1174,7 +1288,7 @@ async function decrementLoggedOutCredits() {
 
 // Slider for Uniquness Level
 const slider = ref(null);
-const sliderValue = ref(2); // Default value
+const sliderValue = ref(3); // Default value
 
 const updateSliderFill = () => {
   if (slider.value) {

@@ -69,7 +69,12 @@
             <p><b>Cuisine:</b> {{ recipe.cuisine }}</p>
             <p
               v-if="
-                recipe.diet_type_if_set && recipe.diet_type_if_set != 'None'
+                recipe.diet_type_if_set &&
+                recipe.diet_type_if_set != 'None' &&
+                recipe.diet_type_if_set != 'N/A' &&
+                recipe.diet_type_if_set != 'NA' &&
+                recipe.diet_type_if_set != 'Not Available' &&
+                recipe.diet_type_if_set != 'n/a'
               "
             >
               <b>Diet:</b> {{ recipe.diet_type_if_set }}

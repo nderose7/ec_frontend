@@ -19,10 +19,18 @@ export default defineNuxtConfig({
   colorMode: {
     classSuffix: ""
   },
-  runtimeConfig: {
+    runtimeConfig: {
     public: {
       strapiURL: process.env.STRAPI_URL,
       nodeENV: process.env.NODE_ENV,
+      stripeKey: process.env.STRIPE_KEY,
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://www.eatclassy.com',
+      siteName: 'EatClassy',
+      siteDescription: 'Create original recipes from any idea, ingredient, region, cuisine, or dietary need.',
+      language: 'en', // prefer more explicit language codes like `en-AU` over `en`
+      gtag: {
+        id: ''
+      }
     }
   },
 })

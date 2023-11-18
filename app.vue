@@ -146,7 +146,7 @@ button.link,
   height: 100vh; /* Default height */
   @screen lg {
     /* Tailwind's way to apply media queries */
-    height: calc(100vh - 212px); /* Adjusted height for large screens */
+    height: calc(100vh - 190px); /* Adjusted height for large screens */
   }
 }
 .dark .toast-style {

@@ -50,10 +50,12 @@
                   recipe.diet_type_if_set &&
                   recipe.diet_type_if_set != 'None' &&
                   recipe.diet_type_if_set != 'N/A' &&
+                  recipe.diet_type_if_set != 'NA' &&
+                  recipe.diet_type_if_set != 'Not Available' &&
                   recipe.diet_type_if_set != 'n/a'
                 "
               >
-                <b>Cuisine:</b> {{ recipe.recipe.diet_type_if_set }}
+                <b>Diet:</b> {{ recipe.diet_type_if_set }}
               </p>
             </div>
             <div class="flex gap-5 text-base mb-4">

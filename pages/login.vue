@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="landing-managed"
-    class="h-screen px-4 text-center dark:bg-midnight-900 bg-slate-100"
-  >
+  <div class="h-screen px-4 text-center dark:bg-midnight-900 bg-slate-100">
     <div class="h-screen flex items-center justify-center">
       <div class="xl:w-1/5 lg:w-1/3 min-w-[320px]">
         <div

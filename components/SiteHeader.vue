@@ -4,7 +4,7 @@
   >
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-10 font-bold py-3 lg:py-0">
-        <div class="flex items-end lg:mr-16">
+        <div class="flex items-end lg:mr-16 xl:mr-48">
           <div class="pt-1">
             <Logo />
 
