@@ -6,7 +6,7 @@
   >
     <div class="">
       <h1 class="mb-3 text-4xl font-bold">Sign Up</h1>
-      <p class="mb-6">Get 50 free credits, save recipes, and more.</p>
+      <p class="mb-6">Get 25 free credits, save recipes, and more.</p>
     </div>
     <div class="mt-5 hidden">
       <a
