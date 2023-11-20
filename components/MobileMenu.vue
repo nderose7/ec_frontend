@@ -29,11 +29,13 @@
         </li>
         <div v-else class="flex gap-4 mt-5">
           <NuxtLink
+            @click="emitCloseMenu"
             to="/sign-up"
             class="btn-primary btn-lg text-center font-bold block mt-1 mb-1 w-full"
             >Sign Up</NuxtLink
           >
           <NuxtLink
+            @click="emitCloseMenu"
             to="/login"
             class="btn-primary btn-lg text-center font-bold block mt-1 mb-1 w-full"
             >Login</NuxtLink
