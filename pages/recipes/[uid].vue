@@ -23,7 +23,9 @@
         </div>
         <div class="w-full">
           <div>
-            <h1 class="mb-4 lg:text-5xl leading-tight lg:leading-tight">
+            <h1
+              class="mb-4 lg:text-5xl text-3xl leading-tight lg:leading-tight"
+            >
               {{ recipe?.attributes.recipe_name }}
             </h1>
             <div v-if="user" class="mb-5">

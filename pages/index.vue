@@ -1,6 +1,10 @@
 <template>
   <div class="xl:flex h-full">
-    <RecipesLoggedIn v-if="user" :triggerUpdate="triggerUpdate" />
+    <RecipesLoggedIn
+      v-if="user"
+      :triggerUpdate="triggerUpdate"
+      class="hidden lg:inline-block"
+    />
     <Recipes v-else :recipes="recipes" />
     <div class="w-full px-5 xl:px-10 pb-48 min-[1600px]:flex gap-10">
       <div
@@ -47,7 +51,7 @@
                 Course
               </label>
             </button>
-            <div v-if="showCourseOptions" class="md:flex gap-4 mb-3 m-2">
+            <div v-if="showCourseOptions" class="lg:flex gap-4 mb-0 m-2">
               <label class="custom-radio">
                 <input
                   type="radio"
@@ -121,6 +125,26 @@
                 Dessert
               </label>
             </div>
+            <div v-if="showCourseOptions" class="lg:flex gap-4 mb-3 mx-2">
+              <label class="custom-radio">
+                <input
+                  type="radio"
+                  v-model="selectedCourseOption"
+                  value="courseCocktail"
+                />
+                <span class="radio-circle"></span>
+                Cocktail
+              </label>
+              <label class="custom-radio">
+                <input
+                  type="radio"
+                  v-model="selectedCourseOption"
+                  value="courseMocktail"
+                />
+                <span class="radio-circle"></span>
+                Mocktail
+              </label>
+            </div>
           </div>
 
           <div class="search-filter">
@@ -143,7 +167,6 @@
                 placeholder="Example: Italy or pasta"
                 class="rounded-lg"
               />
-              <p class="text-base italic">Try Lactose Intolerant,</p>
             </div>
           </div>
 
@@ -264,7 +287,7 @@
                 ref="inputRef"
               />
             </div>
-
+            <div class="scroll-target mt-1"></div>
             <div>
               <button
                 type="submit"
@@ -281,15 +304,18 @@
             </div>
           </div>
         </form>
-        <div class="xl:pb-20 pb-10">
-          <div class="md:flex min-[1600px]:px-32 justify-between">
-            <p class="text-base italic pt-1 pl-1 text-slate-500">
-              Try a recipe name, ingredients, cuisine, or surprise me...
-            </p>
-            <div class="text-base font-medium lg:text-right pb-3 pt-2 md:pt-1">
+        <div class="xl:pb-12 pb-10">
+          <div class="min-[1600px]:px-32">
+            <div class="">
+              <SearchSuggestions />
+            </div>
+            <div class="text-base font-medium text-right pb-3 pt-2 md:pt-1">
               <span class="pl-1"
-                ><span v-if="user">{{ freeCreditsLeft }} free credits left</span
-                ><CreditsAnon v-else />
+                ><span v-if="user && !user.paidMembershipTierThree"
+                  ><b>{{ freeCreditsLeft }}</b>
+                  {{ user.freeAccount ? "free" : "" }} credits left</span
+                >
+                <CreditsAnon v-else-if="!user" />
               </span>
             </div>
           </div>
@@ -313,7 +339,7 @@
           <Icon name="svg-spinners:3-dots-bounce" size="2rem" class="ml-3" />
         </div>
 
-        <div class="min-[1600px]:px-32">
+        <div class="min-[1600px]:px-32 pb-12">
           <div v-if="!existingRecipeData" class="">
             <div class="lg:flex items-top justify-between gap-16">
               <div class="lg:order-2 lg:w-1/3 text-center mb-5 lg:mb-0">
@@ -682,7 +708,7 @@
           </div>
         </div>
         <SignUpOffer v-if="!user" />
-        <MembershipOffer v-if="user && !paidMemberTierOne" />
+        <MembershipOffer v-if="user && !user.paidMembershipTierThree" />
         <LatestRecipes />
       </div>
     </div>
@@ -819,8 +845,9 @@ const fetchRecipeTitle = async () => {
     return;
   }
   isLoadingRecipes.value = true;
-  if (inputRef.value) {
-    inputRef.value.scrollIntoView({ behavior: "smooth" });
+  const scrollTarget = document.querySelector(".scroll-target");
+  if (scrollTarget) {
+    scrollTarget.scrollIntoView({ behavior: "smooth" });
   }
   // Transform 'value' strings to match expected API format if needed
   // Example: 'courseBreakfast' to 'Breakfast'
@@ -1091,10 +1118,9 @@ const processChunk = async (chunk) => {
   } catch (e) {
     isLoadingRecipes.value = false;
     console.error("Error parsing chunk:", chunk, e);
-    /*createRecipesError.value =
+    createRecipesError.value =
       "An error has occurred. Please try to create another recipe.";
     // Handle parsing error or ignore the chunk
-    */
   }
 };
 
@@ -1206,9 +1232,9 @@ const formattedNotes = computed(() => {
   if (!newRecipe.value.cooking_notes) {
     return [];
   }
-  // Split the ingredients string into an array, trim each item to remove extra spaces
+  // Split the notes string into an array using a regular expression that matches dashes that are not attached to words
   return newRecipe.value.cooking_notes
-    .split("-")
+    .split(/\s-\s|^-|-\s|\s-$/)
     .map((note) => note.trim())
     .filter(Boolean);
 });
@@ -1219,7 +1245,7 @@ const existingFormattedNotes = computed(() => {
   }
   // Split the ingredients string into an array, trim each item to remove extra spaces
   return existingRecipeData.value.attributes.cooking_notes
-    .split("-")
+    .split(/\s-\s|^-|-\s|\s-$/)
     .map((note) => note.trim())
     .filter(Boolean);
 });

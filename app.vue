@@ -39,8 +39,14 @@ body {
 .btn-outline-filled {
   @apply border px-3 py-1  bg-brand-500 text-white dark:border-brand-500 border-brand-500 hover:bg-brand-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
 }
+.btn-white {
+  @apply rounded-lg dark:text-slate-400 bg-white border border-slate-300 dark:border-midnight-100 px-6 pt-[5px] pb-2 text-center text-lg font-bold  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-midnight-400 dark:hover:bg-midnight-200 dark:focus:ring-gray-800 hover:dark:text-white;
+}
 .btn-gray {
-  @apply rounded-full dark:text-slate-400 bg-white border border-slate-300 dark:border-midnight-100 px-6 pt-[5px] pb-2 text-center text-lg font-bold  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-midnight-400 dark:hover:bg-midnight-200 dark:focus:ring-gray-800 hover:dark:text-white;
+  @apply rounded-lg dark:text-slate-400 bg-slate-100 border border-slate-300 dark:border-midnight-100 px-6 pt-[5px] pb-2 text-center text-lg font-bold  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-midnight-400 dark:hover:bg-midnight-200 dark:focus:ring-gray-800 hover:dark:text-white;
+}
+.btn-danger {
+  @apply bg-red-600 dark:bg-red-800 text-white px-6 py-3 rounded-lg font-bold;
 }
 .btn-sm {
   @apply px-3 pt-[2px] pb-[4px] text-base rounded-lg;
@@ -143,7 +149,7 @@ button.link,
   @apply mb-6;
 }
 .h-screen-minus-header {
-  height: 100vh; /* Default height */
+  /*height: 100vh; /* Default height */
   @screen lg {
     /* Tailwind's way to apply media queries */
     height: calc(100vh - 190px); /* Adjusted height for large screens */
@@ -152,22 +158,22 @@ button.link,
 .dark .toast-style {
   @apply text-white;
   background: #161a20 !important;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 h2.swal2-title {
-  font-size: 22px !important;
+  font-size: 20px !important;
   margin-bottom: 4px !important;
   margin-left: 16px !important;
   margin-top: 0 !important;
 }
 
 .dark .swal2-icon.swal2-success [class^="swal2-success-line"] {
-  background-color: #a5b4fc !important;
+  background-color: #a5fca9 !important;
 }
 
 .dark .swal2-icon.swal2-success .swal2-success-ring {
-  border-color: rgba(118, 104, 246, 0.3) !important;
+  border-color: rgba(114, 246, 104, 0.3) !important;
 }
 
 ::placeholder {

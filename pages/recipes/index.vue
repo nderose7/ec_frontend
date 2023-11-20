@@ -2,9 +2,12 @@
   <div class="container mx-auto mt-10 xl:pr-96 pb-48">
     <div class="flex items-top justify-between">
       <div>
-        <h1 class="font-bold">Browse Recipes</h1>
+        <h1 class="font-bold my-4 text-3xl lg:text-4xl">Browse Recipes</h1>
       </div>
-      <div class="pagination-controls text-center">
+      <div
+        v-if="recipes.length"
+        class="pagination-controls text-center hidden lg:block"
+      >
         <button
           class="btn-primary p-2 px-4 font-semibold"
           @click="previousPage"
@@ -24,8 +27,8 @@
     </div>
 
     <form
-      @submit.prevent="fetchRecipes"
-      class="search-bar form-control mt-5 flex mb-2 relative"
+      @submit.prevent="handleSearch"
+      class="search-bar form-control mt-2 flex mb-2 relative"
     >
       <Icon
         name="bx:search"
@@ -35,17 +38,45 @@
       />
       <input
         type="text"
-        placeholder="Recipe, ingredients, or cuisine..."
-        class="rounded-lg force-padding-left"
+        placeholder="Recipe, ingredients, cuisine, or diet..."
+        class="rounded-l-lg force-padding-left"
         v-model="ingredientInput"
         @focus="isInputFocused = true"
         @blur="isInputFocused = false"
       />
+      <button
+        type="submit"
+        class="bg-brand-500 text-white mb-1 rounded-r-lg border-brand-500 border-r border-t border-b inline-block py-3"
+      >
+        <div class="px-4">
+          <Icon
+            name="mdi:arrow-right"
+            class="icon-style text-white"
+            size="1.5rem"
+          />
+        </div>
+      </button>
     </form>
-    <div v-if="!recipes.length" class="text-center my-20">
-      <p>Loading recipes...</p>
+    <div v-if="loadingRecipes">
+      <Icon name="svg-spinners:3-dots-bounce" size="3rem" class="ml-3 my-3" />
+    </div>
+    <div v-if="!recipes.length && !loadingRecipes" class="text-center my-20">
+      <p>No recipes found.</p>
     </div>
     <div v-else class="">
+      <div class="meta flex justify-between my-5">
+        <div class="font-bold">
+          Found {{ numberRecipesFound }} recipes
+          <span v-if="isSearchActive && searchQueryValue !== ''"
+            >for "{{ searchQueryValue }}"</span
+          >
+        </div>
+        <div>
+          <button v-if="ingredientInput" @click="clearResults" class="link">
+            Clear Results
+          </button>
+        </div>
+      </div>
       <div
         v-for="recipe in recipes"
         :key="recipe.id"
@@ -96,7 +127,7 @@
         </div>
       </div>
     </div>
-    <div class="pagination-controls text-center mt-10">
+    <div v-if="recipes.length" class="pagination-controls text-center mt-10">
       <button
         class="btn-primary p-2 px-4 font-semibold"
         @click="previousPage"
@@ -127,31 +158,74 @@ const recipes = ref([]);
 const currentPage = ref(1);
 const pageSize = 10; // or any other number you prefer
 const totalRecipes = ref(0);
+const numberRecipesFound = ref(0);
 const totalPages = computed(() => Math.ceil(totalRecipes.value / pageSize));
 const ingredientInput = ref("");
 const isInputFocused = ref(false);
+const isSearchActive = ref(false);
+const searchQueryValue = ref("");
+const loadingRecipes = ref(false);
 
 const isLastPage = computed(() => currentPage.value >= totalPages.value);
 
-const fetchRecipes = async (page = 1) => {
+const fetchRecipes = async (page = 1, searchQuery = ingredientInput.value) => {
+  loadingRecipes.value = true;
   console.log("Fetching recipes...");
-  const recipesData = await find("recipes", {
+  let queryParams = {
     pagination: { page, pageSize },
-    populate: ["userdata", "image"],
-  });
-  console.log("Data: ", recipesData);
+    populate: ["image"],
+  };
 
-  if (recipesData) {
-    recipes.value = recipesData?.data.map((recipeEntity) => ({
-      id: recipeEntity.id,
-      ...recipeEntity.attributes,
-    }));
-    totalRecipes.value = recipesData?.meta.pagination.total;
+  searchQueryValue.value = searchQuery;
+
+  if (isSearchActive.value && searchQuery) {
+    queryParams.filters = {
+      $or: [
+        { recipe_name: { $containsi: searchQuery } },
+        { ingredients: { $containsi: searchQuery } },
+        { cuisine: { $containsi: searchQuery } },
+        { course: { $containsi: searchQuery } },
+        { diet_type_if_set: { $containsi: searchQuery } },
+        // Add more fields here if needed
+      ],
+    };
   }
+
+  try {
+    const recipesData = await find("recipes", queryParams);
+    console.log("Data: ", recipesData);
+
+    if (recipesData) {
+      recipes.value = recipesData.data.map((recipeEntity) => ({
+        id: recipeEntity.id,
+        ...recipeEntity.attributes,
+      }));
+      totalRecipes.value = recipesData.meta.pagination.total;
+
+      // Update numberRecipesFound based on whether a search is active
+      numberRecipesFound.value = isSearchActive.value
+        ? recipesData.meta.pagination.total
+        : totalRecipes.value;
+    }
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    // Handle the error appropriately
+  }
+  loadingRecipes.value = false;
+};
+
+const handleSearch = () => {
+  currentPage.value = 1; // Reset to first page for new search
+  isSearchActive.value = true; // Set search as active
+  fetchRecipes(currentPage.value, ingredientInput.value);
 };
 
 watch(currentPage, (newPage) => {
-  fetchRecipes(newPage);
+  if (isSearchActive.value) {
+    fetchRecipes(newPage, ingredientInput.value);
+  } else {
+    fetchRecipes(newPage);
+  }
 });
 
 const previousPage = () => {
@@ -164,8 +238,30 @@ const nextPage = () => {
 
 onMounted(() => {
   console.log("Fetching recipes...");
+  fetchTotalRecipeCount();
   fetchRecipes();
 });
+
+const clearResults = () => {
+  ingredientInput.value = "";
+  isSearchActive.value = false;
+  currentPage.value = 1;
+  fetchTotalRecipeCount();
+  fetchRecipes();
+};
+
+const fetchTotalRecipeCount = async () => {
+  try {
+    const response = await find("recipes", {
+      pagination: { page: 1, pageSize: 1 },
+    });
+    if (response && response.meta) {
+      numberRecipesFound.value = response.meta.pagination.total;
+    }
+  } catch (error) {
+    console.error("Error fetching total recipe count:", error);
+  }
+};
 </script>
 
 <style scoped>

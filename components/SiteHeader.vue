@@ -4,7 +4,16 @@
   >
     <div class="flex justify-between items-center">
       <div class="flex items-center gap-10 font-bold py-3 lg:py-0">
-        <div class="flex items-end lg:mr-16 xl:mr-48">
+        <div class="flex lg:items-end items-center lg:mr-16 xl:mr-48">
+          <button @click="toggleMenu" class="lg:hidden">
+            <Icon
+              v-if="!showMobileMenu"
+              name="bx:menu"
+              class="icon-style pr-1"
+              size="2.25rem"
+            />
+            <Icon v-else name="bx:x" class="icon-style pr-1" size="2.25rem" />
+          </button>
           <div class="pt-1">
             <Logo />
 
@@ -16,9 +25,7 @@
         <div class="items-center main-nav gap-10 hidden lg:flex">
           <NuxtLink to="/">Create Recipes</NuxtLink>
           <NuxtLink to="/recipes">Browse Recipes</NuxtLink>
-          <NuxtLink to="/recipes/favorites" v-if="userValue"
-            >Your Favorites</NuxtLink
-          >
+          <NuxtLink to="/favorites" v-if="userValue">Your Favorites</NuxtLink>
         </div>
       </div>
       <div v-if="user" class="relative">
@@ -26,7 +33,7 @@
       </div>
       <div
         v-else
-        class="text-right lg:flex items-center gap-3"
+        class="text-right flex items-center gap-3"
         :class="route.path === '/sign-up' ? 'hidden lg:hidden' : ''"
       >
         <NuxtLink
@@ -56,11 +63,20 @@ const onLogout = () => {
 };
 
 const userValue = user.value;
+
+const props = defineProps({
+  showMobileMenu: Boolean,
+});
+const emit = defineEmits(["toggleMenu"]);
+
+const toggleMenu = () => {
+  emit("toggleMenu");
+};
 </script>
 
 <style scoped>
 .main-nav a {
-  @apply py-6 border-b-2 border-transparent;
+  @apply py-6 border-b-2 border-transparent hover:text-brand-500 hover:border-slate-300 dark:hover:border-slate-700;
 }
 .main-nav .router-link-active {
   @apply text-brand-500 border-b-2 border-brand-500;

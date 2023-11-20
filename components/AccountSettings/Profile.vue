@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full pb-20">
+  <div class="w-full pb-20 px-5">
     <Form class="vue-form form-control rounded-lg text-left" @submit="onSubmit">
       <div class="">
         <div class="mb-5 w-full text-lg">
@@ -15,7 +15,7 @@
       </div>
       <label for="email" class="block pt-0 font-bold">Your Email</label>
       <div
-        class="mb-5 rounded-xl bg-slate-200 px-8 pt-8 pb-6 dark:bg-midnight-800"
+        class="mb-5 rounded-xl bg-slate-200 px-8 pt-8 pb-6 dark:bg-midnight-600"
       >
         <div class="mb-2 text-lg">
           <div class="relative">
@@ -71,7 +71,7 @@
 
       <label for="fullName" class="block font-bold">Avatar</label>
       <div
-        class="mb-5 rounded-xl bg-slate-200 px-8 pt-8 pb-2 dark:bg-midnight-800"
+        class="mb-5 rounded-xl bg-slate-200 px-8 pt-8 pb-2 dark:bg-midnight-600"
       >
         <div class="gap-5 md:flex">
           <div
@@ -87,7 +87,7 @@
             >
               <img
                 v-if="userData.data[0].attributes.avatar.data"
-                :src="`${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
+                :src="`${strapiURL}${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
                 alt="avatar"
                 class="h-[60px] w-[60px] cursor-pointer rounded-full"
               />
@@ -132,13 +132,13 @@ input::file-selector-button {
   padding: 0.1rem 0.75rem;
   margin-right: 0.75rem;
   border-radius: 20px;
-  border: thin solid #3b58ed;
+  border: thin solid;
   cursor: pointer;
-  @apply bg-blue-500 hover:bg-blue-700;
+  @apply bg-brand-500 hover:bg-brand-600 border-brand-500;
 }
 input::file-selector-button:active,
 input::file-selector-button:focus {
-  @apply border border-blue-800 bg-blue-700;
+  @apply border border-brand-500 bg-brand-600;
 }
 </style>
 
@@ -151,10 +151,10 @@ const route = useRoute();
 const { find, findOne, create, update, delete: remove } = useStrapi();
 
 const { data: userData, refresh } = await useAsyncData("userdata", () =>
-  findOne("userdatas", {
+  find("userdatas", {
     populate: ["owner", "avatar"],
     filters: {
-      owner: user.value.id,
+      owner: user.value?.id,
     },
   })
 );

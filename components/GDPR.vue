@@ -1,7 +1,7 @@
 <template>
-  <div v-if="!gdprDismissed" class="text-center sticky bottom-6">
+  <div v-if="!gdprDismissed" class="text-center sticky xl:bottom-6 bottom-0">
     <div
-      class="flex text-left gap-10 max-w-[600px] mx-auto bg-brand-500 p-10 py-6 rounded-lg justify-between"
+      class="flex text-left gap-10 max-w-[600px] mx-auto bg-brand-500 p-10 py-6 xl:rounded-lg justify-between items-center"
     >
       <div class="w-full">
         <p class="font-bold text-white">
@@ -21,8 +21,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-
 // Reactive property for GDPR dismissed state
 const gdprDismissed = ref(true);
 

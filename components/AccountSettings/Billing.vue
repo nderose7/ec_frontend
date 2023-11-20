@@ -1,8 +1,8 @@
 <template>
-  <div v-if="loading">
+  <div v-if="loading" class="px-5">
     <Icon name="svg-spinners:bars-scale" size="3rem" class="mt-2" />
   </div>
-  <div v-else-if="dataLoaded" class="w-full">
+  <div v-else-if="dataLoaded" class="w-full px-5">
     <div v-if="stripeUserData?.subscriptions?.length > 0" class="w-full">
       <div
         v-for="subscription in stripeUserData.subscriptions"
@@ -34,7 +34,7 @@
                 subscription.pause_collection !== null
               "
               status-value="Active"
-              class="inline-block rounded-lg bg-midnight-300 px-2 py-1"
+              class="inline-block rounded-lg dark:bg-midnight-300 px-2 py-1"
             >
               <template v-slot:statusValue
                 ><span>Active (Paused)</span></template
@@ -47,14 +47,14 @@
                 subscription.pause_collection == null
               "
               status-value="Active"
-              class="inline-block rounded-lg bg-midnight-300 px-2 py-1"
+              class="inline-block rounded-lg dark:bg-midnight-300 px-2 py-1"
             >
               <template v-slot:statusValue><span>Active</span></template>
             </Status>
             <Status
               v-if="subscription.active && subscription.canceled"
               status-value="Active"
-              class="inline-block rounded-lg bg-midnight-300 px-2 py-1"
+              class="inline-block rounded-lg dark:bg-midnight-300 px-2 py-1"
             >
               <template v-slot:statusValue
                 ><span>Active (Not Renewing)</span></template
@@ -63,7 +63,7 @@
             <Status
               v-if="!subscription.active"
               status-value="Inactive"
-              class="inline-block rounded-lg bg-midnight-300 px-2 py-1"
+              class="inline-block rounded-lg dark:bg-midnight-300px-2 py-1"
             >
               <template v-slot:statusValue><span>Inactive</span></template>
             </Status>
@@ -101,7 +101,7 @@
                 "
                 type="button"
                 @click="pauseSubscription(subscription.subscriptionId)"
-                class="block my-4 lg:my-0 p-2 dark:bg-midnight-200 bg-slate-100 link rounded-full border dark:border-midnight-100"
+                class="block my-4 lg:my-0 p-2 dark:bg-midnight-800 bg-slate-100 link rounded-lg border dark:border-midnight-100"
               >
                 <Icon name="mdi:pause" class="icon-style" /> Pause Subscription
               </button>
@@ -112,7 +112,7 @@
                 "
                 type="button"
                 @click="resumeSubscription(subscription.subscriptionId)"
-                class="block p-2 dark:bg-midnight-200 bg-slate-100 rounded-full link border dark:border-midnight-100"
+                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100"
               >
                 <Icon
                   name="material-symbols:resume"
@@ -125,20 +125,20 @@
                 v-if="!subscription.canceled"
                 type="button"
                 @click="openCancelModal(subscription.subscriptionId)"
-                class="block p-2 dark:bg-midnight-200 bg-slate-100 rounded-full link border dark:border-midnight-100"
+                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100"
               >
                 <Icon name="mdi:cancel" class="icon-style" /> Cancel
                 Subscription
               </button>
             </div>
-            <button
+            <NuxtLink
               v-if="subscription.canceled"
               type="button"
-              @click="renewSubscription(subscription.priceId)"
-              class="btn-primary inline-block"
+              to="/membership"
+              class="btn-primary inline-block px-3 py-2 font-semibold"
             >
               <Icon name="bx:redo" class="icon-style" /> Renew Subscription
-            </button>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -148,17 +148,8 @@
       class="tile-no-hover p-5 w-full bg-slate-100 dark:bg-midnight-900 rounded-lg"
     >
       <h3>Looks like you don't have any active subscriptions!</h3>
-      <button
-        v-if="!userData.data[0].attributes.freeAccount"
-        type="button"
-        @click="renewSubscription(tutorialsSubscriptionPriceId)"
-        class="btn-primary inline-block mt-5 py-2 px-4 font-bold"
-      >
-        Purchase Subscription
-      </button>
       <NuxtLink
-        v-else-if="userData.data[0].attributes.freeAccount"
-        to="/upgrade"
+        to="/membership"
         class="btn-primary inline-block mt-5 py-2 px-4 font-bold"
       >
         Purchase Subscription
@@ -173,9 +164,9 @@
       <button
         type="button"
         @click="showModal = false"
-        class="close absolute right-3 top-0 dark:hover:text-slate-300"
+        class="close absolute right-3 top-2 dark:hover:text-slate-300"
       >
-        <Icon name="bx:x" size="2rem" />
+        <Icon name="bx:x" size="2.5rem" />
       </button>
       <div class="text-center w-full">
         <Icon name="jam:triangle-danger" size="4rem" class="text-red-600" />
@@ -206,7 +197,7 @@
 
 <style scoped>
 .billing-tile {
-  @apply rounded-lg dark:bg-midnight-800 bg-white p-5 mb-4 dark:border-midnight-100 border;
+  @apply rounded-lg dark:bg-midnight-900 bg-white p-5 mb-4 dark:border-midnight-100 border;
 }
 h2 {
   @apply dark:text-blue-200;
@@ -223,7 +214,7 @@ const { Toast } = swalMixins.data();
 const { find, findOne, create, update, delete: remove } = useStrapi();
 
 const {
-  public: { strapiURL },
+  public: { strapiURL, stripeKey },
 } = useRuntimeConfig();
 
 const tutorialsSubscriptionPriceId = "price_0NpYh7Ie9L9WfGDJlgozYg5m";
@@ -239,7 +230,7 @@ const user = useStrapiUser();
 const stripe = ref(null);
 
 const initializeStripe = async () => {
-  stripe.value = await loadStripe("pk_test_ig399xZp9qYR2Znjsi1MNwnU");
+  stripe.value = await loadStripe(stripeKey);
 };
 
 const fetchUserData = async () => {
@@ -459,7 +450,7 @@ const openCancelModal = (subscriptionId) => {
   top: 0;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.8);
-  @apply pt-60 w-full h-full;
+  @apply pt-60 w-full h-full  px-5;
 }
 
 .close {
@@ -477,9 +468,8 @@ const openCancelModal = (subscriptionId) => {
 }
 
 .modal-content {
-  @apply dark:bg-midnight-900 bg-slate-100 p-20 rounded-lg dark:border-midnight-100 border;
-  margin: 5% auto;
+  @apply dark:bg-midnight-900 bg-slate-100 p-20 rounded-lg dark:border-midnight-100 border lg:w-5/12 mx-auto;
+
   padding: 50px;
-  width: 40%;
 }
 </style>

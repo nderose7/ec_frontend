@@ -35,8 +35,8 @@
           }"
         >
           <img
-            :src="`${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
-            class="inline-block h-[40px] w-[40px] cursor-pointer rounded-full border border-midnight-100 hover:opacity-80 dark:border-midnight-100"
+            :src="`${strapiURL}${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
+            class="inline-block h-[40px] w-[40px] cursor-pointer rounded-full border border-slate-100 hover:opacity-80 dark:border-midnight-100"
           />
         </button>
 
@@ -58,20 +58,24 @@
                 user?.email ? truncateString(user?.email, 24) : ""
               }}
             </div>
-            <div
-              v-if="paidTutorials"
-              class="mt-3 p-1 px-4 rounded-full bg-green-100 dark:bg-green-600 w-fit dark:text-midnight-100"
+            <NuxtLink
+              to="/settings/billing"
+              v-if="!user.freeAccount"
+              class="mt-3 p-1 px-3 inline-block rounded-full bg-green-100 dark:bg-midnight-900 dark:text-brand-500 w-fit"
             >
-              <Icon name="bx:check-circle" class="icon-style" /> Paid Tutorials
-              Member
-            </div>
+              <Icon name="bx:check-circle" class="icon-style" /> Paid Member:
+              {{ membershipType }}
+            </NuxtLink>
             <div
               v-else
               class="mt-3 p-1 px-4 rounded-full bg-slate-100 dark:bg-midnight-900 w-fit"
             >
               <Icon name="bx:check-circle" class="icon-style" /> Free Account
               &nbsp;
-              <NuxtLink to="/membership" class="link text-base"
+              <NuxtLink
+                to="/membership"
+                class="link text-base"
+                @click="openUser = !openUser"
                 >Upgrade</NuxtLink
               >
             </div>
@@ -106,6 +110,10 @@
 <script setup>
 import { truncateString } from "~/utils/truncateString.js";
 const user = useStrapiUser();
+
+const {
+  public: { strapiURL },
+} = useRuntimeConfig();
 
 let openUser = ref();
 const { logout } = useStrapiAuth();
@@ -159,6 +167,17 @@ const paidTutorials = computed(() => {
 const hasAvatar = computed(() => {
   if (userData.value?.data[0]?.attributes?.avatar?.data) {
     return true;
+  }
+  return false;
+});
+
+const membershipType = computed(() => {
+  if (user.value.paidMembershipTierOne) {
+    return "50/month";
+  } else if (user.value.paidMembershipTierTwo) {
+    return "120/month";
+  } else if (user.value.paidMembershipTierThree) {
+    return "Unlimited";
   }
   return false;
 });

@@ -45,7 +45,7 @@
         ></div>
         <div v-if="user">
           <p class="mt-5 text-center">
-            <NuxtLink to="/recipes/favorites" class="link"
+            <NuxtLink to="/favorites" class="link"
               >Go To Favorites
               <Icon name="mdi:arrow-right" class="icon-style" />
             </NuxtLink>

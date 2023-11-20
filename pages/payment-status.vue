@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen px-4 text-center dark:bg-midnight-900 bg-slate-100">
+  <div class="h-screen px-4 text-center">
     <div class="h-screen flex justify-center pt-32">
       <div class="xl:w-1/4 lg:w-1/2 min-w-[320px]">
         <p v-if="loading">Processing payment result...</p>
@@ -9,12 +9,10 @@
             class="text-brand-500"
             size="6rem"
           />
-          <h1 class="mb-2 mt-4">Payment successful!</h1>
+          <h1 class="mb-2 mt-4">Your membership is active!</h1>
           <p>
             To manage your membership, check out the
-            <NuxtLink to="/account-settings/billing" class="link"
-              >Billing</NuxtLink
-            >
+            <NuxtLink to="/settings/billing" class="link">Billing</NuxtLink>
             page.
           </p>
           <NuxtLink
@@ -40,17 +38,17 @@ const loading = ref(true);
 const paymentStatus = ref("");
 
 onMounted(async () => {
-  const paymentIntentId = route.query.paymentIntentId;
-  console.log(paymentIntentId);
+  const subscriptionId = route.query.subscriptionId;
+  console.log(subscriptionId);
   const token = useStrapiToken();
-  // Call your Strapi endpoint to verify the payment
-  const response = await fetch(`${strapiURL}/api/payments/verify`, {
+  // Call your Strapi endpoint to verify the subscription
+  const response = await fetch(`${strapiURL}/api/verify-subscription`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token.value}`,
     },
-    body: JSON.stringify({ paymentIntentId: paymentIntentId }),
+    body: JSON.stringify({ subscriptionId: subscriptionId }),
   });
 
   const result = await response.json();

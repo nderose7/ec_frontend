@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div
-      class="vue-form form-control rounded-xl bg-white p-7 pb-2 pt-6 text-left dark:bg-midnight-900 lg:mx-0 border dark:border-midnight-100"
+      class="vue-form form-control rounded-xl bg-white p-7 pb-6 pt-6 text-left dark:bg-midnight-900 lg:mx-0 border dark:border-midnight-100"
     >
       <label for="username" class="mb-2 block text-2xl font-bold"
         ><Icon name="lucide:sprout" size="1.25rem" class="icon-style" /> Account
@@ -33,7 +33,7 @@
           <p><b>Please exercise caution.</b></p>
 
           <button
-            class="btn-danger rounded-full"
+            class="btn-danger rounded-full inline-block mt-4"
             @click="showModal = !showModal"
           >
             <Icon name="jam:triangle-danger" class="icon-style" /> Delete My

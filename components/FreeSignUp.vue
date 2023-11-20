@@ -56,16 +56,21 @@
           >
             <Icon :name="`${showPassword ? 'mdi:eye-off' : 'mdi:eye'}`" />
           </button>
+          <div v-if="password" class="password-strength">
+            <div
+              :class="getStrengthColor(passwordStrength)"
+              class="strength-bar h-2 rounded-full"
+              :style="{ width: passwordStrength * 25 + '%' }"
+            ></div>
+          </div>
         </div>
       </div>
 
       <p class="mt-4 text-base">
         By signing up, you agree to our
-        <NuxtLink to="/terms" class="text-blue-500">Terms of Use</NuxtLink>
+        <NuxtLink to="/terms" class="link">Terms of Use</NuxtLink>
         and our
-        <NuxtLink to="/privacy" class="text-blue-500"
-          >Privacy Agreement</NuxtLink
-        >. We
+        <NuxtLink to="/privacy" class="link">Privacy Agreement</NuxtLink>. We
         <i>never</i>
         share your data.
       </p>
@@ -87,8 +92,12 @@
 </template>
 
 <style>
-#landing-managed {
-  scroll-behavior: smooth;
+.password-strength {
+  @apply w-full bg-white rounded-full mt-2 border dark:border-midnight-200;
+}
+
+.strength-bar {
+  transition: width 0.3s ease;
 }
 </style>
 
@@ -106,7 +115,7 @@ const {
 const email = ref("");
 const password = ref("");
 const { register } = useStrapiAuth();
-const { update, find } = useStrapi();
+const { update, find, create } = useStrapi();
 
 const debug = ref(false);
 const showPassword = ref(false);
@@ -170,18 +179,18 @@ const schema = object({
     .required()
     .test(
       "password-no-special",
-      "Password must contain at least one special character e.g. ~!@#$%^&*().",
+      "Must contain at least one special character ~!@#$%^&*().",
       async (value) => !(await validatePasswordSpecial(value))
     )
     .test(
       "password-no-number",
-      "Password must contain at least one number.",
+      "Must contain at least one number.",
       async (value) => !(await validatePasswordNumerical(value))
     )
     .min(8)
     .test(
       "password-no-capital",
-      "Password must contain at least one capital letter.",
+      "Must contain at least one capital letter.",
       async (value) => !(await validatePasswordCapital(value))
     )
     .label("Password"),
@@ -199,6 +208,31 @@ const displayErrorMessage = (msg) => {
 
 const displayUsernameField = () => {
   showUsernameField.value = true;
+};
+
+const passwordStrength = computed(() => {
+  let strength = 0;
+  if (regexSpecialCharacters.test(password.value)) strength++;
+  if (regexCapitalLetters.test(password.value)) strength++;
+  if (regexNumerical.test(password.value)) strength++;
+  if (password.value.length >= 8) strength++;
+
+  return strength; // This will be a number between 0-4 based on the criteria met
+});
+
+const getStrengthColor = (strength) => {
+  switch (strength) {
+    case 1:
+      return "bg-brand-500";
+    case 2:
+      return "bg-brand-500";
+    case 3:
+      return "bg-brand-500";
+    case 4:
+      return "bg-brand-500";
+    default:
+      return "bg-transparent";
+  }
 };
 
 const onSubmit = async () => {
@@ -319,25 +353,32 @@ const fetchRecipesFromStrapi = async () => {
     console.log("Total recipes fetched: ", allRecipes.length);
     return allRecipes;
   } catch (error) {
-    console.error("There was a problem with the find operation:", error);
+    console.error("Error with the find operation:", error);
   }
 };
 
 const updateRecipeInStrapi = async (recipeId, userId) => {
   try {
-    const response = await update("recipes", recipeId, {
+    await update("recipes", recipeId, {
       created_by_user: {
         connect: [userId],
       },
     });
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-
-    return response.json();
   } catch (error) {
-    console.error("There was a problem with the fetch operation:", error);
+    console.error("Error with the recipe update:", error);
+  }
+  try {
+    await create("userrecipes", {
+      user: {
+        connect: [userId],
+      },
+      recipe: {
+        connect: [recipeId],
+      },
+      addedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.log("Error creating userrecipe: ", error);
   }
 };
 </script>

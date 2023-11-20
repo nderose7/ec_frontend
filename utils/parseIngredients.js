@@ -9,7 +9,7 @@ export function parseDashesToHTML(ingredientListString) {
 
   // Split the string by "-" while filtering out empty entries and trimming whitespace
   const ingredients = ingredientListString
-    .split('-')
+    .split(/\s-\s|^-|-\s|\s-$/)
     .filter((ingredient) => ingredient.trim() !== '')
     .map((ingredient) => ingredient.trim());
 

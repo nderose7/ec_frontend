@@ -1,8 +1,8 @@
 <template>
   <div class="container mx-auto mt-10 xl:pr-96">
-    <h1 class="font-bold my-4">Your Favorite Recipes</h1>
+    <h1 class="font-bold my-4 text-3xl lg:text-4xl">Your Favorite Recipes</h1>
     <form
-      @submit.prevent="fetchRecipes"
+      @submit.prevent="handleSearch"
       class="search-bar form-control mt-5 flex mb-2 relative"
     >
       <Icon
@@ -14,16 +14,44 @@
       <input
         type="text"
         placeholder="Recipe, ingredients, or cuisine..."
-        class="rounded-lg force-padding-left"
+        class="rounded-l-lg force-padding-left"
         v-model="ingredientInput"
         @focus="isInputFocused = true"
         @blur="isInputFocused = false"
       />
+      <button
+        type="submit"
+        class="bg-brand-500 text-white mb-1 rounded-r-lg border-brand-500 border-r border-t border-b inline-block py-3"
+      >
+        <div class="px-4">
+          <Icon
+            name="mdi:arrow-right"
+            class="icon-style text-white"
+            size="1.5rem"
+          />
+        </div>
+      </button>
     </form>
+    <div v-if="loadingRecipes">
+      <Icon name="svg-spinners:3-dots-bounce" size="3rem" class="ml-3 my-3" />
+    </div>
     <div v-if="favoriteRecipes.length === 0" class="text-center my-20">
       <p>You have no favorite recipes yet.</p>
     </div>
     <div v-else>
+      <div class="meta flex justify-between my-5">
+        <div class="font-bold">
+          Found {{ numberRecipesFound }} recipes
+          <span v-if="isSearchActive && searchQueryValue !== ''"
+            >for "{{ searchQueryValue }}"</span
+          >
+        </div>
+        <div>
+          <button v-if="ingredientInput" @click="clearResults" class="link">
+            Clear Results
+          </button>
+        </div>
+      </div>
       <div
         v-for="recipe in favoriteRecipes"
         :key="recipe.id"
@@ -86,14 +114,42 @@ const favoriteRecipes = ref([]);
 
 const ingredientInput = ref("");
 const isInputFocused = ref(false);
+const isSearchActive = ref(false);
+const numberRecipesFound = ref(0);
+const loadingRecipes = ref(false);
 
 const {
   public: { strapiURL },
 } = useRuntimeConfig();
 
-const fetchFavoriteRecipes = async () => {
+const fetchFavoriteRecipes = async (searchQuery = ingredientInput.value) => {
   if (!user.value) {
     return;
+  }
+
+  let queryParams = {
+    filters: {
+      user: user.value.id,
+    },
+    populate: {
+      recipe: {
+        populate: "image",
+      },
+    },
+    sort: ["favoritedAt:desc"],
+  };
+
+  if (isSearchActive.value && searchQuery) {
+    queryParams.filters.recipe = {
+      $or: [
+        { recipe_name: { $containsi: searchQuery } },
+        { ingredients: { $containsi: searchQuery } },
+        { cuisine: { $containsi: searchQuery } },
+        { course: { $containsi: searchQuery } },
+        { diet_type_if_set: { $containsi: searchQuery } },
+        // Add other recipe fields to search in
+      ],
+    };
   }
 
   try {
@@ -125,6 +181,10 @@ const fetchFavoriteRecipes = async () => {
           favoritedAt: fav.attributes.favoritedAt, // Store the favorited time if needed
         };
       });
+      // Update numberRecipesFound based on whether a search is active
+      numberRecipesFound.value = isSearchActive.value
+        ? recipesData.meta.pagination.total
+        : totalRecipes.value;
     }
   } catch (error) {
     console.error("Failed to fetch favorite recipes:", error);
@@ -132,10 +192,42 @@ const fetchFavoriteRecipes = async () => {
 };
 
 // Fetch favorite recipes on mount
-onMounted(fetchFavoriteRecipes);
+onMounted(() => {
+  console.log("Fetching recipes...");
+  fetchTotalRecipeCount();
+  fetchFavoriteRecipes();
+});
 
 // Optionally, re-fetch favorites when user state changes (e.g., after login/logout)
 watch(user, fetchFavoriteRecipes, { immediate: true });
+
+const handleSearch = () => {
+  isSearchActive.value = true;
+  fetchFavoriteRecipes();
+};
+
+const clearResults = () => {
+  ingredientInput.value = "";
+  isSearchActive.value = false;
+  currentPage.value = 1;
+  fetchTotalRecipeCount();
+  fetchRecipes();
+};
+
+const fetchTotalRecipeCount = async () => {
+  try {
+    const response = await find("userfavorites", {
+      filters: {
+        user: user.value.id,
+      },
+    });
+    if (response && response.meta) {
+      numberRecipesFound.value = response.meta.pagination.total;
+    }
+  } catch (error) {
+    console.error("Error fetching total recipe count:", error);
+  }
+};
 </script>
 
 <style scoped>

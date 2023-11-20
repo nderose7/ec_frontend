@@ -1,6 +1,6 @@
 <template>
   <div class="pb-8 xl:pl-48">
-    <ul class="settings-links text-xl font-bold">
+    <ul class="settings-links text-xl font-bold px-5">
       <li class="mb-4">
         <NuxtLink to="/settings/profile" class="py-2">Profile</NuxtLink>
       </li>
@@ -16,7 +16,7 @@
 
 <style scoped>
 .settings-links .router-link-active {
-  font-weight: bold;
+  @apply font-bold text-brand-500 border-b border-brand-500;
 }
 .settings-links li a,
 .settings-links li {
@@ -24,5 +24,8 @@
 }
 .settings-links li a {
   @apply mr-8;
+}
+.settings-links li a:hover {
+  @apply text-brand-500;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
   <div
-    class="min-[1600px]:w-1/4 lg:w-1/3 px-5 pb-4 lg:sticky lg:top-[82px] h-full lg:border-r dark:border-midnight-600"
+    class="min-[1600px]:w-1/4 w-1/3 px-5 pb-4 hidden xl:block sticky top-[82px] h-full border-r dark:border-midnight-600"
   >
     <div>
       <ul class="xl:pr-2 pt-5">
-        <div class="h-screen-minus-header lg:overflow-y-scroll xl:pl-5">
+        <div class="h-screen-minus-header overflow-y-scroll xl:pl-5">
           <h5
             v-if="recipesFromStrapi.today?.length"
             class="text-sm text-slate-500 mb-3"
@@ -31,7 +31,7 @@
                 </button>
               </div>
               <div>
-                <NuxtLink @click="emitCloseMenu" :to="`/recipes/${recipe.uid}`">
+                <NuxtLink :to="`/recipes/${recipe.uid}`">
                   <h2
                     class="mb-0 text-lg dark:text-slate-300 text-left hover:text-brand-500"
                   >
@@ -83,7 +83,7 @@
                 </button>
               </div>
               <div>
-                <NuxtLink @click="emitCloseMenu" :to="`/recipes/${recipe.uid}`">
+                <NuxtLink :to="`/recipes/${recipe.uid}`">
                   <h2
                     class="mb-0 text-lg dark:text-slate-300 text-left hover:text-brand-500"
                   >
@@ -135,7 +135,7 @@
                 </button>
               </div>
               <div>
-                <NuxtLink @click="emitCloseMenu" :to="`/recipes/${recipe.uid}`">
+                <NuxtLink :to="`/recipes/${recipe.uid}`">
                   <h2
                     class="mb-0 text-lg dark:text-slate-300 text-left hover:text-brand-500"
                   >
@@ -187,7 +187,7 @@
                 </button>
               </div>
               <div>
-                <NuxtLink @click="emitCloseMenu" :to="`/recipes/${recipe.uid}`">
+                <NuxtLink :to="`/recipes/${recipe.uid}`">
                   <h2
                     class="mb-0 text-lg dark:text-slate-300 text-left hover:text-brand-500"
                   >
@@ -244,16 +244,9 @@ const { find, update, delete: _delete, create } = useStrapi();
 const user = useStrapiUser();
 const userFavoritesIds = ref([]);
 
-const pageSize = 25; // Adjust as needed
-let page = ref(1);
-const isFetching = ref(false);
-const endOfList = ref(false);
-
-const emit = defineEmits(["closeMenu"]);
-
-const emitCloseMenu = () => {
-  emit("closeMenu");
-};
+const pageSize = 100;
+let page = 1;
+//let recipesFromStrapi = [];
 
 const props = defineProps({
   triggerUpdate: Number,
@@ -283,16 +276,7 @@ const fetchRecipesFromStrapi = async () => {
           user: user.value?.id,
         },
         sort: ["addedAt:desc"],
-        pagination: {
-          page: page.value,
-          pageSize: pageSize,
-        },
       });
-
-      // ... process the response ...
-      if (userRecipesResponse.length === 0) {
-        endOfList.value = true; // No more recipes to fetch
-      }
 
       if (userRecipesResponse) {
         const recipes = userRecipesResponse.map((userRecipe) => {
