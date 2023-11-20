@@ -95,7 +95,7 @@
             class="text-brand-500 hover:underline"
             ><h2 class="mb-2">{{ recipe.recipe_name }}</h2></nuxt-link
           >
-          <div class="flex gap-5 text-base mb-4">
+          <div class="lg:flex gap-5 text-base mb-4">
             <p><b>Course:</b> {{ recipe.course }}</p>
             <p><b>Cuisine:</b> {{ recipe.cuisine }}</p>
             <p
@@ -111,7 +111,7 @@
               <b>Diet:</b> {{ recipe.diet_type_if_set }}
             </p>
           </div>
-          <div class="flex gap-5 text-base mb-4">
+          <div class="lg:flex gap-5 text-base mb-4">
             <p>
               <Icon name="bx:time" class="icon-style" />
               {{ recipe.total_time }}
