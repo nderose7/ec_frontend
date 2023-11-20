@@ -1,6 +1,26 @@
 <template>
   <div class="container mx-auto mt-10 xl:pr-96">
     <h1 class="font-bold my-4 text-3xl lg:text-4xl">Your Favorite Recipes</h1>
+    <div
+      v-if="favoriteRecipes.length"
+      class="pagination-controls text-center hidden lg:block"
+    >
+      <button
+        class="btn-primary p-2 px-4 font-semibold"
+        @click="previousPage"
+        :disabled="currentPage <= 1"
+      >
+        <Icon name="mdi:arrow-left" class="icon-style" />
+      </button>
+      <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="btn-primary p-2 px-4 font-semibold"
+        @click="nextPage"
+        :disabled="isLastPage"
+      >
+        <Icon name="mdi:arrow-right" class="icon-style" />
+      </button>
+    </div>
     <form
       @submit.prevent="handleSearch"
       class="search-bar form-control mt-5 flex mb-2 relative"
@@ -103,6 +123,26 @@
         </div>
       </div>
     </div>
+    <div
+      v-if="favoriteRecipes.length"
+      class="pagination-controls text-center mt-10"
+    >
+      <button
+        class="btn-primary p-2 px-4 font-semibold"
+        @click="previousPage"
+        :disabled="currentPage <= 1"
+      >
+        <Icon name="mdi:arrow-left" class="icon-style" /> Prev
+      </button>
+      <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        class="btn-primary p-2 px-4 font-semibold"
+        @click="nextPage"
+        :disabled="isLastPage"
+      >
+        Next <Icon name="mdi:arrow-right" class="icon-style" />
+      </button>
+    </div>
   </div>
 </template>
 
@@ -118,25 +158,28 @@ const isSearchActive = ref(false);
 const numberRecipesFound = ref(0);
 const loadingRecipes = ref(false);
 
+const currentPage = ref(1);
+const pageSize = 10; // Adjust the page size as needed
+const totalPages = ref(0);
+const totalFavoriteRecipes = ref(0);
+
 const {
   public: { strapiURL },
 } = useRuntimeConfig();
 
-const fetchFavoriteRecipes = async (searchQuery = ingredientInput.value) => {
+const fetchFavoriteRecipes = async (
+  page = currentPage.value,
+  searchQuery = ingredientInput.value
+) => {
   if (!user.value) {
     return;
   }
 
   let queryParams = {
-    filters: {
-      user: user.value.id,
-    },
-    populate: {
-      recipe: {
-        populate: "image",
-      },
-    },
+    filters: { user: user.value.id },
+    populate: { recipe: { populate: "image" } },
     sort: ["favoritedAt:desc"],
+    pagination: { page, pageSize },
   };
 
   if (isSearchActive.value && searchQuery) {
@@ -153,17 +196,7 @@ const fetchFavoriteRecipes = async (searchQuery = ingredientInput.value) => {
   }
 
   try {
-    const response = await find("userfavorites", {
-      filters: {
-        user: user.value.id,
-      },
-      populate: {
-        recipe: {
-          populate: "image",
-        },
-      },
-      sort: ["favoritedAt:desc"], // Sort by favorited time
-    });
+    const response = await find("userfavorites", queryParams);
 
     if (response.data) {
       favoriteRecipes.value = response.data.map((fav) => {
@@ -181,6 +214,10 @@ const fetchFavoriteRecipes = async (searchQuery = ingredientInput.value) => {
           favoritedAt: fav.attributes.favoritedAt, // Store the favorited time if needed
         };
       });
+
+      totalFavoriteRecipes.value = response.meta.pagination.total;
+      totalPages.value = Math.ceil(totalFavoriteRecipes.value / pageSize);
+
       // Update numberRecipesFound based on whether a search is active
       numberRecipesFound.value = isSearchActive.value
         ? recipesData.meta.pagination.total
@@ -201,19 +238,6 @@ onMounted(() => {
 // Optionally, re-fetch favorites when user state changes (e.g., after login/logout)
 watch(user, fetchFavoriteRecipes, { immediate: true });
 
-const handleSearch = () => {
-  isSearchActive.value = true;
-  fetchFavoriteRecipes();
-};
-
-const clearResults = () => {
-  ingredientInput.value = "";
-  isSearchActive.value = false;
-  currentPage.value = 1;
-  fetchTotalRecipeCount();
-  fetchRecipes();
-};
-
 const fetchTotalRecipeCount = async () => {
   try {
     const response = await find("userfavorites", {
@@ -227,6 +251,33 @@ const fetchTotalRecipeCount = async () => {
   } catch (error) {
     console.error("Error fetching total recipe count:", error);
   }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+    fetchFavoriteRecipes();
+  }
+};
+
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    fetchFavoriteRecipes();
+  }
+};
+
+const handleSearch = () => {
+  isSearchActive.value = true;
+  currentPage.value = 1;
+  fetchFavoriteRecipes();
+};
+
+const clearResults = () => {
+  ingredientInput.value = "";
+  isSearchActive.value = false;
+  currentPage.value = 1;
+  fetchFavoriteRecipes();
 };
 </script>
 
