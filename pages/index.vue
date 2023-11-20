@@ -1013,7 +1013,7 @@ const fetchRecipes = async () => {
   };
 
   try {
-    const response = await fetch("http://localhost:8000/get-recipes/", {
+    const response = await fetch(`${dataAPI}/get-recipes/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
