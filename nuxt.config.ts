@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
     public: {
       strapiURL: process.env.STRAPI_URL,
+      dataAPI: process.env.DATA_API,
       nodeENV: process.env.NODE_ENV,
       stripeKey: process.env.STRIPE_KEY,
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://www.eatclassy.com',
