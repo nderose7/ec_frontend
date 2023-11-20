@@ -80,9 +80,9 @@
       <div
         v-for="recipe in recipes"
         :key="recipe.id"
-        class="mb-6 p-4 card flex gap-10"
+        class="mb-6 p-4 card lg:flex gap-10"
       >
-        <div v-if="recipe.image?.data" class="w-1/3">
+        <div v-if="recipe.image?.data" class="lg:w-1/3">
           <nuxt-link :to="`/recipes/${recipe.uid}`">
             <img
               :src="`${strapiURL}${recipe.image?.data.attributes.url}`"
