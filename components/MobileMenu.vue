@@ -21,12 +21,24 @@
             Browse Recipes</NuxtLink
           >
         </li>
-        <li>
-          <NuxtLink @click="emitCloseMenu" to="/favorites" v-if="user"
+        <li v-if="user">
+          <NuxtLink @click="emitCloseMenu" to="/favorites"
             ><Icon name="fluent:star-24-regular" class="icon-style mr-1" /> Your
             Favorites</NuxtLink
           >
         </li>
+        <div v-else class="flex gap-4 mt-5">
+          <NuxtLink
+            to="/sign-up"
+            class="btn-primary btn-lg text-center font-bold block mt-1 mb-1 w-full"
+            >Sign Up</NuxtLink
+          >
+          <NuxtLink
+            to="/login"
+            class="btn-primary btn-lg text-center font-bold block mt-1 mb-1 w-full"
+            >Login</NuxtLink
+          >
+        </div>
       </ul>
     </div>
     <RecipesLoggedIn @closeMenu="emitCloseMenu" />

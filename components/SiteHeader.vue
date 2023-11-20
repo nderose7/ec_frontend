@@ -33,7 +33,7 @@
       </div>
       <div
         v-else
-        class="text-right flex items-center gap-3"
+        class="text-right items-center gap-3 hidden lg:flex"
         :class="route.path === '/sign-up' ? 'hidden lg:hidden' : ''"
       >
         <NuxtLink
