@@ -727,7 +727,7 @@ import {
 } from "~/composables/useCredits.js";
 
 const {
-  public: { strapiURL },
+  public: { strapiURL, dataAPI },
 } = useRuntimeConfig();
 
 const showFilters = ref(false);
@@ -875,7 +875,7 @@ const fetchRecipeTitle = async () => {
   };
 
   try {
-    const response = await fetch("http://localhost:8000/get-recipe-title/", {
+    const response = await fetch(`${dataAPI}/get-recipe-title/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
