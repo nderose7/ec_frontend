@@ -87,7 +87,7 @@
             >
               <img
                 v-if="userData.data[0].attributes.avatar.data"
-                :src="`${strapiURL}${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
+                :src="`${doAPI}${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
                 alt="avatar"
                 class="h-[60px] w-[60px] cursor-pointer rounded-full"
               />
@@ -228,7 +228,7 @@ async function onSubmit() {
 }*/
 
 const {
-  public: { strapiURL },
+  public: { strapiURL, doAPI },
 } = useRuntimeConfig();
 
 const client = useStrapiClient();
