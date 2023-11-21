@@ -17,7 +17,7 @@
       <div class="lg:flex justify-between gap-10 xl:gap-16">
         <div v-if="recipe.attributes?.image.data" class="lg:order-2 lg:w-2/3">
           <img
-            :src="`${strapiURL}${recipe.attributes.image?.data?.attributes?.url}`"
+            :src="`${doCDN}${recipe.attributes.image?.data?.attributes?.url}`"
             class="rounded-lg mb-6 lg:mb-0"
           />
         </div>
@@ -152,7 +152,7 @@ const userFavoritesIds = ref([]);
 const paidMemberTierOne = ref(false);
 
 const {
-  public: { strapiURL },
+  public: { strapiURL, doCDN },
 } = useRuntimeConfig();
 
 const { data: recipes } = await useFetch(

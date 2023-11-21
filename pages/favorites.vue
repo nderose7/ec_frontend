@@ -80,7 +80,7 @@
         <div class="lg:flex justify-between gap-10">
           <div v-if="recipe.image" class="lg:w-1/3">
             <img
-              :src="`${strapiURL}${recipe.image}`"
+              :src="`${doCDN}${recipe.image}`"
               class="rounded-lg mb-6 lg:mb-0"
             />
           </div>
@@ -164,7 +164,7 @@ const totalPages = ref(0);
 const totalFavoriteRecipes = ref(0);
 
 const {
-  public: { strapiURL },
+  public: { strapiURL, doCDN },
 } = useRuntimeConfig();
 
 const fetchFavoriteRecipes = async (

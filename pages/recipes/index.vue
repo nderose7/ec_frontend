@@ -85,7 +85,7 @@
         <div v-if="recipe.image?.data" class="lg:w-1/3">
           <nuxt-link :to="`/recipes/${recipe.uid}`">
             <img
-              :src="`${strapiURL}${recipe.image?.data.attributes.url}`"
+              :src="`${doCDN}${recipe.image?.data.attributes.url}`"
               class="rounded-lg mb-6 lg:mb-0"
           /></nuxt-link>
         </div>
@@ -151,7 +151,7 @@
 const { find } = useStrapi();
 
 const {
-  public: { strapiURL },
+  public: { strapiURL, doCDN },
 } = useRuntimeConfig();
 
 const recipes = ref([]);
@@ -229,11 +229,17 @@ watch(currentPage, (newPage) => {
 });
 
 const previousPage = () => {
-  if (currentPage.value > 1) currentPage.value--;
+  if (currentPage.value > 1) {
+    currentPage.value--;
+    window.scrollTo(0, 0); // Scroll to the top of the page
+  }
 };
 
 const nextPage = () => {
-  if (!isLastPage.value) currentPage.value++;
+  if (!isLastPage.value) {
+    currentPage.value++;
+    window.scrollTo(0, 0); // Scroll to the top of the page
+  }
 };
 
 onMounted(() => {
