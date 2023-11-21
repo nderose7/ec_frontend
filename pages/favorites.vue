@@ -165,6 +165,7 @@ const currentPage = ref(1);
 const pageSize = 10; // Adjust the page size as needed
 const totalPages = ref(0);
 const totalFavoriteRecipes = ref(0);
+const searchQueryValue = ref("");
 
 const {
   public: { strapiURL },
@@ -177,6 +178,8 @@ const fetchFavoriteRecipes = async (
   if (!user.value) {
     return;
   }
+
+  searchQueryValue.value = searchQuery;
 
   let queryParams = {
     filters: { user: user.value.id },
