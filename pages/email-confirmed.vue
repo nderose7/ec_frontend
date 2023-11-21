@@ -7,7 +7,7 @@
       <div class="mx-auto">
         <Icon name="line-md:confirm-circle" class="text-blue-600" size="5rem" />
         <h1 class="mb-4 mt-5 text-5xl">Email Confirmed!</h1>
-        <p>Taking you to homepage</p>
+        <p>Taking you to homepage...</p>
         <Icon name="svg-spinners:bars-scale" size="5rem" class="mt-10" />
       </div>
     </div>

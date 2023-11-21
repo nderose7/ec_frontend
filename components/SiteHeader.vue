@@ -54,14 +54,6 @@
 <script setup>
 const route = useRoute();
 const user = useStrapiUser();
-
-const { logout } = useStrapiAuth();
-const router = useRouter();
-const onLogout = () => {
-  logout();
-  router.push("/");
-};
-
 const userValue = user.value;
 
 const props = defineProps({

@@ -6,9 +6,7 @@
         class="max-w-md px-10 py-5 pb-10 dark:bg-midnight-700 rounded-xl border dark:border-midnight-100 bg-white"
       >
         <div class="logo mt-4 mb-5 px-10 text-4xl mx-auto">
-          <NuxtLink to="/" class="inline-block">
-            <Logo />
-          </NuxtLink>
+          <Logo />
         </div>
         <h1 class="mb-4 text-2xl font-extrabold">Forgot your password?</h1>
         <p class="text-lg">
