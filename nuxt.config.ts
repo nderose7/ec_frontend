@@ -35,4 +35,7 @@ export default defineNuxtConfig({
       }
     }
   },
+  extends: [
+    'nuxt-seo-kit'
+  ]
 })

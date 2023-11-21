@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto mt-10 xl:pr-96 pb-48 px-5">
-    <div class="flex items-top justify-between">
+    <div class="flex items-center justify-between">
       <div>
         <h1 class="font-bold my-4 text-3xl lg:text-4xl">Browse Recipes</h1>
       </div>
@@ -28,7 +28,7 @@
 
     <form
       @submit.prevent="handleSearch"
-      class="search-bar form-control mt-2 flex mb-2 relative"
+      class="search-bar form-control mt-5 flex mb-2 relative"
     >
       <Icon
         name="bx:search"
@@ -153,6 +153,11 @@ const { find } = useStrapi();
 const {
   public: { strapiURL },
 } = useRuntimeConfig();
+
+useSeoMeta({
+  title: "Browse Recipes",
+  description: "Browse all recipes created by the EatClassy community.",
+});
 
 const recipes = ref([]);
 const currentPage = ref(1);

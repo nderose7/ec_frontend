@@ -1,25 +1,31 @@
 <template>
   <div class="container mx-auto mt-10 xl:pr-96 px-5">
-    <h1 class="font-bold my-4 text-3xl lg:text-4xl">Your Favorite Recipes</h1>
-    <div
-      v-if="favoriteRecipes.length"
-      class="pagination-controls text-center hidden lg:block"
-    >
-      <button
-        class="btn-primary p-2 px-4 font-semibold"
-        @click="previousPage"
-        :disabled="currentPage <= 1"
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="font-bold my-4 text-3xl lg:text-4xl">
+          Your Favorite Recipes
+        </h1>
+      </div>
+      <div
+        v-if="favoriteRecipes.length"
+        class="pagination-controls text-center hidden lg:block"
       >
-        <Icon name="mdi:arrow-left" class="icon-style" />
-      </button>
-      <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
-      <button
-        class="btn-primary p-2 px-4 font-semibold"
-        @click="nextPage"
-        :disabled="isLastPage"
-      >
-        <Icon name="mdi:arrow-right" class="icon-style" />
-      </button>
+        <button
+          class="btn-primary p-2 px-4 font-semibold"
+          @click="previousPage"
+          :disabled="currentPage <= 1"
+        >
+          <Icon name="mdi:arrow-left" class="icon-style" />
+        </button>
+        <span class="mx-4">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+          class="btn-primary p-2 px-4 font-semibold"
+          @click="nextPage"
+          :disabled="isLastPage"
+        >
+          <Icon name="mdi:arrow-right" class="icon-style" />
+        </button>
+      </div>
     </div>
     <form
       @submit.prevent="handleSearch"
@@ -276,6 +282,11 @@ const clearResults = () => {
   currentPage.value = 1;
   fetchFavoriteRecipes();
 };
+
+useSeoMeta({
+  title: "Favorites",
+  description: "Your favorite recipes.",
+});
 </script>
 
 <style scoped>

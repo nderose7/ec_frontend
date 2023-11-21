@@ -145,6 +145,13 @@ import {
 const route = useRoute();
 const { update, find, delete: _delete, create } = useStrapi();
 
+useSeoMeta({
+  title: () => recipes.value?.data[0]?.attributes?.recipe_name,
+  description: () => recipes.value?.data[0]?.attributes?.paragraph_description,
+  ogImage: () =>
+    recipes.value?.data[0]?.attributes?.image?.data?.attributes?.url,
+});
+
 const recipeId = ref();
 const user = useStrapiUser();
 const userFavoritesIds = ref([]);

@@ -1,5 +1,6 @@
 <template>
   <NuxtLayout>
+    <SeoKit />
     <NuxtPage />
     <GDPR />
   </NuxtLayout>

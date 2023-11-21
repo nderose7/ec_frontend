@@ -1404,6 +1404,12 @@ const createRecipes = async () => {
     }
   }
 };
+
+useSeoMeta({
+  title: "EatClassy",
+  description:
+    "Create original, insanely good recipes for any idea, ingredient, cuisine, region, or diet.",
+});
 </script>
 
 <style scoped>

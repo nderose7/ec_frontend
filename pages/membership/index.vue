@@ -162,6 +162,12 @@ const {
   public: { strapiURL, stripeKey },
 } = useRuntimeConfig();
 
+useSeoMeta({
+  title: "Become A Member",
+  description:
+    "Sign up for an EatClassy.com membership to create more recipes.",
+});
+
 const stripePromise = loadStripe(stripeKey);
 const user = useStrapiUser();
 const router = useRouter();
