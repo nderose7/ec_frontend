@@ -65,6 +65,6 @@ const emitCloseMenu = () => {
   @apply px-2 py-2 rounded-lg w-full block;
 }
 .mobile-menu ul li a.router-link-active {
-  @apply bg-slate-100 dark:bg-midnight-200 font-bold;
+  @apply bg-slate-100 dark:bg-midnight-600 font-bold text-brand-500;
 }
 </style>

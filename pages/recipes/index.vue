@@ -1,8 +1,10 @@
 <template>
-  <div class="container mx-auto mt-10 xl:pr-96 pb-48 px-5">
+  <div class="container mx-auto lg:mt-10 mt-4 xl:pr-96 pb-48 px-5">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="font-bold my-4 text-3xl lg:text-4xl">Browse Recipes</h1>
+        <h1 class="font-bold mt-4 lg:my-4 text-3xl lg:text-4xl">
+          Browse Recipes
+        </h1>
       </div>
       <div
         v-if="recipes.length"
@@ -39,7 +41,7 @@
       <input
         type="text"
         placeholder="Recipe, ingredients, cuisine, or diet..."
-        class="rounded-l-lg force-padding-left"
+        class="rounded-l-lg force-padding-left outline-0"
         v-model="ingredientInput"
         @focus="isInputFocused = true"
         @blur="isInputFocused = false"
@@ -71,7 +73,7 @@
             >for "{{ searchQueryValue }}"</span
           >
         </div>
-        <div>
+        <div class="min-w-[110px] text-right">
           <button v-if="ingredientInput" @click="clearResults" class="link">
             Clear Results
           </button>
