@@ -40,7 +40,7 @@
       <input
         type="text"
         placeholder="Recipe, ingredients, or cuisine..."
-        class="force-padding-left"
+        class="rounded-l-lg force-padding-left outline-0"
         v-model="ingredientInput"
         @focus="isInputFocused = true"
         @blur="isInputFocused = false"

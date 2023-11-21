@@ -282,7 +282,7 @@
               <input
                 type="text"
                 placeholder="Create a recipe..."
-                class=""
+                class="rounded-l-lg outline-0"
                 v-model="ingredientInput"
                 ref="inputRef"
               />
