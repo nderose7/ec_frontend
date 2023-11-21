@@ -47,14 +47,14 @@
         >
           <div class="mb-4 border-b pb-5 dark:border-gray-700">
             <div class="font-bold">
-              <Icon name="bx:user" class="icon-style mr-1" />{{
+              <Icon name="bx:user" class="icon-style mr-2" />{{
                 fullName
                   ? truncateString(fullName, 24)
                   : truncateString(user?.username, 24)
               }}
             </div>
             <div>
-              <Icon name="mdi:email-outline" class="icon-style mr-1" />{{
+              <Icon name="mdi:email-outline" class="icon-style mr-2" />{{
                 user?.email ? truncateString(user?.email, 24) : ""
               }}
             </div>
@@ -82,7 +82,11 @@
           </div>
 
           <label class="mr-5"
-            ><Icon name="codicon:color-mode" class="icon-style" size="1rem" />
+            ><Icon
+              name="codicon:color-mode"
+              class="icon-style mr-1"
+              size="1rem"
+            />
             Color Mode:</label
           >
 
@@ -93,12 +97,12 @@
             to="/settings/profile"
             class="mt-2 block py-1"
           >
-            <Icon name="bx:cog" class="icon-style mx-1 lg:mx-0" /> Account
+            <Icon name="bx:cog" class="icon-style mr-1 lg:mx-0" /> Account
             Settings
           </NuxtLink>
 
           <button @click="logoutUser()" class="block cursor-pointer py-1">
-            <Icon name="mdi:logout" class="icon-style mx-1 lg:mx-0" />
+            <Icon name="mdi:logout" class="icon-style mr-1 lg:mx-0" />
             <span class="ml-1 inline-block"> Logout </span>
           </button>
         </div>
