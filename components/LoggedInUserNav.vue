@@ -35,7 +35,7 @@
           }"
         >
           <img
-            :src="`${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
+            :src="userData?.data[0]?.attributes?.avatar?.data?.attributes?.url"
             class="inline-block h-[40px] w-[40px] cursor-pointer rounded-full border border-slate-100 hover:opacity-80 dark:border-midnight-100"
           />
         </button>
@@ -111,14 +111,10 @@
 import { truncateString } from "~/utils/truncateString.js";
 const user = useStrapiUser();
 
-const {
-  public: { strapiURL },
-} = useRuntimeConfig();
-
 let openUser = ref();
 const { logout } = useStrapiAuth();
 
-const userNavLoading = ref(true);
+const userNavLoading = ref(false);
 
 const logoutUser = () => {
   logout();
@@ -157,15 +153,8 @@ const fullName = computed(() => {
   return null;
 });
 
-const paidTutorials = computed(() => {
-  if (userData.value?.data[0]?.attributes?.paidTutorials) {
-    return userData.value.data[0].attributes.paidTutorials;
-  }
-  return null;
-});
-
 const hasAvatar = computed(() => {
-  if (userData.value?.data[0]?.attributes?.avatar?.data) {
+  if (userData?.value?.data[0]?.attributes?.avatar?.data) {
     return true;
   }
   return false;
