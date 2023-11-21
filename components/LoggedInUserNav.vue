@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="logged-in-user-nav">
     <div v-if="userNavLoading">
       <Icon name="svg-spinners:bars-scale" size="1.5rem" class="" />
     </div>

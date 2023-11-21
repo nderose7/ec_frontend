@@ -28,7 +28,7 @@
           <NuxtLink to="/favorites" v-if="userValue">Your Favorites</NuxtLink>
         </div>
       </div>
-      <div v-if="user" class="relative">
+      <div v-if="userValue" class="relative">
         <LoggedInUserNav />
       </div>
       <div
