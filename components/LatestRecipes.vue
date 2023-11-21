@@ -9,7 +9,7 @@
           <div v-if="recipe.attributes.image?.data" class="mb-4">
             <NuxtLink :to="`/recipes/${recipe.attributes.uid}`">
               <img
-                :src="`${strapiURL}${recipe.attributes.image?.data.attributes.url}`"
+                :src="`${recipe.attributes.image?.data.attributes.url}`"
                 class="rounded-lg mb-6 lg:mb-0"
               />
             </NuxtLink>

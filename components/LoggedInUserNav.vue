@@ -35,7 +35,7 @@
           }"
         >
           <img
-            :src="`${doAPI}${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
+            :src="`${userData?.data[0]?.attributes?.avatar?.data?.attributes?.url}`"
             class="inline-block h-[40px] w-[40px] cursor-pointer rounded-full border border-slate-100 hover:opacity-80 dark:border-midnight-100"
           />
         </button>
@@ -112,7 +112,7 @@ import { truncateString } from "~/utils/truncateString.js";
 const user = useStrapiUser();
 
 const {
-  public: { strapiURL, doAPI },
+  public: { strapiURL },
 } = useRuntimeConfig();
 
 let openUser = ref();

@@ -85,7 +85,7 @@
         <div v-if="recipe.image?.data" class="lg:w-1/3">
           <nuxt-link :to="`/recipes/${recipe.uid}`">
             <img
-              :src="`${doCDN}${recipe.image?.data.attributes.url}`"
+              :src="`${recipe.image?.data.attributes.url}`"
               class="rounded-lg mb-6 lg:mb-0"
           /></nuxt-link>
         </div>

@@ -600,7 +600,7 @@
               <div class="lg:order-2 lg:w-1/3 text-center mb-5 lg:mb-0">
                 <img
                   v-if="existingRecipeData.attributes.image"
-                  :src="`${strapiURL}${existingRecipeData.attributes.image?.data?.attributes?.url}`"
+                  :src="`${existingRecipeData.attributes.image?.data?.attributes?.url}`"
                   class="lg:max-w-full rounded-lg cropped-image"
                 />
                 <Icon
@@ -727,7 +727,7 @@ import {
 } from "~/composables/useCredits.js";
 
 const {
-  public: { strapiURL, dataAPI },
+  public: { strapiURL },
 } = useRuntimeConfig();
 
 const showFilters = ref(false);
@@ -875,13 +875,16 @@ const fetchRecipeTitle = async () => {
   };
 
   try {
-    const response = await fetch(`${dataAPI}/get-recipe-title/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    const response = await fetch(
+      "https://data.eatclassy.com/get-recipe-title/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -1013,7 +1016,7 @@ const fetchRecipes = async () => {
   };
 
   try {
-    const response = await fetch(`${dataAPI}/get-recipes/`, {
+    const response = await fetch("https://data.eatclassy.com/get-recipes/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
