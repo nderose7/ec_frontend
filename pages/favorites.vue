@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto mt-10 xl:pr-96">
+  <div class="container mx-auto mt-10 xl:pr-96 px-5">
     <h1 class="font-bold my-4 text-3xl lg:text-4xl">Your Favorite Recipes</h1>
     <div
       v-if="favoriteRecipes.length"
@@ -90,7 +90,7 @@
               class="text-brand-500 hover:underline"
               ><h2 class="mb-2">{{ recipe.recipe_name }}</h2></nuxt-link
             >
-            <div class="flex gap-5 text-base mb-4">
+            <div class="lg:flex gap-5 text-base mb-4">
               <p><b>Course:</b> {{ recipe.course }}</p>
               <p><b>Cuisine:</b> {{ recipe.cuisine }}</p>
               <p
@@ -106,7 +106,7 @@
                 <b>Diet:</b> {{ recipe.diet_type_if_set }}
               </p>
             </div>
-            <div class="flex gap-5 text-base mb-4">
+            <div class="lg:flex gap-5 text-base mb-4">
               <p>
                 <Icon name="bx:time" class="icon-style" />
                 {{ recipe.total_time }}

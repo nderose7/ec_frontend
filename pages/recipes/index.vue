@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto mt-10 xl:pr-96 pb-48">
+  <div class="container mx-auto mt-10 xl:pr-96 pb-48 px-5">
     <div class="flex items-top justify-between">
       <div>
         <h1 class="font-bold my-4 text-3xl lg:text-4xl">Browse Recipes</h1>
