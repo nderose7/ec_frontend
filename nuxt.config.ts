@@ -23,6 +23,7 @@ export default defineNuxtConfig({
     public: {
       strapiURL: process.env.STRAPI_URL,
       dataAPI: process.env.DATA_API,
+      doCDN: process.env.DO_CDN,
       nodeENV: process.env.NODE_ENV,
       stripeKey: process.env.STRIPE_KEY,
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://www.eatclassy.com',

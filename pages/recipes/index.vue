@@ -151,7 +151,7 @@
 const { find } = useStrapi();
 
 const {
-  public: { strapiURL, doCDN },
+  public: { strapiURL },
 } = useRuntimeConfig();
 
 const recipes = ref([]);

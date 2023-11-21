@@ -79,10 +79,7 @@
       >
         <div class="lg:flex justify-between gap-10">
           <div v-if="recipe.image" class="lg:w-1/3">
-            <img
-              :src="`${doCDN}${recipe.image}`"
-              class="rounded-lg mb-6 lg:mb-0"
-            />
+            <img :src="`${recipe.image}`" class="rounded-lg mb-6 lg:mb-0" />
           </div>
           <div class="lg:w-full">
             <nuxt-link
@@ -164,7 +161,7 @@ const totalPages = ref(0);
 const totalFavoriteRecipes = ref(0);
 
 const {
-  public: { strapiURL, doCDN },
+  public: { strapiURL },
 } = useRuntimeConfig();
 
 const fetchFavoriteRecipes = async (

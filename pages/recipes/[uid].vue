@@ -152,7 +152,7 @@ const userFavoritesIds = ref([]);
 const paidMemberTierOne = ref(false);
 
 const {
-  public: { strapiURL, doCDN },
+  public: { strapiURL },
 } = useRuntimeConfig();
 
 const { data: recipes } = await useFetch(
