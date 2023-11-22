@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen px-4 text-center dark:bg-midnight-900 bg-slate-100">
-    <div class="h-screen flex items-center justify-center">
+    <div class="h-screen-minus-header flex items-center justify-center">
       <div class="xl:w-1/5 lg:w-1/3 min-w-[320px]">
         <div
           class="rounded-xl border bg-white px-8 pb-12 pt-10 dark:border-midnight-400 dark:bg-midnight-700 lg:rounded-3xl"
@@ -84,7 +84,15 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.h-screen-minus-header {
+  height: calc(100vh - 100px); /* Default height */
+  @screen lg {
+    /* Tailwind's way to apply media queries */
+    height: calc(100vh - 100px); /* Adjusted height for large screens */
+  }
+}
+</style>
 
 <script setup>
 import swalMixins from "~/mixins/swalMixins";
