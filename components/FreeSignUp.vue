@@ -243,11 +243,11 @@ const onSubmit = async () => {
     // Step 1: Register the user using the Strapi function
     const usernameToUse = showUsernameField.value
       ? customUsername.value
-      : email.value.split("@")[0];
+      : email.value;
 
     // Step 1: Register the user using the Strapi function
     const userRegistered = await register({
-      username: email.value,
+      username: usernameToUse,
       email: email.value,
       password: password.value,
     });
