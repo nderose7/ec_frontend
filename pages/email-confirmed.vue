@@ -21,35 +21,8 @@
 <script setup>
 const router = useRouter();
 
-const user = useStrapiUser();
-
-const {
-  public: { strapiURL },
-} = useRuntimeConfig();
-
-const auth = async () => {
-  try {
-    // Step 2: Complete the registration by creating a Stripe customer
-    const response = await fetch(`${strapiURL}/api/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: user.value.email,
-        userId: user.value.id,
-      }),
-    });
-    if (response.ok) {
-      router.push("/login?emailConfirmed=true");
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
 onMounted(async () => {
-  await auth();
+  router.push("/login?emailConfirmed=true");
 });
 
 useHead({

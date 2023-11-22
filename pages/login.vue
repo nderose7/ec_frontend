@@ -127,6 +127,8 @@ const {
   public: { strapiURL },
 } = useRuntimeConfig();
 
+const user = useStrapiUser();
+
 // form state
 const email = ref("");
 const password = ref("");
@@ -142,7 +144,30 @@ const loginUser = async (e) => {
       identifier: email.value,
       password: password.value,
     });
-    router.push("/");
+    if (route.query.emailConfirmed) {
+      const auth = async () => {
+        try {
+          // Step 2: Complete the registration by creating a Stripe customer
+          const response = await fetch(`${strapiURL}/api/auth/register`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: user.value.email,
+              userId: user.value.id,
+            }),
+          });
+          if (response.ok) {
+            router.push("/");
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      };
+    } else {
+      router.push("/");
+    }
   } catch (error) {
     console.log(error);
     Toast.fire({
