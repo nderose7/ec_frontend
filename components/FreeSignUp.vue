@@ -51,6 +51,7 @@
             v-model="password"
           />
           <button
+            type="button"
             @click="showPassword = !showPassword"
             class="absolute top-[42px] right-3"
           >
@@ -179,7 +180,7 @@ const schema = object({
     .required()
     .test(
       "password-no-special",
-      "Must contain at least one special character ~!@#$%^&*().",
+      "Must contain at least one: ~!@#$%^&*().",
       async (value) => !(await validatePasswordSpecial(value))
     )
     .test(
