@@ -5,7 +5,7 @@
       :triggerUpdate="triggerUpdate"
       class="hidden lg:inline-block"
     />
-    <Recipes v-else :recipes="recipes" />
+    <Recipes v-else :recipes="recipes" class="hidden lg:inline-block" />
     <div class="w-full px-5 xl:px-10 pb-48 min-[1600px]:flex gap-10">
       <div
         class="recipe-search w-full xl:px-16"

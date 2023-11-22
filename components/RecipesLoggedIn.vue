@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-[1600px]:w-1/4 lg:w-1/3 px-5 pb-4 lg:sticky lg:top-[82px] h-full lg:border-r dark:border-midnight-600"
+    class="min-[1600px]:w-1/4 lg:w-1/3 px-5 pb-24 lg:pb-4 lg:sticky lg:top-[82px] h-full lg:border-r dark:border-midnight-600"
   >
     <div>
       <ul class="xl:pr-2 pt-5">
@@ -218,7 +218,7 @@
         ></div>
         <div v-if="user">
           <p class="mt-5 text-center">
-            <NuxtLink to="/favorites" class="link"
+            <NuxtLink to="/favorites" @click="emitCloseMenu" class="link"
               >Go To Favorites
               <Icon name="mdi:arrow-right" class="icon-style" />
             </NuxtLink>
@@ -226,9 +226,14 @@
         </div>
         <div v-else>
           <p class="mt-5 text-center">
-            <NuxtLink to="/login" class="link">Login</NuxtLink> or
-            <NuxtLink to="/sign-up" class="link">Sign Up</NuxtLink> to save
-            recipes.
+            <NuxtLink to="/login" @click="emitCloseMenu" class="link"
+              >Login</NuxtLink
+            >
+            or
+            <NuxtLink to="/sign-up" @click="emitCloseMenu" class="link"
+              >Sign Up</NuxtLink
+            >
+            to save recipes.
           </p>
         </div>
       </ul>
