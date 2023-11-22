@@ -101,10 +101,10 @@
             Settings
           </NuxtLink>
 
-          <button @click="logoutUser()" class="block cursor-pointer py-1">
+          <NuxtLink @click="logoutUser()" class="block cursor-pointer py-1">
             <Icon name="mdi:logout" class="icon-style mr-1 lg:mx-0" />
             <span class="ml-1 inline-block"> Logout </span>
-          </button>
+          </NuxtLink>
         </div>
       </div>
     </div>
@@ -123,6 +123,7 @@ const userNavLoading = ref(false);
 
 const logoutUser = () => {
   logout();
+  //findUserData();
   router.push("/");
 };
 
@@ -130,7 +131,7 @@ const { find } = useStrapi();
 const userData = ref(null);
 const userDataError = ref(null);
 
-onMounted(async () => {
+const findUserData = async () => {
   userNavLoading.value = true;
   try {
     const result = await find("userdatas", {
@@ -145,6 +146,10 @@ onMounted(async () => {
     console.error("Error fetching userData:", error);
   }
   userNavLoading.value = false;
+};
+
+onMounted(async () => {
+  findUserData();
 });
 
 if (userDataError.value) {

@@ -1,7 +1,8 @@
 <script setup>
 const { logout } = useStrapiAuth();
+const router = useRouter();
 onMounted(() => {
   logout();
-  navigateTo("/");
+  router.push("/");
 });
 </script>

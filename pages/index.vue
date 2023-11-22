@@ -1291,7 +1291,7 @@ function checkCredits() {
 async function decrementLoggedInCredits() {
   console.log("Decrementing strapi");
   // Check if userData is populated and has a freeCreditsLeft value
-  if (userData.value && userData.value[0].attributes.freeCreditsLeft > 0) {
+  if (userData.value && userData.value[0]?.attributes?.freeCreditsLeft > 0) {
     console.log("More than 0");
     try {
       console.log("Updating userdata: ", userData.value[0].id);

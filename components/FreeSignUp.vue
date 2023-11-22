@@ -73,7 +73,12 @@
           @click="onSubmit()"
           class="btn-primary px-6 py-3 mt-2 block w-full rounded-lg text-xl font-bold lg:inline-block lg:w-auto"
         >
-          Next
+          <span v-if="registerLoading || recipeImportLoading"
+            ><Icon name="svg-spinners:pulse-3" class="icon-style mr-1" />{{
+              registerLoading ? "Creating account..." : ""
+            }}{{ recipeImportLoading ? "Importing creations..." : "" }}</span
+          >
+          <span v-else>Next</span>
         </button>
         <p v-if="errorMessage" class="mt-5 text-red-500">
           {{ errorMessage }}
@@ -225,10 +230,14 @@ const getStrengthColor = (strength) => {
   }
 };
 
+const registerLoading = ref(false);
+const recipeImportLoading = ref(false);
+
 const onSubmit = async () => {
   //console.log("Clicked");
 
   try {
+    registerLoading.value = true;
     // Step 1: Register the user using the Strapi function
     const userRegistered = await register({
       username: email.value,
@@ -236,114 +245,15 @@ const onSubmit = async () => {
       password: password.value,
     });
 
-    let userId;
-
-    if (userRegistered) {
-      console.log("User registered: ", userRegistered);
-      userId = userRegistered.user?.value?.id;
-    } else {
-      console.log("User not registered...");
-    }
-
-    const localStorageData = JSON.parse(
-      localStorage.getItem("recipes") || "{}"
-    );
-    const localStorageRecipes = localStorageData.recipes || [];
-
-    if (!Array.isArray(localStorageRecipes)) {
-      console.error(
-        "localStorageRecipes is not an array:",
-        localStorageRecipes
-      );
-      return; // Exit the function or handle this scenario appropriately
-    }
-
-    //console.log("Retrieved localStorageRecipes:", localStorageRecipes);
-
-    const strapiRecipes = await fetchRecipesFromStrapi();
-
-    const strapiRecipesToUpdate = strapiRecipes.filter((strapiRecipe) =>
-      localStorageRecipes.some(
-        (localRecipe) =>
-          slugify(localRecipe.recipe_name) === strapiRecipe.attributes.uid
-      )
-    );
-
-    await Promise.all(
-      strapiRecipesToUpdate.map((recipe) =>
-        updateRecipeInStrapi(recipe.id, userId)
-      )
-    );
-
     navigateTo("/check-email");
   } catch (error) {
     console.error(error);
+    registerLoading.value = true;
     Toast.fire({
       icon: "error",
       title: "Error signing up",
       text: "Please try again or contact support.",
     });
-  }
-};
-
-const fetchRecipesFromStrapi = async () => {
-  let allRecipes = [];
-  let page = 1;
-  let pageSize = 25; // Adjust the page size if needed
-  let totalRecipes = 0;
-
-  try {
-    do {
-      // Fetching a page of recipes
-      const response = await find("recipes", {
-        pagination: {
-          page: page,
-          pageSize: pageSize,
-        },
-      });
-
-      if (response) {
-        console.log(
-          `Fetched page ${page} with ${response.data.length} recipes.`
-        );
-        allRecipes.push(...response.data);
-        totalRecipes = response.meta.pagination.total; // Total number of recipes
-      } else {
-        break; // Break if no response
-      }
-
-      page++;
-    } while (allRecipes.length < totalRecipes);
-
-    console.log("Total recipes fetched: ", allRecipes.length);
-    return allRecipes;
-  } catch (error) {
-    console.error("Error with the find operation:", error);
-  }
-};
-
-const updateRecipeInStrapi = async (recipeId, userId) => {
-  try {
-    await update("recipes", recipeId, {
-      created_by_user: {
-        connect: [userId],
-      },
-    });
-  } catch (error) {
-    console.error("Error with the recipe update:", error);
-  }
-  try {
-    await create("userrecipes", {
-      user: {
-        connect: [userId],
-      },
-      recipe: {
-        connect: [recipeId],
-      },
-      addedAt: new Date().toISOString(),
-    });
-  } catch (error) {
-    console.log("Error creating userrecipe: ", error);
   }
 };
 </script>

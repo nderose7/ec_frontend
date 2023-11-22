@@ -75,6 +75,10 @@
             </div>
           </form>
         </div>
+        <div v-if="route.query.emailConfirmed && recipeImportLoading">
+          Importing your creations...
+          <Icon name="svg-spinners:3-dots-bounce" size="1rem" class="ml-3" />
+        </div>
         <div class="mt-4">
           <p
             class="mb-2 text-center text-base"
@@ -114,6 +118,10 @@ import swalMixins from "~/mixins/swalMixins";
 const { Toast } = swalMixins.data();
 const route = useRoute();
 
+const recipeImportLoading = ref(false);
+
+const { find, create } = useStrapi();
+
 definePageMeta({
   layout: "blank",
   middleware: "loggedin",
@@ -127,8 +135,6 @@ const {
   public: { strapiURL },
 } = useRuntimeConfig();
 
-const user = useStrapiUser();
-
 // form state
 const email = ref("");
 const password = ref("");
@@ -140,24 +146,69 @@ const router = useRouter();
 const loginUser = async (e) => {
   e.preventDefault();
   try {
-    await login({
+    const response = await login({
       identifier: email.value,
       password: password.value,
     });
-    if (route.query.emailConfirmed) {
+    console.log("Response: ", response.user);
+    if (response.user && route.query.emailConfirmed) {
+      const user = useStrapiUser();
+      console.log("Login response okay...");
       try {
         // Step 2: Complete the registration by creating a Stripe customer
-        const response = await fetch(`${strapiURL}/api/auth/register`, {
+        const responseAuth = await fetch(`${strapiURL}/api/auth/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: user.value.email,
-            userId: user.value.id,
+            email: user.value?.email,
+            userId: user.value?.id,
           }),
         });
-        if (response.ok) {
+        if (responseAuth.ok) {
+          console.log("Auth response okay...");
+          try {
+            recipeImportLoading.value = true;
+
+            const localStorageData = JSON.parse(
+              localStorage.getItem("recipes") || "{}"
+            );
+            const localStorageRecipes = localStorageData.recipes || [];
+
+            if (!Array.isArray(localStorageRecipes)) {
+              console.error(
+                "localStorageRecipes is not an array:",
+                localStorageRecipes
+              );
+              return; // Exit the function or handle this scenario appropriately
+            }
+
+            console.log("Retrieved localStorageRecipes:", localStorageRecipes);
+
+            const strapiRecipes = await fetchRecipesFromStrapi();
+
+            const strapiRecipesToUpdate = strapiRecipes.filter((strapiRecipe) =>
+              localStorageRecipes.some(
+                (localRecipe) =>
+                  slugify(localRecipe.recipe_name) ===
+                  strapiRecipe.attributes.uid
+              )
+            );
+
+            await Promise.all(
+              strapiRecipesToUpdate.map((recipe) =>
+                updateRecipeInStrapi(recipe.id, user.value?.id)
+              )
+            );
+            localStorage.removeItem("recipes");
+            recipeImportLoading.value = false;
+
+            router.push("/login?emailConfirmed=true");
+          } catch (error) {
+            console.error(error);
+          }
+
           router.push("/");
         }
       } catch (error) {
@@ -179,6 +230,67 @@ const loginUser = async (e) => {
 useHead({
   meta: [{ name: "robots", content: "noindex" }],
 });
+
+const fetchRecipesFromStrapi = async () => {
+  let allRecipes = [];
+  let page = 1;
+  let pageSize = 25; // Adjust the page size if needed
+  let totalRecipes = 0;
+
+  try {
+    do {
+      // Fetching a page of recipes
+      const response = await find("recipes", {
+        pagination: {
+          page: page,
+          pageSize: pageSize,
+        },
+      });
+
+      if (response) {
+        console.log(
+          `Fetched page ${page} with ${response.data.length} recipes.`
+        );
+        allRecipes.push(...response.data);
+        totalRecipes = response.meta.pagination.total; // Total number of recipes
+      } else {
+        break; // Break if no response
+      }
+
+      page++;
+    } while (allRecipes.length < totalRecipes);
+
+    console.log("Total recipes fetched: ", allRecipes.length);
+    return allRecipes;
+  } catch (error) {
+    console.error("Error with the find operation:", error);
+  }
+};
+
+const updateRecipeInStrapi = async (recipeId, userId) => {
+  try {
+    await update("recipes", recipeId, {
+      created_by_user: {
+        connect: [userId],
+      },
+    });
+  } catch (error) {
+    console.error("Error with the recipe update:", error);
+  }
+  try {
+    await create("userrecipes", {
+      user: {
+        connect: [userId],
+      },
+      recipe: {
+        connect: [recipeId],
+      },
+      addedAt: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.log("Error creating userrecipe: ", error);
+  }
+};
 
 // handle form submit
 /*
