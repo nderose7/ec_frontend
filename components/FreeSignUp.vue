@@ -31,16 +31,7 @@
           :debug="debug"
           v-model="email"
         />
-        <VTextInput
-          v-if="showUsernameField"
-          class="mt-2"
-          type="text"
-          name="username"
-          id="username"
-          label="Choose a Username"
-          :debug="debug"
-          v-model="customUsername"
-        />
+
         <div class="relative mt-2">
           <VTextInput
             :type="showPassword ? 'text' : 'password'"
@@ -121,8 +112,6 @@ const { update, find, create } = useStrapi();
 const debug = ref(false);
 const showPassword = ref(false);
 const errorMessage = ref(null);
-const showUsernameField = ref(false);
-const customUsername = ref("");
 
 onMounted(() => {
   document.getElementById("email").focus();
@@ -241,13 +230,8 @@ const onSubmit = async () => {
 
   try {
     // Step 1: Register the user using the Strapi function
-    const usernameToUse = showUsernameField.value
-      ? customUsername.value
-      : email.value;
-
-    // Step 1: Register the user using the Strapi function
     const userRegistered = await register({
-      username: usernameToUse,
+      username: email.value,
       email: email.value,
       password: password.value,
     });
@@ -303,22 +287,6 @@ const onSubmit = async () => {
       title: "Error signing up",
       text: "Please try again or contact support.",
     });
-    // Handle the unique username constraint
-    if (
-      error.error &&
-      error.error.message === "Email or Username are already taken"
-    ) {
-      // Adjust this condition based on the exact error message from Strapi
-      displayErrorMessage(
-        "Email or username already taken. Please choose a different one."
-      );
-      displayUsernameField(); // Function to render the "Username" input field for the user
-    } else {
-      // Handle other errors
-      displayErrorMessage(
-        "An error occurred during registration. Please try again." + error
-      );
-    }
   }
 };
 
