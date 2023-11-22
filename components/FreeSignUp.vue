@@ -239,20 +239,11 @@ const onSubmit = async () => {
     let userId;
 
     if (userRegistered) {
+      console.log("User registered: ", userRegistered);
       userId = userRegistered.user?.value?.id;
+    } else {
+      console.log("User not registered...");
     }
-
-    // Step 2: Complete the registration by creating a Stripe customer
-    const response = await fetch(`${strapiURL}/api/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: email.value,
-        userId: userId,
-      }),
-    });
 
     const localStorageData = JSON.parse(
       localStorage.getItem("recipes") || "{}"

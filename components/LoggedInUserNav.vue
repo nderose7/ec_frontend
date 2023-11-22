@@ -114,6 +114,7 @@
 <script setup>
 import { truncateString } from "~/utils/truncateString.js";
 const user = useStrapiUser();
+const router = useRouter();
 
 let openUser = ref();
 const { logout } = useStrapiAuth();
@@ -122,7 +123,7 @@ const userNavLoading = ref(false);
 
 const logoutUser = () => {
   logout();
-  navigateTo("/");
+  router.push("/");
 };
 
 const { find } = useStrapi();

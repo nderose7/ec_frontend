@@ -2,6 +2,16 @@
   <div class="h-screen px-4 text-center dark:bg-midnight-900 bg-slate-100">
     <div class="h-screen-minus-header flex items-center justify-center">
       <div class="xl:w-1/5 lg:w-1/3 min-w-[320px]">
+        <div v-if="route.query.emailConfirmed">
+          <Icon
+            name="line-md:confirm-circle"
+            class="text-brand-500"
+            size="5rem"
+          />
+          <p class="text-xl pb-4 font-semibold">
+            Your email address is confirmed.<br />Please sign in.
+          </p>
+        </div>
         <div
           class="rounded-xl border bg-white px-8 pb-12 pt-10 dark:border-midnight-400 dark:bg-midnight-700 lg:rounded-3xl"
         >
@@ -65,20 +75,25 @@
             </div>
           </form>
         </div>
-        <p class="mt-4 mb-2 text-center text-base">
-          Don't have an account?
-          <NuxtLink to="/sign-up" class="link">Sign Up.</NuxtLink>
-        </p>
-        <p class="text-center text-base">
-          <NuxtLink to="/forgot-password" class="link"
-            >Forgot your password?</NuxtLink
+        <div class="mt-4">
+          <p
+            class="mb-2 text-center text-base"
+            v-if="!route.query.emailConfirmed"
           >
-        </p>
-        <NuxtLink
-          to="/forgot-password"
-          class="hidden rounded bg-slate-700 px-3 py-2 font-bold text-white"
-          >Forgot Password</NuxtLink
-        >
+            Don't have an account?
+            <NuxtLink to="/sign-up" class="link">Sign Up.</NuxtLink>
+          </p>
+          <p class="text-center text-base">
+            <NuxtLink to="/forgot-password" class="link"
+              >Forgot your password?</NuxtLink
+            >
+          </p>
+          <NuxtLink
+            to="/forgot-password"
+            class="hidden rounded bg-slate-700 px-3 py-2 font-bold text-white"
+            >Forgot Password</NuxtLink
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -97,6 +112,7 @@
 <script setup>
 import swalMixins from "~/mixins/swalMixins";
 const { Toast } = swalMixins.data();
+const route = useRoute();
 
 definePageMeta({
   layout: "blank",

@@ -152,10 +152,6 @@
 <script setup>
 const { find } = useStrapi();
 
-const {
-  public: { strapiURL },
-} = useRuntimeConfig();
-
 useSeoMeta({
   title: "Browse Recipes",
   description: "Browse all recipes created by the EatClassy community.",
