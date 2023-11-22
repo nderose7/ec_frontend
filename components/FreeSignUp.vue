@@ -282,6 +282,7 @@ const onSubmit = async () => {
 
     navigateTo("/check-email");
   } catch (error) {
+    console.error(error);
     Toast.fire({
       icon: "error",
       title: "Error signing up",
