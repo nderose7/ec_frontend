@@ -1130,7 +1130,7 @@ const processChunk = async (chunk) => {
 const fetchExistingRecipeFromStrapi = async (slug) => {
   try {
     const response = await fetch(
-      `http://localhost:1337/api/recipes?filters[uid][$eq]=${slug}&populate=*`
+      `${strapiURL}/api/recipes?filters[uid][$eq]=${slug}&populate=*`
     );
     console.log("Response value:", response);
     const recipes = await response.json();
