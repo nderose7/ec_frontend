@@ -31,6 +31,22 @@
       <div v-if="userValue" class="relative">
         <LoggedInUserNav />
       </div>
+      <div
+        v-if="!user"
+        class="text-right items-center gap-3 hidden lg:flex"
+        :class="route.path === '/sign-up' ? 'hidden lg:hidden' : ''"
+      >
+        <NuxtLink
+          to="/sign-up"
+          class="btn-primary btn-responsive font-bold inline-block mt-1 mb-1"
+          >Sign Up</NuxtLink
+        >
+        <NuxtLink
+          to="/login"
+          class="btn-primary btn-responsive font-bold inline-block mt-1 mb-1"
+          >Login</NuxtLink
+        >
+      </div>
     </div>
   </div>
 </template>
