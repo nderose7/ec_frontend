@@ -236,7 +236,11 @@ const onSubmit = async () => {
       password: password.value,
     });
 
-    const userId = userRegistered.user.value.id;
+    let userId;
+
+    if (userRegistered) {
+      userId = userRegistered.user?.value?.id;
+    }
 
     // Step 2: Complete the registration by creating a Stripe customer
     const response = await fetch(`${strapiURL}/api/auth/register`, {
