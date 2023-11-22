@@ -247,7 +247,7 @@ const onSubmit = async () => {
 
     // Step 1: Register the user using the Strapi function
     const userRegistered = await register({
-      username: usernameToUse,
+      username: email.value,
       email: email.value,
       password: password.value,
     });
