@@ -106,6 +106,8 @@
                 <span class="radio-circle"></span>
                 Appetizer
               </label>
+            </div>
+            <div v-if="showCourseOptions" class="lg:flex gap-4 mb-3 mx-2">
               <label class="custom-radio">
                 <input
                   type="radio"
@@ -115,6 +117,7 @@
                 <span class="radio-circle"></span>
                 Side
               </label>
+
               <label class="custom-radio">
                 <input
                   type="radio"
@@ -124,8 +127,7 @@
                 <span class="radio-circle"></span>
                 Dessert
               </label>
-            </div>
-            <div v-if="showCourseOptions" class="lg:flex gap-4 mb-3 mx-2">
+
               <label class="custom-radio">
                 <input
                   type="radio"
@@ -183,7 +185,7 @@
                 Difficulty / Time
               </label>
             </button>
-            <div v-if="showDifficultyOptions" class="md:flex gap-4 mb-3">
+            <div v-if="showDifficultyOptions" class="md:flex gap-4 mb-3 mx-2">
               <label class="custom-radio">
                 <input
                   type="radio"
