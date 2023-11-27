@@ -1,9 +1,9 @@
 <template>
-  <div class="xl:flex h-full">
+  <div class="lg:flex h-full">
     <RecipesLoggedIn
       v-if="user"
       :triggerUpdate="triggerUpdate"
-      class="hidden lg:inline-block"
+      class="hidden lg:block w-full"
     />
     <Recipes v-else :recipes="recipes" class="hidden lg:inline-block" />
     <div class="w-full px-5 xl:px-10 pb-48 min-[1600px]:flex gap-10">
