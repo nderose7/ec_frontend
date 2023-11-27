@@ -3,7 +3,7 @@
     v-if="recipes && recipes.length"
     class="min-[1600px]:w-1/4 lg:w-[450px] px-5 pb-4 lg:sticky lg:top-[82px] h-full lg:border-r dark:border-midnight-600"
   >
-    <div>
+    <div class="">
       <ul class="xl:pr-2 pt-5">
         <h5 class="text-sm text-slate-500 mb-3 xl:pl-5">YOUR CREATIONS</h5>
         <div class="h-screen-minus-header overflow-y-scroll xl:pl-5">
@@ -52,7 +52,7 @@
           </p>
         </div>
         <div v-else>
-          <p class="mt-5 text-center">
+          <p class="mt-3 text-center">
             <NuxtLink to="/login" class="link">Login</NuxtLink> or
             <NuxtLink to="/sign-up" class="link">Sign Up</NuxtLink> to save
             recipes.
