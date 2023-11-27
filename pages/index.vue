@@ -363,11 +363,44 @@
                   {{ newRecipe.recipe_name }}
                 </h1>
 
-                <div class="mt-6 mb-5">
+                <div class="md:flex gap-5 mt-6">
+                  <div v-if="newRecipe.course" class="hidden md:block">
+                    <Icon name="mdi:earth" class="icon-style" size="" />
+                  </div>
+                  <div>
+                    <b>{{
+                      isLoadingRecipes || newRecipe.course ? "Course:" : ""
+                    }}</b>
+                    <span v-if="isLoadingRecipes && !newRecipe.course"
+                      ><Icon
+                        name="svg-spinners:3-dots-bounce"
+                        size="1rem"
+                        class="ml-3"
+                    /></span>
+                    {{ newRecipe.course ? newRecipe.course : "" }}
+                  </div>
+                  <div>
+                    <b>{{
+                      isLoadingRecipes || newRecipe.cuisine_type
+                        ? "Cuisine:"
+                        : ""
+                    }}</b>
+                    <span v-if="isLoadingRecipes && !newRecipe.cuisine_type"
+                      ><Icon
+                        name="svg-spinners:3-dots-bounce"
+                        size="1rem"
+                        class="ml-3"
+                    /></span>
+                    {{ newRecipe.cuisine_type ? newRecipe.cuisine_type : "" }}
+                  </div>
+                </div>
+
+                <div class="mt-2 mb-5">
                   <div class="md:flex gap-5 mt-2">
                     <div v-if="newRecipe.prep_time" class="hidden md:block">
                       <Icon name="bx:time" class="icon-style" />
                     </div>
+
                     <div>
                       <b>{{
                         isLoadingRecipes || newRecipe.prep_time ? "Prep:" : ""
@@ -1406,9 +1439,9 @@ const createRecipes = async () => {
 };
 
 useSeoMeta({
-  title: "Create Unique Recipes Using AI",
+  title: "EatClassy - Create Unique Recipes Using AI",
   description:
-    "Create original, insanely good recipes for any idea, ingredient, cuisine, region, or dietary need using our AI-powered recipe engine.",
+    "Create original, insanely good recipes for any idea, ingredient, cuisine, region, or dietary need using the EatClassy AI-powered recipe engine.",
 });
 </script>
 
