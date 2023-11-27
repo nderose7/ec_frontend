@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-[1600px]:w-1/4 lg:w-1/3 px-5 pb-24 lg:pb-4 lg:sticky lg:top-[82px] h-full lg:border-r dark:border-midnight-600"
+    class="min-[1600px]:w-1/4 lg:w-[450px] px-5 pb-4 lg:sticky lg:top-[78px] h-full lg:border-r dark:border-midnight-600"
   >
     <div>
       <ul class="xl:pr-2 pt-5">
@@ -113,7 +113,7 @@
             v-if="recipesFromStrapi.lastSevenDays?.length"
             class="text-sm text-slate-500 mb-3"
           >
-            Previous 7 Days
+            PREVIOUS 7 DAYS
           </h5>
 
           <li
@@ -165,7 +165,7 @@
             v-if="recipesFromStrapi.older?.length"
             class="text-sm text-slate-500 mb-3"
           >
-            Older
+            OLDER
           </h5>
 
           <li

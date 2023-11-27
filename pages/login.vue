@@ -75,8 +75,11 @@
             </div>
           </form>
         </div>
-        <div v-if="route.query.emailConfirmed && recipeImportLoading">
-          Importing your creations...
+        <div
+          v-if="route.query.emailConfirmed && recipeImportLoading"
+          class="mt-2"
+        >
+          Importing your creations for first login...
           <Icon name="svg-spinners:3-dots-bounce" size="1rem" class="ml-3" />
         </div>
         <div class="mt-4">
