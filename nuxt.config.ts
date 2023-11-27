@@ -33,7 +33,7 @@ export default defineNuxtConfig({
       stripeKey: process.env.STRIPE_KEY,
       siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://www.eatclassy.com',
       siteName: 'EatClassy',
-      siteDescription: 'Create original recipes from any idea, ingredient, region, cuisine, or dietary need.',
+      siteDescription: 'Create original, insanely good recipes for any idea, ingredient, cuisine, region, or dietary need using the EatClassy AI-powered recipe engine.',
       language: 'en', // prefer more explicit language codes like `en-AU` over `en`
       gtag: {
         id: ''
