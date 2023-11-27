@@ -3,7 +3,7 @@
     <ul class="dark:border-midnight-600 pt-5">
       <h5 class="text-sm text-slate-500 mb-4">COMMUNITY CREATIONS</h5>
       <div
-        class="lg:grid grid-cols-3 gap-x-10 xl:grid-cols-2 min-[1600px]:grid-cols-3"
+        class="lg:grid grid-cols-2 min-[1400px]:grid-cols-3 gap-x-10 xl:grid-cols-2 min-[1600px]:grid-cols-3"
       >
         <li v-for="recipe in recipes" :key="recipe.id" class="card">
           <div v-if="recipe.attributes.image?.data" class="mb-4">
