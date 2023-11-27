@@ -95,7 +95,7 @@
                   value="courseDinner"
                 />
                 <span class="radio-circle"></span>
-                Dinner
+                Main / Dinner
               </label>
               <label class="custom-radio">
                 <input

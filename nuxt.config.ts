@@ -6,8 +6,13 @@ export default defineNuxtConfig({
     "nuxt-icon",
     "@nuxtjs/color-mode",
     "@nuxtjs/google-fonts",
-    "@nuxtjs/strapi"
+    "@nuxtjs/strapi",
+    "nuxt-gtag",
+    "@nuxtjs/google-adsense"
   ],
+  googleAdsense: {
+    id: 'ca-pub-8481734308143857'
+  },
   googleFonts: {
     families: {
       Urbanist:  {
