@@ -1406,9 +1406,9 @@ const createRecipes = async () => {
 };
 
 useSeoMeta({
-  title: "EatClassy",
+  title: "Create Unique Recipes Using AI",
   description:
-    "Create original, insanely good recipes for any idea, ingredient, cuisine, region, or diet.",
+    "Create original, insanely good recipes for any idea, ingredient, cuisine, region, or dietary need using our AI-powered recipe engine.",
 });
 </script>
 
