@@ -1,21 +1,16 @@
 <template>
-  <div v-if="!searchSuggestionsDismissed" class="text-center">
-    <div
-      class="flex text-left gap-10 mx-auto bg-brand-500 p-3 px-5 rounded-lg justify-between items-center mb-2 mt-2"
-    >
-      <p class="text-base italic text-white">
+  <div v-if="!searchSuggestionsDismissed" class="mt-1">
+    <div class="justify-between items-center mb-2">
+      <p class="text-base italic">
         <b>Tip:</b> Try a recipe name, ingredients, cuisine, or say surprise
-        me...
-      </p>
-
-      <div class="text-right">
+        me... <span class="md:hidden"><br /></span>
         <button
           @click="dismissSearchSuggestions"
-          class="bg-white px-6 py-3 inline-block rounded-lg text-lg font-bold text-brand-500"
+          class="inline-block font-bold text-brand-500 mt-1 md:mt-0"
         >
           Dismiss
         </button>
-      </div>
+      </p>
     </div>
   </div>
 </template>

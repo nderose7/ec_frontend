@@ -2,7 +2,6 @@
   <NuxtLayout>
     <SeoKit />
     <NuxtPage />
-    <GDPR />
   </NuxtLayout>
 </template>
 

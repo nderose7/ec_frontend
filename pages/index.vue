@@ -305,11 +305,13 @@
           </div>
         </form>
         <div class="xl:pb-12 pb-10">
-          <div class="min-[1600px]:px-32">
-            <div class="">
+          <div class="min-[1600px]:px-32 flex justify-between">
+            <div class="w-full">
               <SearchSuggestions />
             </div>
-            <div class="text-base font-medium text-right pb-3 pt-2 md:pt-1">
+            <div
+              class="text-base font-medium text-right pb-3 pt-1 md:pt-1 w-2/3"
+            >
               <span class="pl-1"
                 ><span v-if="user && !user.paidMembershipTierThree"
                   ><b>{{ freeCreditsLeft }}</b>
