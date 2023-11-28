@@ -92,7 +92,7 @@
               }}
             </p>
           </div>
-          <div class="w-2/3 lg:text-right mt-5 lg:mt-0">
+          <div class="lg:w-2/3 w-full lg:text-right mt-5 lg:mt-0">
             <div class="flex gap-2 lg:justify-end">
               <button
                 v-if="
