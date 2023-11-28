@@ -146,14 +146,14 @@
         <div v-if="user && !user.freeAccount" class="">
           <NuxtLink
             to="/membership/change"
-            class="btn-primary block md:inline-block text-lg px-5 py-3 font-bold text-center"
+            class="btn-primary block md:inline-block text-lg px-5 py-3 font-bold text-center w-full mb-4 md:mb-0"
             >Upgrade / Downgrade</NuxtLink
           >
         </div>
         <div>
           <button
             @click="redirectToCustomerPortal()"
-            class="btn-primary block md:inline-block px-5 py-3 font-bold text-center"
+            class="btn-primary block md:inline-block px-5 py-3 font-bold text-center w-full"
           >
             Open Billing Portal
           </button>
