@@ -338,12 +338,14 @@
         >
           <b>Creating your recipe...</b>
           <Icon name="svg-spinners:3-dots-bounce" size="2rem" class="ml-3" />
-          <Adsbygoogle />
+          <div class="mt-2">
+            <Adsbygoogle />
+          </div>
         </div>
 
         <div class="min-[1600px]:px-32 pb-12">
           <div v-if="!existingRecipeData" class="">
-            <div v-if="!isLoadingRecipes">
+            <div v-if="!isLoadingRecipes && showAds" class="mt-2">
               <Adsbygoogle />
             </div>
             <div class="lg:flex items-top justify-between gap-16">
@@ -780,6 +782,7 @@ const cuisineOption = ref("");
 const ingredientInput = ref("");
 const triggerUpdate = ref(0);
 const inputRef = ref(null);
+const showAds = ref(false);
 
 const showImagination = ref(false);
 const paidMemberTierOne = ref(false);
@@ -860,6 +863,7 @@ function loadRecipes() {
 const titleFromFetch = ref("");
 
 const fetchRecipeTitle = async () => {
+  showAds.value = true;
   createRecipesError.value = false;
   existingRecipeData.value = false;
   newRecipe.value = {};
