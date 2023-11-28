@@ -1,5 +1,5 @@
 <template>
-  <div class="logged-in-user-nav">
+  <div v-if="user" class="logged-in-user-nav">
     <div v-if="userNavLoading">
       <Icon name="svg-spinners:bars-scale" size="1.5rem" class="" />
     </div>
@@ -59,6 +59,7 @@
               }}
             </div>
             <NuxtLink
+              @click="openUser = !openUser"
               to="/settings/billing"
               v-if="!user.freeAccount"
               class="mt-3 p-1 px-3 inline-block rounded-full bg-green-100 dark:bg-midnight-900 dark:text-brand-500 w-fit"
@@ -73,9 +74,9 @@
               <Icon name="bx:check-circle" class="icon-style" /> Free Account
               &nbsp;
               <NuxtLink
+                @click="openUser = !openUser"
                 to="/membership"
                 class="link text-base"
-                @click="openUser = !openUser"
                 >Upgrade</NuxtLink
               >
             </div>
@@ -101,7 +102,11 @@
             Settings
           </NuxtLink>
 
-          <NuxtLink @click="logoutUser()" class="block cursor-pointer py-1">
+          <NuxtLink
+            @click="openUser = !openUser"
+            to="/logout"
+            class="block cursor-pointer py-1"
+          >
             <Icon name="mdi:logout" class="icon-style mr-1 lg:mx-0" />
             <span class="ml-1 inline-block"> Logout </span>
           </NuxtLink>
@@ -150,6 +155,14 @@ const findUserData = async () => {
 
 onMounted(async () => {
   findUserData();
+});
+
+const paymentStatus = inject("paymentStatus", "none");
+
+watch(paymentStatus, (newStatus) => {
+  if (newStatus === "success") {
+    findUserData();
+  }
 });
 
 if (userDataError.value) {

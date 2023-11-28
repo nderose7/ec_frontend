@@ -1,7 +1,8 @@
 <template>
   <div class="container mx-auto px-4">
     <div class="text-center mt-10 mb-8">
-      <h1>Create More Recipes.</h1>
+      <h1 class="mb-4">Create More Recipes.</h1>
+      <p>Sign up for an EatClassy membership. Pause or cancel anytime.</p>
       <div v-if="showPayment">
         <p class="mt-3">
           You will be charged {{ selectedPrice }}/month until you pause or

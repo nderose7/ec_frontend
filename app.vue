@@ -48,6 +48,9 @@ body {
 .btn-danger {
   @apply bg-red-600 dark:bg-red-800 text-white px-6 py-3 rounded-lg font-bold;
 }
+button:disabled {
+  @apply opacity-40;
+}
 .btn-sm {
   @apply px-3 pt-[2px] pb-[4px] text-base rounded-lg;
 }

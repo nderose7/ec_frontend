@@ -10,9 +10,7 @@ export default defineNuxtConfig({
     "nuxt-gtag",
     "@nuxtjs/google-adsense"
   ],
-  googleAdsense: {
-    id: 'ca-pub-8481734308143857'
-  },
+
   googleFonts: {
     families: {
       Urbanist:  {
@@ -37,7 +35,11 @@ export default defineNuxtConfig({
       language: 'en', // prefer more explicit language codes like `en-AU` over `en`
       gtag: {
         id: ''
-      }
+      },
+      googleAdsense: {
+        id: process.env.GOOGLE_ADSENSE_ID,
+        test: process.env.GOOGLE_ADSENSE_TEST_MODE === 'true',
+      },
     }
   },
   extends: [

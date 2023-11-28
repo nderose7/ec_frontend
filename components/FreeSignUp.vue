@@ -248,7 +248,7 @@ const onSubmit = async () => {
     navigateTo("/check-email");
   } catch (error) {
     console.error(error);
-    registerLoading.value = true;
+    registerLoading.value = false;
     Toast.fire({
       icon: "error",
       title: "Error signing up",

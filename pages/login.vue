@@ -123,7 +123,7 @@ const route = useRoute();
 
 const recipeImportLoading = ref(false);
 
-const { find, create } = useStrapi();
+const { find, create, update } = useStrapi();
 
 definePageMeta({
   layout: "blank",

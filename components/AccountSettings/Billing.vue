@@ -101,7 +101,7 @@
                 "
                 type="button"
                 @click="pauseSubscription(subscription.subscriptionId)"
-                class="block my-4 lg:my-0 p-2 dark:bg-midnight-800 bg-slate-100 link rounded-lg border dark:border-midnight-100"
+                class="block my-4 lg:my-0 p-2 dark:bg-midnight-800 bg-slate-100 link rounded-lg border dark:border-midnight-100 mb-2 lg:mb-0"
               >
                 <Icon name="mdi:pause" class="icon-style" /> Pause Subscription
               </button>
@@ -112,7 +112,7 @@
                 "
                 type="button"
                 @click="resumeSubscription(subscription.subscriptionId)"
-                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100"
+                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100 mb-2 lg:mb-0"
               >
                 <Icon
                   name="material-symbols:resume"
@@ -140,6 +140,23 @@
               <Icon name="bx:redo" class="icon-style" /> Renew Subscription
             </NuxtLink>
           </div>
+        </div>
+      </div>
+      <div class="flex gap-4 mt-5">
+        <div v-if="user && !user.freeAccount" class="">
+          <NuxtLink
+            to="/membership/change"
+            class="btn-primary inline-block text-lg px-5 py-3 font-bold"
+            >Upgrade / Downgrade</NuxtLink
+          >
+        </div>
+        <div>
+          <button
+            @click="redirectToCustomerPortal()"
+            class="btn-primary inline-block px-5 py-3 font-bold"
+          >
+            Open Billing Portal
+          </button>
         </div>
       </div>
     </div>
@@ -216,8 +233,6 @@ const { find, findOne, create, update, delete: remove } = useStrapi();
 const {
   public: { strapiURL, stripeKey },
 } = useRuntimeConfig();
-
-const tutorialsSubscriptionPriceId = "price_0NpYh7Ie9L9WfGDJlgozYg5m";
 
 const userData = ref(null);
 const stripeUserData = ref("");
@@ -439,6 +454,35 @@ const subscriptionToCancel = ref(null);
 const openCancelModal = (subscriptionId) => {
   subscriptionToCancel.value = subscriptionId;
   showModal.value = true;
+};
+
+const redirectToCustomerPortal = async () => {
+  try {
+    const token = useStrapiToken();
+
+    const response = await fetch(
+      `${strapiURL}/api/create-customer-portal-session`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.value}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        "Failed to create customer portal session: " + response.statusText
+      );
+    }
+
+    const { url } = await response.json();
+    window.location.href = url; // Redirect the user to the Customer Portal
+  } catch (error) {
+    console.error("Error redirecting to customer portal:", error);
+    // Handle the error appropriately
+  }
 };
 </script>
 

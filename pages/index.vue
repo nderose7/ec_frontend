@@ -338,10 +338,14 @@
         >
           <b>Creating your recipe...</b>
           <Icon name="svg-spinners:3-dots-bounce" size="2rem" class="ml-3" />
+          <Adsbygoogle />
         </div>
 
         <div class="min-[1600px]:px-32 pb-12">
           <div v-if="!existingRecipeData" class="">
+            <div v-if="!isLoadingRecipes">
+              <Adsbygoogle />
+            </div>
             <div class="lg:flex items-top justify-between gap-16">
               <div class="lg:order-2 lg:w-1/3 text-center mb-5 lg:mb-0">
                 <img
@@ -1438,6 +1442,14 @@ const createRecipes = async () => {
     }
   }
 };
+
+const paymentStatus = inject("paymentStatus", "none");
+
+watch(paymentStatus, (newStatus) => {
+  if (newStatus === "success") {
+    loadUserData();
+  }
+});
 
 useSeoMeta({
   title: "EatClassy - Create Unique Recipes Using AI",

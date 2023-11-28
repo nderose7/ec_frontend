@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen container">
+  <div class="min-h-screen container mx-auto">
     <AccountSettingsHeader />
     <AccountSettingsMenu />
     <div class="xl:px-48">
