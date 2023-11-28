@@ -4,7 +4,7 @@
     <div class="flex min-h-screen items-center justify-center">
       <div class="px-10 lg:w-5/12">
         <div>
-          <Icon name="bx:envelope" class="text-blue-500" size="6rem" />
+          <Icon name="bx:envelope" class="text-brand-500" size="6rem" />
         </div>
         <h1 class="my-4 text-2xl font-bold lg:text-3xl">Check your email!</h1>
         <p>
@@ -12,7 +12,10 @@
           further instructions. If you think you have an account, but you did
           not receive an email, please check your spam folder.
         </p>
-        <NuxtLink to="/login" class="btn-primary my-8 inline-block">
+        <NuxtLink
+          to="/login"
+          class="btn-primary my-8 inline-block px-5 py-3 font-bold"
+        >
           Back to Login
         </NuxtLink>
       </div>

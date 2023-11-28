@@ -19,12 +19,14 @@
           <input
             v-model="email"
             type="email"
-            class=""
+            class="rounded-lg"
             placeholder="name@domain.com"
             required
           />
         </div>
-        <button type="submit" class="btn-primary">Get New Password</button>
+        <button type="submit" class="btn-primary px-5 py-3 font-bold">
+          Get New Password
+        </button>
       </form>
     </div>
   </div>

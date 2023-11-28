@@ -142,18 +142,18 @@
           </div>
         </div>
       </div>
-      <div class="flex gap-4 mt-5">
+      <div class="md:flex gap-4 mt-5">
         <div v-if="user && !user.freeAccount" class="">
           <NuxtLink
             to="/membership/change"
-            class="btn-primary inline-block text-lg px-5 py-3 font-bold"
+            class="btn-primary block md:inline-block text-lg px-5 py-3 font-bold text-center"
             >Upgrade / Downgrade</NuxtLink
           >
         </div>
         <div>
           <button
             @click="redirectToCustomerPortal()"
-            class="btn-primary inline-block px-5 py-3 font-bold"
+            class="btn-primary block md:inline-block px-5 py-3 font-bold text-center"
           >
             Open Billing Portal
           </button>
