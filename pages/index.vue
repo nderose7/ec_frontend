@@ -527,17 +527,21 @@
               <div>
                 <h2
                   class="mt-8 mb-4"
-                  v-if="newRecipe.ingredients || isLoadingRecipes"
+                  v-if="formattedIngredients.length || isLoadingRecipes"
                 >
                   Ingredients
                 </h2>
                 <Icon
-                  v-if="!newRecipe.ingredients && isLoadingRecipes"
+                  v-if="!formattedIngredients.length && isLoadingRecipes"
                   name="svg-spinners:3-dots-bounce"
                   size="2rem"
                   class="ml-3"
                 />
-                {{ newRecipe.ingredients }}
+                <ul class="list-disc ml-8">
+                  <li v-for="ingredient in formattedIngredients">
+                    {{ ingredient }}
+                  </li>
+                </ul>
               </div>
               <div>
                 <h2
@@ -1181,9 +1185,12 @@ const formattedIngredients = computed(() => {
   if (!newRecipe.value.ingredients) {
     return [];
   }
-  // Split the ingredients string into an array, trim each item to remove extra spaces
+
+  // Split the ingredients string into an array based on dashes.
+  // This regex will match a dash ('-') that is either at the start of the string (^-) or
+  // followed by a space (\s-), capturing the dash and any preceding spaces.
   return newRecipe.value.ingredients
-    .split(/(?<=^|\s)-\s*/)
+    .split(/\s*-\s*/)
     .map((ingredient) => ingredient.trim())
     .filter(Boolean);
 });
