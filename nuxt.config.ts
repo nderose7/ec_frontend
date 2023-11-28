@@ -22,7 +22,7 @@ export default defineNuxtConfig({
   colorMode: {
     classSuffix: ""
   },
-    runtimeConfig: {
+  runtimeConfig: {
     public: {
       strapiURL: process.env.STRAPI_URL,
       dataAPI: process.env.DATA_API,
