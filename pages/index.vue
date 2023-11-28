@@ -527,12 +527,12 @@
               <div>
                 <h2
                   class="mt-8 mb-4"
-                  v-if="newRecipe.ingredients.length || isLoadingRecipes"
+                  v-if="newRecipe.ingredients || isLoadingRecipes"
                 >
                   Ingredients
                 </h2>
                 <Icon
-                  v-if="!newRecipe.ingredients.length && isLoadingRecipes"
+                  v-if="!newRecipe.ingredients && isLoadingRecipes"
                   name="svg-spinners:3-dots-bounce"
                   size="2rem"
                   class="ml-3"
