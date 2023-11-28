@@ -92,8 +92,8 @@
               }}
             </p>
           </div>
-          <div class="w-full lg:text-right mt-5 lg:mt-0">
-            <div class="lg:flex gap-2 lg:justify-end">
+          <div class="w-2/3 lg:text-right mt-5 lg:mt-0">
+            <div class="flex gap-2 lg:justify-end">
               <button
                 v-if="
                   !subscription.canceled &&
@@ -101,9 +101,9 @@
                 "
                 type="button"
                 @click="pauseSubscription(subscription.subscriptionId)"
-                class="block my-4 lg:my-0 p-2 dark:bg-midnight-800 bg-slate-100 link rounded-lg border dark:border-midnight-100 mb-2 lg:mb-0"
+                class="block p-2 dark:bg-midnight-800 bg-slate-100 link rounded-lg border dark:border-midnight-100 mb-2 lg:mb-0 w-full"
               >
-                <Icon name="mdi:pause" class="icon-style" /> Pause Subscription
+                <Icon name="mdi:pause" class="icon-style" /> Pause
               </button>
               <button
                 v-if="
@@ -112,23 +112,22 @@
                 "
                 type="button"
                 @click="resumeSubscription(subscription.subscriptionId)"
-                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100 mb-2 lg:mb-0"
+                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100 mb-2 lg:mb-0 w-full"
               >
                 <Icon
                   name="material-symbols:resume"
                   class="icon-style top-[-1px]"
                 />
-                Resume Subscription
+                Resume
               </button>
 
               <button
                 v-if="!subscription.canceled"
                 type="button"
                 @click="openCancelModal(subscription.subscriptionId)"
-                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100"
+                class="block p-2 dark:bg-midnight-800 bg-slate-100 rounded-lg link border dark:border-midnight-100 mb-2 lg:mb-0 w-full"
               >
                 <Icon name="mdi:cancel" class="icon-style" /> Cancel
-                Subscription
               </button>
             </div>
             <NuxtLink
@@ -137,7 +136,7 @@
               to="/membership"
               class="btn-primary inline-block px-3 py-2 font-semibold"
             >
-              <Icon name="bx:redo" class="icon-style" /> Renew Subscription
+              <Icon name="bx:redo" class="icon-style" /> Renew Membership
             </NuxtLink>
           </div>
         </div>
