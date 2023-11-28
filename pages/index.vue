@@ -1202,7 +1202,7 @@ const existingFormattedIngredients = computed(() => {
   }
   // Split the ingredients string into an array, trim each item to remove extra spaces
   return existingRecipeData.value.attributes.ingredients
-    .split(/(?<=^|\s)-\s*/)
+    .split(/\s*-\s*/)
     .map((ingredient) => ingredient.trim())
     .filter(Boolean);
 });
