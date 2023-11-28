@@ -7,7 +7,7 @@
       @closeMenu="showMobileMenu = false"
       class="max-h-screen"
     />
-    <div v-show="!showMobileMenu">
+    <div>
       <slot />
     </div>
   </div>
