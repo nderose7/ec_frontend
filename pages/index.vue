@@ -527,21 +527,17 @@
               <div>
                 <h2
                   class="mt-8 mb-4"
-                  v-if="formattedIngredients.length || isLoadingRecipes"
+                  v-if="newRecipe.ingredients.length || isLoadingRecipes"
                 >
                   Ingredients
                 </h2>
                 <Icon
-                  v-if="!formattedIngredients.length && isLoadingRecipes"
+                  v-if="!newRecipe.ingredients.length && isLoadingRecipes"
                   name="svg-spinners:3-dots-bounce"
                   size="2rem"
                   class="ml-3"
                 />
-                <ul class="list-disc ml-8">
-                  <li v-for="ingredient in formattedIngredients">
-                    {{ ingredient }}
-                  </li>
-                </ul>
+                {{ newRecipe.ingredients }}
               </div>
               <div>
                 <h2
@@ -1101,65 +1097,6 @@ const processChunk = async (chunk) => {
     }
 
     Object.assign(newRecipe.value, data);
-
-    //console.log("data: ", data);
-
-    /*
-    if (data.recipe_name) {
-      console.log("data.recipe_name found from GPT: ", data.recipe_name);
-      // Slugify the title from OpenAI's response
-      const titleSlug = slugify(data.recipe_name); // Assuming data has a title field
-      console.log(
-        "Attempt to fetch the existing recipe from Strapi with uid: ",
-        titleSlug
-      );
-      // Attempt to fetch the existing recipe from Strapi
-      existingRecipe.value = await fetchExistingRecipeFromStrapi(titleSlug);
-      console.log("existingRecipe.value: ", existingRecipe.value);
-    }*/
-    /*
-    if (existingRecipe.value) {
-      controller.abort();
-      existingRecipeData.value = existingRecipe.value; // Use the existing recipe from Strapi
-      console.log(
-        "Recipe already exists in Strapi. Using existing recipe:",
-        existingRecipeData.value
-      );
-      isLoadingRecipes.value = false;
-      updateLocalStorage();
-      loadRecipes();
-      decrementLoggedInCredits();
-      decrementCredits();
-      console.log(
-        "Trying to connect user to existing recipe with id",
-        existingRecipeData.value.id
-      );
-      /*
-      await update("recipes", existingRecipeData.value.id, {
-        created_by_user: {
-          connect: [user.value?.id || null],
-        },
-      });*/
-    /*
-      if (user.value) {
-        console.log("User exists, attempting to create userrecipes data");
-        await create("userrecipes", {
-          user: {
-            connect: [user.value.id],
-          },
-          recipe: {
-            connect: [existingRecipeData.value.id],
-          },
-          addedAt: new Date().toISOString(),
-        });
-        triggerUpdate.value++;
-      }
-      console.log("Userrecipes complete...");
-      return;
-    } else {
-      // If the recipe does not exist in Strapi, use the OpenAI generated recipe
-      Object.assign(newRecipe.value, data);
-    }*/
   } catch (e) {
     isLoadingRecipes.value = false;
     console.error("Error parsing chunk:", chunk, e);
@@ -1204,10 +1141,7 @@ const updateUIAfterStream = () => {
   createRecipes();
   loadRecipes();
   decrementLoggedInCredits();
-  //decrementLoggedOutCredits();
   decrementCredits();
-  //let recipeObject = parseFullRecipeText(newRecipe.value.full_recipe);
-  //fullRecipe.value.push(recipeObject);
 };
 
 function updateLocalStorage() {
@@ -1240,13 +1174,6 @@ function updateLocalStorage() {
     );
     data.value = { recipes: updatedRecipes };
   }
-
-  // Store the updated array back into localStorage
-  //.setItem("recipes", JSON.stringify({ recipes: updatedRecipes }));
-  //console.log("Updated recipes in localStorage:", updatedRecipes);
-
-  // Update your reactive property to trigger the UI update
-  //data.value = { recipes: updatedRecipes };
 }
 
 // Computed property to create a list of ingredients from the string
