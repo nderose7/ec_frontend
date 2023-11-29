@@ -174,7 +174,7 @@
             v-if="recipesFromStrapi.older?.length"
             class="text-sm text-slate-500 mb-3"
           >
-            OLDER
+            OLDER THAN 7 DAYS
           </h5>
 
           <li
