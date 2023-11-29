@@ -50,6 +50,7 @@ definePageMeta({
 });
 
 useHead({
+  title: "Reset Password",
   meta: [{ name: "robots", content: "noindex" }],
 });
 </script>

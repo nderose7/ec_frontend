@@ -60,4 +60,9 @@ onMounted(async () => {
   paymentStatus.value = result.status;
   loading.value = false;
 });
+
+useHead({
+  title: "Payment Status",
+  meta: [{ name: "robots", content: "noindex" }],
+});
 </script>

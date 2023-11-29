@@ -17,5 +17,6 @@ definePageMeta({
 });
 useHead({
   title: "Profile",
+  meta: [{ name: "robots", content: "noindex" }],
 });
 </script>

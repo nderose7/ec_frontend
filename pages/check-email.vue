@@ -16,4 +16,8 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+useHead({
+  meta: [{ name: "robots", content: "noindex" }],
+});
+</script>

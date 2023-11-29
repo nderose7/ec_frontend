@@ -17,5 +17,6 @@ definePageMeta({
 });
 useHead({
   title: "Billing",
+  meta: [{ name: "robots", content: "noindex" }],
 });
 </script>
