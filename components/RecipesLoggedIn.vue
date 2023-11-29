@@ -9,7 +9,7 @@
     class="sticky top-[78px] px-5 pb-4 h-full lg:border-r dark:border-midnight-600 lg:min-w-[360px] lg:max-w-[400px]"
   >
     <div class="h-full">
-      <ul class="xl:pr-2 py-5 sticky top-[78px]">
+      <ul class="xl:pr-2 pb-5 pt-2 sticky top-[78px]">
         <div
           class="h-screen-minus-header overflow-y-scroll xl:pl-5"
           ref="scrollContainer"
