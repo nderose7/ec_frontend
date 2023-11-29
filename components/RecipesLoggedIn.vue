@@ -6,10 +6,10 @@
       recipesFromStrapi.lastSevenDays?.length ||
       recipesFromStrapi.older?.length
     "
-    class="px-5 pb-4 sticky top-[78px] h-full lg:border-r dark:border-midnight-600 lg:min-w-[360px] lg:max-w-[360px]"
+    class="sticky top-[78px] px-5 pb-4 h-full lg:border-r dark:border-midnight-600 lg:min-w-[360px] lg:max-w-[400px]"
   >
-    <div>
-      <ul class="xl:pr-2 pt-5">
+    <div class="h-full">
+      <ul class="xl:pr-2 py-5 sticky top-[78px]">
         <div
           class="h-screen-minus-header overflow-y-scroll xl:pl-5"
           ref="scrollContainer"

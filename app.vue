@@ -152,10 +152,10 @@ button.link,
   @apply mb-6;
 }
 .h-screen-minus-header {
-  /*height: 100vh; /* Default height */
+  height: 100vh; /* Default height */
   @screen lg {
     /* Tailwind's way to apply media queries */
-    height: calc(100vh - 190px); /* Adjusted height for large screens */
+    height: calc(100vh - 114px); /* Adjusted height for large screens */
   }
 }
 .dark .toast-style {

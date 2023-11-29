@@ -1,5 +1,5 @@
 <template>
-  <div v-show="showMobileMenu" class="mobile-menu pt-5 pb-48 h-full">
+  <div v-show="showMobileMenu" class="mobile-menu pt-5 pb-16">
     <div class="px-5">
       <SearchRecipes @closeMenu="emitCloseMenu" />
       <ul>
