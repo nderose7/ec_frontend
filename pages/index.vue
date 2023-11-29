@@ -1180,15 +1180,14 @@ function updateLocalStorage() {
   }
 }
 
-// Computed property to create a list of ingredients from the string
 const formattedIngredients = computed(() => {
   if (!newRecipe.value.ingredients) {
     return [];
   }
 
-  // Split the ingredients string into an array based on "- " at the start of a line.
-  // This regex will match "- " that is either at the start of the string (^- ) or
-  // after a newline character (\n- ).
+  // Adjusted regex to split the ingredients string into an array.
+  // The regex now matches "- " at the start of the string or after a newline character.
+  // The "?" in "(?:^|\n)- " makes the preceding group (?:^|\n) non-capturing.
   return newRecipe.value.ingredients
     .split(/(?:^|\n)- /)
     .map((ingredient) => ingredient.trim())
@@ -1202,7 +1201,7 @@ const existingFormattedIngredients = computed(() => {
   }
   // Split the ingredients string into an array, trim each item to remove extra spaces
   return existingRecipeData.value.attributes.ingredients
-    .split(/\s*-\s*/)
+    .split(/(?:^|\n)- /)
     .map((ingredient) => ingredient.trim())
     .filter(Boolean);
 });
