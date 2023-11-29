@@ -1189,7 +1189,7 @@ const formattedIngredients = computed(() => {
   // The regex now matches "- " at the start of the string or after a newline character.
   // The "?" in "(?:^|\n)- " makes the preceding group (?:^|\n) non-capturing.
   return newRecipe.value.ingredients
-    .split(/(?:^|\n)- /)
+    .split(/\n?- /)
     .map((ingredient) => ingredient.trim())
     .filter(Boolean);
 });
@@ -1201,7 +1201,7 @@ const existingFormattedIngredients = computed(() => {
   }
   // Split the ingredients string into an array, trim each item to remove extra spaces
   return existingRecipeData.value.attributes.ingredients
-    .split(/(?:^|\n)- /)
+    .split(/\n?- /)
     .map((ingredient) => ingredient.trim())
     .filter(Boolean);
 });
