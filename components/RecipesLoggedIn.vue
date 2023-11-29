@@ -6,7 +6,7 @@
       recipesFromStrapi.lastSevenDays?.length ||
       recipesFromStrapi.older?.length
     "
-    class="px-5 pb-4 lg:sticky lg:top-[78px] h-full lg:border-r dark:border-midnight-600 lg:min-w-[350px] lg:max-w-[350px]"
+    class="px-5 pb-4 lg:sticky lg:top-[78px] h-full lg:border-r dark:border-midnight-600 lg:min-w-[360px] lg:max-w-[360px]"
   >
     <div>
       <ul class="xl:pr-2 pt-5">
