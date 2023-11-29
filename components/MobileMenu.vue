@@ -43,7 +43,6 @@
         </div>
       </ul>
     </div>
-    <RecipesLoggedIn @closeMenu="emitCloseMenu" />
   </div>
 </template>
 

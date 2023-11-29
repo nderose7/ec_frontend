@@ -50,9 +50,14 @@
                 </NuxtLink>
 
                 <div class="flex gap-5 text-base mb-4">
-                  <p>
+                  <p v-if="recipe.total_time">
                     <Icon name="bx:time" class="icon-style" />
-                    {{ truncateString(recipe.total_time, 16) }}
+                    {{
+                      truncateString(
+                        recipe.total_time ? recipe.total_time : "",
+                        16
+                      )
+                    }}
                   </p>
 
                   <p>
@@ -313,6 +318,7 @@ const fetchRecipesFromStrapi = async () => {
       }
 
       if (userRecipesResponse) {
+        recipesFromStrapi.value = {};
         const newRecipes = userRecipesResponse.map((userRecipe) => {
           return {
             ...userRecipe.attributes.recipe.data.attributes,
