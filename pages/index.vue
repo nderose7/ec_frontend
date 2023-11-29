@@ -1186,11 +1186,11 @@ const formattedIngredients = computed(() => {
     return [];
   }
 
-  // Split the ingredients string into an array based on dashes.
-  // This regex will match a dash ('-') that is either at the start of the string (^-) or
-  // followed by a space (\s-), capturing the dash and any preceding spaces.
+  // Split the ingredients string into an array based on "- " at the start of a line.
+  // This regex will match "- " that is either at the start of the string (^- ) or
+  // after a newline character (\n- ).
   return newRecipe.value.ingredients
-    .split(/\s*-\s*/)
+    .split(/(?:^|\n)- /)
     .map((ingredient) => ingredient.trim())
     .filter(Boolean);
 });
