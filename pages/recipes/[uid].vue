@@ -65,17 +65,25 @@
           <div
             class="mt-6 bg-slate-100 dark:bg-midnight-600 border dark:border-midnight-200 rounded-lg px-5 py-2 pb-3 w-fit"
           >
-            <div class="lg:flex gap-5 mt-2 space-y-1">
-              <div class="hidden lg:block">
-                <Icon name="bx:time" class="icon-style" />
+            <div class="md:flex gap-5 mt-1 space-y-1 items-center">
+              <div class="text-slate-500">
+                <Icon name="bx:time" class="" />
+                <span
+                  class="md:hidden text-sm font-bold ml-1 relative top-[1px]"
+                  >TIME</span
+                >
               </div>
               <div><b>Prep:</b> {{ recipe?.attributes.prep_time }}</div>
               <div><b>Cook:</b> {{ recipe?.attributes.cook_time }}</div>
               <div><b>Total:</b> {{ recipe?.attributes.total_time }}</div>
             </div>
-            <div class="lg:flex gap-5 mt-2 space-y-1">
-              <div class="hidden lg:block">
-                <Icon name="mdi:silverware" class="icon-style" />
+            <div class="md:flex gap-5 md:mt-2 mt-3 space-y-1 items-center">
+              <div class="text-slate-500">
+                <Icon name="mdi:silverware" class="" />
+                <span
+                  class="md:hidden text-sm font-bold ml-1 relative top-[1px]"
+                  >SERVINGS</span
+                >
               </div>
               <div class="lg:w-1/4">
                 <b>Servings:</b> {{ recipe?.attributes.servings }}
@@ -89,13 +97,20 @@
                 recipe?.attributes.diet_type_if_set != 'N/A' &&
                 recipe?.attributes.diet_type_if_set != 'n/a'
               "
-              class="md:flex gap-5 mt-2"
+              class="md:flex gap-5 mt-3"
             >
               <div class="hidden md:block">
                 <Icon
                   name="pepicons-pop:line-slant-up-circle"
                   class="icon-style p-[2px]"
                 />
+              </div>
+              <div class="text-slate-500 md:hidden">
+                <Icon name="mdi:cancel" class="" />
+                <span
+                  class="md:hidden text-sm font-bold ml-1 relative top-[1px]"
+                  >DIET</span
+                >
               </div>
               <div>
                 <b>Diet:</b>
