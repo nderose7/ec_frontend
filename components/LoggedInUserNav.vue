@@ -157,13 +157,14 @@ onMounted(async () => {
   findUserData();
 });
 
+/*
 const paymentStatus = inject("paymentStatus", "none");
 
 watch(paymentStatus, (newStatus) => {
   if (newStatus === "success") {
     findUserData();
   }
-});
+});*/
 
 if (userDataError.value) {
   console.error("Error fetching userData:", userDataError.value);

@@ -39,7 +39,7 @@ const route = useRoute();
 const loading = ref(true);
 const paymentStatus = ref("");
 
-provide("paymentStatus", paymentStatus);
+//provide("paymentStatus", paymentStatus);
 
 onMounted(async () => {
   const subscriptionId = route.query.subscriptionId;

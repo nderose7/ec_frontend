@@ -318,7 +318,7 @@ const fetchRecipesFromStrapi = async () => {
       }
 
       if (userRecipesResponse) {
-        recipesFromStrapi.value = {};
+        //recipesFromStrapi.value = {};
         const newRecipes = userRecipesResponse.map((userRecipe) => {
           return {
             ...userRecipe.attributes.recipe.data.attributes,
@@ -333,12 +333,30 @@ const fetchRecipesFromStrapi = async () => {
         const newGroupedRecipes = groupRecipesByDate(newRecipes);
         //recipesFromStrapi.value = groupedRecipes;
         // Append new recipes to existing groups
+        /*
         Object.keys(newGroupedRecipes).forEach((group) => {
           if (recipesFromStrapi.value[group]) {
             recipesFromStrapi.value[group].push(...newGroupedRecipes[group]);
           } else {
             recipesFromStrapi.value[group] = newGroupedRecipes[group];
           }
+        });*/
+        Object.keys(newGroupedRecipes).forEach((group) => {
+          if (!recipesFromStrapi.value[group]) {
+            recipesFromStrapi.value[group] = [];
+          }
+
+          // Reverse the new recipes array to maintain their order when unshifting
+          newGroupedRecipes[group].reverse().forEach((newRecipe) => {
+            if (
+              !recipesFromStrapi.value[group].some(
+                (existingRecipe) => existingRecipe.id === newRecipe.id
+              )
+            ) {
+              // Unshift to add the new recipe at the beginning of the array
+              recipesFromStrapi.value[group].unshift(newRecipe);
+            }
+          });
         });
 
         setUserFavorites(userFavoritesIds.value); // Ensure the isFavorited status is set correctly

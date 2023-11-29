@@ -1380,13 +1380,14 @@ const createRecipes = async () => {
   }
 };
 
+/*
 const paymentStatus = inject("paymentStatus", "none");
 
 watch(paymentStatus, (newStatus) => {
   if (newStatus === "success") {
     loadUserData();
   }
-});
+});*/
 
 useSeoMeta({
   title: "EatClassy - Create Unique Recipes Using AI",
