@@ -279,10 +279,9 @@
           <div class="flex w-full items-center">
             <div class="w-full">
               <input
-                id="ingredientInput"
                 type="text"
                 placeholder="Create a recipe..."
-                class="rounded-l-lg outline-0"
+                class="rounded-l-lg outline-0 ingredient-input"
                 v-model="ingredientInput"
                 ref="inputRef"
               />
@@ -1397,7 +1396,7 @@ useSeoMeta({
 </script>
 
 <style scoped>
-#ingredient-input {
+input.ingredient-input {
   -webkit-border-top-right-radius: 0;
   border-top-right-radius: 0;
   -webkit-border-bottom-right-radius: 0;
