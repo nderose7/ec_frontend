@@ -123,13 +123,13 @@
 
       <div>
         <h2 class="mt-8 mb-4">Ingredients</h2>
-        <div v-html="parsedIngredients" class="ml-5"></div>
+        <ul v-html="parsedIngredients" class="ml-8 list-disc"></ul>
 
         <h2 class="mt-8 mb-4">Instructions</h2>
         <div v-html="parsedInstructions" class="ml-5"></div>
 
         <h2 class="mt-8 mb-4">Cooking Notes</h2>
-        <div v-html="parsedNotes" class="ml-5"></div>
+        <ul v-html="parsedNotes" class="ml-8 list-disc"></ul>
 
         <h2 class="mt-8 mb-4">Beer, Wine, Cocktail Pairings</h2>
         <ul class="list-disc ml-8">
@@ -146,11 +146,7 @@
   </div>
 </template>
 
-<style scoped>
-li {
-  @apply pl-2;
-}
-</style>
+<style scoped></style>
 
 <script setup>
 import {
