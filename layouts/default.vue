@@ -1,11 +1,10 @@
 <template>
-  <div>
+  <div class="h-full">
     <SiteHeader :showMobileMenu="showMobileMenu" @toggleMenu="toggleMenu" />
     <MobileMenu
       v-show="showMobileMenu"
       :showMobileMenu="showMobileMenu"
       @closeMenu="showMobileMenu = false"
-      class="max-h-screen"
     />
     <div v-show="!showMobileMenu">
       <slot />

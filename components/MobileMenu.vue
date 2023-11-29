@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="showMobileMenu"
-    class="mobile-menu pt-5 h-screen-minus-header overflow-y-scroll"
-  >
+  <div v-show="showMobileMenu" class="mobile-menu pt-5 pb-48 h-full">
     <div class="px-5">
       <SearchRecipes @closeMenu="emitCloseMenu" />
       <ul>

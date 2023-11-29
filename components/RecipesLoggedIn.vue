@@ -6,12 +6,12 @@
       recipesFromStrapi.lastSevenDays?.length ||
       recipesFromStrapi.older?.length
     "
-    class="px-5 pb-4 lg:sticky lg:top-[78px] h-full lg:border-r dark:border-midnight-600 lg:min-w-[360px] lg:max-w-[360px]"
+    class="px-5 pb-4 sticky top-[78px] h-full lg:border-r dark:border-midnight-600 lg:min-w-[360px] lg:max-w-[360px]"
   >
     <div>
       <ul class="xl:pr-2 pt-5">
         <div
-          class="h-screen-minus-header lg:overflow-y-scroll xl:pl-5"
+          class="h-screen-minus-header overflow-y-scroll xl:pl-5"
           ref="scrollContainer"
         >
           <h5
@@ -226,9 +226,9 @@
           <Icon name="svg-spinners:bars-scale" size="1rem" class="mt-2" />
         </div>
         <div
-          class="border-b-2 dark:border-midnight-200 w-1/5 mx-auto text-center pt-4"
+          class="hidden border-b-2 dark:border-midnight-200 w-1/5 mx-auto text-center pt-4"
         ></div>
-        <div v-if="user">
+        <div v-if="user" class="hidden">
           <p class="mt-5 text-center">
             <NuxtLink to="/favorites" @click="emitCloseMenu" class="link"
               >Go To Favorites
