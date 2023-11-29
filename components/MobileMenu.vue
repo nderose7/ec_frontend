@@ -43,11 +43,15 @@
         </div>
       </ul>
     </div>
-    <RecipesLoggedIn @closeMenu="emitCloseMenu" />
+    <RecipesLoggedIn
+      @closeMenu="emitCloseMenu"
+      :triggerUpdate="globalState.triggerUpdate"
+    />
   </div>
 </template>
 
 <script setup>
+import { globalState } from "../store/store.js";
 const user = useStrapiUser();
 const props = defineProps({
   showMobileMenu: Boolean,

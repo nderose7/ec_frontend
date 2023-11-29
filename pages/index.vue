@@ -756,6 +756,7 @@
 </template>
 
 <script setup>
+import { globalState } from "../store/store.js";
 import { slugify } from "~/utils/slugify.js";
 import swalMixins from "~/mixins/swalMixins";
 const { Toast } = swalMixins.data();
@@ -975,6 +976,7 @@ const fetchRecipeTitle = async () => {
           addedAt: new Date().toISOString(),
         });
         triggerUpdate.value++;
+        globalState.triggerUpdate++;
       }
       console.log("Userrecipes complete...");
       return;
@@ -1373,6 +1375,7 @@ const createRecipes = async () => {
       }
       console.log("Userrecipes complete...");
       triggerUpdate.value++;
+      globalState.triggerUpdate++;
       return createdRecipe;
     } catch (error) {
       console.error(`An error occurred during recipe creation:`, error);
