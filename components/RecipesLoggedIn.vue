@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="
+    v-show="
       recipesFromStrapi.today?.length ||
       recipesFromStrapi.yesterday?.length ||
       recipesFromStrapi.lastSevenDays?.length ||
@@ -10,7 +10,10 @@
   >
     <div>
       <ul class="xl:pr-2 pt-5">
-        <div class="h-screen-minus-header lg:overflow-y-scroll xl:pl-5">
+        <div
+          class="h-screen-minus-header lg:overflow-y-scroll xl:pl-5"
+          ref="scrollContainer"
+        >
           <h5
             v-if="recipesFromStrapi.today?.length"
             class="text-sm text-slate-500 mb-3"
@@ -219,6 +222,9 @@
             </div>
           </li>
         </div>
+        <div v-if="isFetching" class="text-center">
+          <Icon name="svg-spinners:bars-scale" size="1rem" class="mt-2" />
+        </div>
         <div
           class="border-b-2 dark:border-midnight-200 w-1/5 mx-auto text-center pt-4"
         ></div>
@@ -306,7 +312,7 @@ const fetchRecipesFromStrapi = async () => {
       }
 
       if (userRecipesResponse) {
-        const recipes = userRecipesResponse.map((userRecipe) => {
+        const newRecipes = userRecipesResponse.map((userRecipe) => {
           return {
             ...userRecipe.attributes.recipe.data.attributes,
             id: userRecipe.attributes.recipe.data.id,
@@ -317,8 +323,17 @@ const fetchRecipesFromStrapi = async () => {
           };
         });
 
-        const groupedRecipes = groupRecipesByDate(recipes);
-        recipesFromStrapi.value = groupedRecipes;
+        const newGroupedRecipes = groupRecipesByDate(newRecipes);
+        //recipesFromStrapi.value = groupedRecipes;
+        // Append new recipes to existing groups
+        Object.keys(newGroupedRecipes).forEach((group) => {
+          if (recipesFromStrapi.value[group]) {
+            recipesFromStrapi.value[group].push(...newGroupedRecipes[group]);
+          } else {
+            recipesFromStrapi.value[group] = newGroupedRecipes[group];
+          }
+        });
+
         setUserFavorites(userFavoritesIds.value); // Ensure the isFavorited status is set correctly
       }
     } catch (error) {
@@ -489,4 +504,65 @@ function startOfDay(date) {
 function differenceInCalendarDays(date1, date2) {
   return Math.floor((date1 - date2) / (1000 * 60 * 60 * 24));
 }
+
+const scrollContainer = ref(null);
+
+// Infinite scrolling
+const checkScroll = () => {
+  console.log("Scroll event detected");
+  if (!scrollContainer.value) return;
+
+  const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
+  if (
+    scrollTop + clientHeight >= scrollHeight - 5 &&
+    !isFetching.value &&
+    !endOfList.value
+  ) {
+    console.log("End of list, loading more recipes...");
+    // Load more recipes
+    loadMoreRecipes();
+  }
+};
+
+onMounted(() => {
+  console.log("Component mounted");
+  if (scrollContainer.value) {
+    console.log("Component mounted");
+    scrollContainer.value.addEventListener("scroll", checkScroll);
+  }
+});
+
+/*
+watch(
+  recipesFromStrapi,
+  () => {
+    if (
+      recipesFromStrapi.value?.today?.length ||
+      recipesFromStrapi.value?.yesterday?.length ||
+      recipesFromStrapi.value?.lastSevenDays?.length ||
+      recipesFromStrapi.value?.older?.length
+    ) {
+      nextTick(() => {
+        if (scrollContainer.value) {
+          console.log("Adding event listener");
+          scrollContainer.value.addEventListener("scroll", checkScroll);
+        }
+      });
+    }
+  },
+  { immediate: true }
+);
+*/
+
+onUnmounted(() => {
+  if (scrollContainer.value) {
+    scrollContainer.value.removeEventListener("scroll", checkScroll);
+  }
+});
+const loadMoreRecipes = async () => {
+  isFetching.value = true;
+  page.value += 1;
+  await fetchRecipesFromStrapi(); // This function needs to handle pagination logic
+  isFetching.value = false;
+};
 </script>
