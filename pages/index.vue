@@ -279,6 +279,7 @@
           <div class="flex w-full items-center">
             <div class="w-full">
               <input
+                id="ingredientInput"
                 type="text"
                 placeholder="Create a recipe..."
                 class="rounded-l-lg outline-0"
@@ -1396,21 +1397,15 @@ useSeoMeta({
 </script>
 
 <style scoped>
-.nav {
-  @apply xl:flex gap-2 mb-4 mt-5;
+#ingredient-input {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
-.nav li {
-  @apply px-0 py-2;
-}
-.nav li button {
-  @apply border dark:border-midnight-200 rounded-lg px-3 py-1;
-}
-.router-link-active {
-  @apply text-blue-600 font-normal dark:bg-midnight-900;
-}
-.nav label {
-  @apply text-lg font-medium px-3 pb-1 pt-[2px] border rounded-lg dark:border-midnight-200 my-2 bg-white dark:bg-midnight-800;
-}
+
 label {
   @apply text-lg font-bold inline-block;
 }

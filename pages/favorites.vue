@@ -300,4 +300,12 @@ useSeoMeta({
 .force-padding-left {
   padding-left: 42px !important;
 }
+input {
+  -webkit-border-top-right-radius: 0;
+  border-top-right-radius: 0;
+  -webkit-border-bottom-right-radius: 0;
+  border-bottom-right-radius: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
 </style>
