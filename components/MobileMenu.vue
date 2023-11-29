@@ -1,5 +1,8 @@
 <template>
-  <div v-show="showMobileMenu" class="mobile-menu pt-5 pb-16 fixed w-full">
+  <div
+    v-show="showMobileMenu"
+    class="mobile-menu pt-5 pb-16 w-full h-screen-minus-header"
+  >
     <div class="px-5">
       <SearchRecipes @closeMenu="emitCloseMenu" />
       <ul>
