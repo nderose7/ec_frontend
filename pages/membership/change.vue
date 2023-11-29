@@ -399,8 +399,7 @@ function formatStripeAmount(amount) {
   return formattedAmount;
 }
 
-/*
 useSeoMeta({
   title: "Upgrade / Downgrade",
-});*/
+});
 </script>
