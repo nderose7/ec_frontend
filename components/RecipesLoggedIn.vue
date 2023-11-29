@@ -14,13 +14,14 @@
           class="h-screen-minus-header overflow-y-scroll xl:pl-5"
           ref="scrollContainer"
         >
-          <h5
-            v-if="recipesFromStrapi.today?.length"
-            class="text-sm text-slate-500 mb-3"
-          >
-            TODAY'S CREATIONS
-          </h5>
-
+          <div class="bg-white dark:bg-midnight-800 sticky top-0 z-20">
+            <h5
+              v-if="recipesFromStrapi.today?.length"
+              class="text-sm text-slate-500 mb-3 py-2"
+            >
+              TODAY'S CREATIONS
+            </h5>
+          </div>
           <li
             v-for="recipe in recipesFromStrapi.today"
             :key="recipe.id"
@@ -65,14 +66,14 @@
               </div>
             </div>
           </li>
-
-          <h5
-            v-if="recipesFromStrapi.yesterday?.length"
-            class="text-sm text-slate-500 mb-3"
-          >
-            YESTERDAY
-          </h5>
-
+          <div class="bg-white dark:bg-midnight-800 sticky top-0 z-20">
+            <h5
+              v-if="recipesFromStrapi.yesterday?.length"
+              class="text-sm text-slate-500 mb-3 py-2"
+            >
+              YESTERDAY
+            </h5>
+          </div>
           <li
             v-for="recipe in recipesFromStrapi.yesterday"
             :key="recipe.id"
@@ -117,14 +118,14 @@
               </div>
             </div>
           </li>
-
-          <h5
-            v-if="recipesFromStrapi.lastSevenDays?.length"
-            class="text-sm text-slate-500 mb-3"
-          >
-            PREVIOUS 7 DAYS
-          </h5>
-
+          <div class="bg-white dark:bg-midnight-800 sticky top-0 z-20">
+            <h5
+              v-if="recipesFromStrapi.lastSevenDays?.length"
+              class="text-sm text-slate-500 mb-3 py-2"
+            >
+              PREVIOUS 7 DAYS
+            </h5>
+          </div>
           <li
             v-for="recipe in recipesFromStrapi.lastSevenDays"
             :key="recipe.id"
@@ -169,14 +170,14 @@
               </div>
             </div>
           </li>
-
-          <h5
-            v-if="recipesFromStrapi.older?.length"
-            class="text-sm text-slate-500 mb-3"
-          >
-            OLDER THAN 7 DAYS
-          </h5>
-
+          <div class="bg-white dark:bg-midnight-800 sticky top-0 z-20">
+            <h5
+              v-if="recipesFromStrapi.older?.length"
+              class="text-sm text-slate-500 mb-3 py-2"
+            >
+              OLDER THAN 7 DAYS
+            </h5>
+          </div>
           <li
             v-for="recipe in recipesFromStrapi.older"
             :key="recipe.id"
