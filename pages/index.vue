@@ -670,6 +670,49 @@
                   {{ existingRecipeData.attributes.recipe_name }}
                 </h1>
 
+                <div class="md:flex gap-5 mt-6">
+                  <div v-if="existingRecipeData.course" class="hidden md:block">
+                    <Icon name="mdi:earth" class="icon-style" size="" />
+                  </div>
+                  <div>
+                    <b>{{
+                      isLoadingRecipes || existingRecipeData.course
+                        ? "Course:"
+                        : ""
+                    }}</b>
+                    <span v-if="isLoadingRecipes && !existingRecipeData.course"
+                      ><Icon
+                        name="svg-spinners:3-dots-bounce"
+                        size="1rem"
+                        class="ml-3"
+                    /></span>
+                    {{
+                      existingRecipeData.course ? existingRecipeData.course : ""
+                    }}
+                  </div>
+                  <div>
+                    <b>{{
+                      isLoadingRecipes || existingRecipeData.cuisine_type
+                        ? "Cuisine:"
+                        : ""
+                    }}</b>
+                    <span
+                      v-if="
+                        isLoadingRecipes && !existingRecipeData.cuisine_type
+                      "
+                      ><Icon
+                        name="svg-spinners:3-dots-bounce"
+                        size="1rem"
+                        class="ml-3"
+                    /></span>
+                    {{
+                      existingRecipeData.cuisine_type
+                        ? existingRecipeData.cuisine_type
+                        : ""
+                    }}
+                  </div>
+                </div>
+
                 <div class="mt-6 mb-5">
                   <div class="flex gap-5 mt-2">
                     <div v-if="existingRecipeData.attributes.prep_time">
