@@ -876,20 +876,22 @@ let isError = false;
 //const user_recipes = await find("user_recipes");
 
 async function loadUserData() {
-  try {
-    // Await the async call to resolve the Promise
-    const response = await find("userdatas", {
-      populate: ["recipes", "owner"],
-      filters: {
-        owner: user.value?.id,
-      },
-    });
-    // Once the data is retrieved, update the userData ref with the result
-    userData.value = response.data; // Correctly update the ref value here
-    freeCreditsLeft.value = userData.value[0].attributes.freeCreditsLeft;
-    console.log("freeCreditsLeft", freeCreditsLeft.value);
-  } catch (e) {
-    console.error("Failed to load user data:", e);
+  if (user.value) {
+    try {
+      // Await the async call to resolve the Promise
+      const response = await find("userdatas", {
+        populate: ["recipes", "owner"],
+        filters: {
+          owner: user.value?.id,
+        },
+      });
+      // Once the data is retrieved, update the userData ref with the result
+      userData.value = response.data; // Correctly update the ref value here
+      freeCreditsLeft.value = userData.value[0].attributes.freeCreditsLeft;
+      console.log("freeCreditsLeft", freeCreditsLeft.value);
+    } catch (e) {
+      console.error("Failed to load user data:", e);
+    }
   }
 }
 
