@@ -6,7 +6,7 @@
       recipesFromStrapi.lastSevenDays?.length ||
       recipesFromStrapi.older?.length
     "
-    class="sticky top-[78px] px-5 pb-4 h-full lg:border-r dark:border-midnight-600 lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[380px]"
+    class="sticky top-[78px] px-5 pb-24 h-full lg:border-r dark:border-midnight-600 lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[380px]"
   >
     <div class="h-full">
       <ul class="xl:pr-2 pb-5 pt-2 sticky top-[78px]">
@@ -271,6 +271,7 @@ const pageSize = 25; // Adjust as needed
 let page = ref(1);
 const isFetching = ref(false);
 const endOfList = ref(false);
+let isFetchingMore = ref(false);
 
 const emit = defineEmits(["closeMenu"]);
 
@@ -293,7 +294,7 @@ watch(
 const recipesFromStrapi = ref([]);
 
 // Fetch recipes associated with the user through the userrecipes API
-const fetchRecipesFromStrapi = async () => {
+const fetchRecipesFromStrapi = async (isInfiniteScroll = false) => {
   console.log("Fetching recipes associated with the user...");
   if (user.value?.id) {
     try {
@@ -341,20 +342,25 @@ const fetchRecipesFromStrapi = async () => {
             recipesFromStrapi.value[group] = newGroupedRecipes[group];
           }
         });*/
+        // Updated logic to merge new recipes
         Object.keys(newGroupedRecipes).forEach((group) => {
           if (!recipesFromStrapi.value[group]) {
             recipesFromStrapi.value[group] = [];
           }
 
-          // Reverse the new recipes array to maintain their order when unshifting
-          newGroupedRecipes[group].reverse().forEach((newRecipe) => {
+          newGroupedRecipes[group].forEach((newRecipe) => {
             if (
               !recipesFromStrapi.value[group].some(
                 (existingRecipe) => existingRecipe.id === newRecipe.id
               )
             ) {
-              // Unshift to add the new recipe at the beginning of the array
-              recipesFromStrapi.value[group].unshift(newRecipe);
+              if (isInfiniteScroll) {
+                // Append for infinite scrolling
+                recipesFromStrapi.value[group].push(newRecipe);
+              } else {
+                // Unshift for new recipe addition
+                recipesFromStrapi.value[group].unshift(newRecipe);
+              }
             }
           });
         });
@@ -557,28 +563,6 @@ onMounted(() => {
   }
 });
 
-/*
-watch(
-  recipesFromStrapi,
-  () => {
-    if (
-      recipesFromStrapi.value?.today?.length ||
-      recipesFromStrapi.value?.yesterday?.length ||
-      recipesFromStrapi.value?.lastSevenDays?.length ||
-      recipesFromStrapi.value?.older?.length
-    ) {
-      nextTick(() => {
-        if (scrollContainer.value) {
-          console.log("Adding event listener");
-          scrollContainer.value.addEventListener("scroll", checkScroll);
-        }
-      });
-    }
-  },
-  { immediate: true }
-);
-*/
-
 onUnmounted(() => {
   if (scrollContainer.value) {
     scrollContainer.value.removeEventListener("scroll", checkScroll);
@@ -586,8 +570,10 @@ onUnmounted(() => {
 });
 const loadMoreRecipes = async () => {
   isFetching.value = true;
+  isFetchingMore.value = true; // Set flag for infinite scrolling
   page.value += 1;
-  await fetchRecipesFromStrapi(); // This function needs to handle pagination logic
+  await fetchRecipesFromStrapi(true); // Pass true for infinite scrolling
   isFetching.value = false;
+  isFetchingMore.value = false; // Reset flag after fetching
 };
 </script>
