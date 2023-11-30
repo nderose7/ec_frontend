@@ -61,8 +61,8 @@
     <div v-if="loadingRecipes">
       <Icon name="svg-spinners:3-dots-bounce" size="3rem" class="ml-3 my-3" />
     </div>
-    <div v-if="favoriteRecipes.length === 0" class="text-center my-20">
-      <p>You have no favorite recipes yet.</p>
+    <div v-if="favoriteRecipes.length === 0" class="text-center my-16">
+      <p>No favorites found.</p>
     </div>
     <div v-else>
       <div class="meta flex justify-between my-5">
