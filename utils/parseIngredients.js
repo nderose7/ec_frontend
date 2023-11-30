@@ -28,10 +28,10 @@ export function parseNumbersToHTML(instructions) {
   let html = '<ol>';
   for (let i = 1; i < steps.length; i += 2) { // Increment by 2 as every even index is a number.
     if (steps[i - 1].match(/\d+\.$/)) {
-      html += `<li>${steps[i].trim()}</li>`; // Trim each step and wrap it in <li> tags
+      html += `<li class="py-1">${steps[i].trim()}</li>`; // Trim each step and wrap it in <li> tags
     } else {
       // This handles the case where the first element in the array is not a number which should be the instruction part.
-      html += `<li>${steps[i - 1].trim() + ' ' + steps[i].trim()}</li>`;
+      html += `<li class="py-1">${steps[i - 1].trim() + ' ' + steps[i].trim()}</li>`;
     }
   }
   html += '</ol>';
