@@ -31,7 +31,7 @@
               <div v-if="user">
                 <button @click="toggleFavorite(recipe)">
                   <Icon
-                    :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                    :name="recipe.isFavorited ? 'bx:bxs-heart' : 'bx:heart'"
                     :class="
                       recipe.isFavorited
                         ? 'icon-style text-yellow-500'
@@ -88,7 +88,7 @@
               <div v-if="user">
                 <button @click="toggleFavorite(recipe)">
                   <Icon
-                    :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                    :name="recipe.isFavorited ? 'bx:bxs-heart' : 'bx:heart'"
                     :class="
                       recipe.isFavorited
                         ? 'icon-style text-yellow-500'
@@ -140,7 +140,7 @@
               <div v-if="user">
                 <button @click="toggleFavorite(recipe)">
                   <Icon
-                    :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                    :name="recipe.isFavorited ? 'bx:bxs-heart' : 'bx:heart'"
                     :class="
                       recipe.isFavorited
                         ? 'icon-style text-yellow-500'
@@ -192,7 +192,7 @@
               <div v-if="user">
                 <button @click="toggleFavorite(recipe)">
                   <Icon
-                    :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
+                    :name="recipe.isFavorited ? 'bx:bxs-heart' : 'bx:heart'"
                     :class="
                       recipe.isFavorited
                         ? 'icon-style text-yellow-500'
@@ -272,6 +272,7 @@ let page = ref(1);
 const isFetching = ref(false);
 const endOfList = ref(false);
 let isFetchingMore = ref(false);
+const learnAboutFavorites = ref(false);
 
 const emit = defineEmits(["closeMenu"]);
 

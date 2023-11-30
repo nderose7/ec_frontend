@@ -2,7 +2,7 @@
   <div class="container mx-auto px-4 pb-48">
     <div class="text-center mt-10 mb-8">
       <h1 class="mb-4">Upgrade / Downgrade</h1>
-      <p class="xl:w-1/2 mx-auto">
+      <p class="xl:w-1/2 mx-auto md:px-32 xl:px-0">
         Easily upgrade or downgrade your membership here. You will be charged a
         prorated amount when switching. Select a plan to see details.
       </p>

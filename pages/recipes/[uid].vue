@@ -37,9 +37,9 @@
                 "
               >
                 <Icon
-                  :name="recipe.isFavorited ? 'bx:bxs-star' : 'bx:star'"
-                  size="1.5rem"
-                  class="icon-style"
+                  :name="recipe.isFavorited ? 'bx:bxs-heart' : 'bx:heart'"
+                  size="1.25rem"
+                  class=""
                   :class="
                     recipe.isFavorited ? ' text-yellow-500' : ' text-brand-500'
                   "
