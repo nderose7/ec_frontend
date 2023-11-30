@@ -53,9 +53,10 @@
                 required
               />
             </div>
-            <div class="form-group">
+            <div class="form-group relative">
               <label for="password" class="label font-bold">Password</label>
               <input
+                :type="showPassword ? 'text' : 'password'"
                 v-model="password"
                 class="rounded-md"
                 id="password"
@@ -63,6 +64,13 @@
                 name="password"
                 required
               />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute top-[42px] right-3"
+              >
+                <Icon :name="`${showPassword ? 'mdi:eye-off' : 'mdi:eye'}`" />
+              </button>
             </div>
             <div class="mt-8 flex justify-center">
               <button
@@ -114,6 +122,9 @@
     height: calc(100vh - 100px); /* Adjusted height for large screens */
   }
 }
+input[type="password"] {
+  font-family: Verdana;
+}
 </style>
 
 <script setup>
@@ -142,6 +153,8 @@ const {
 const email = ref("");
 const password = ref("");
 const error = ref("");
+
+const showPassword = ref(false);
 
 const { login } = useStrapiAuth();
 const router = useRouter();
@@ -221,11 +234,18 @@ const loginUser = async (e) => {
       router.push("/");
     }
   } catch (error) {
-    console.log(error);
+    console.error("Login error:", error);
+    let errorMessage = "Login failed. Please try again.";
+
+    // Check for error message in the expected structure
+    if (error && error.error && error.error.message) {
+      errorMessage = error.error.message;
+    }
+
     Toast.fire({
       icon: "error",
-      title: "Error!",
-      text: error,
+      title: "Login Error",
+      text: errorMessage,
     });
   }
 };

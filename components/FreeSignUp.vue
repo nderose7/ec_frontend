@@ -40,6 +40,7 @@
             label="Choose a Password"
             :debug="debug"
             v-model="password"
+            @keydown.enter.prevent="onSubmit"
           />
           <button
             type="button"
