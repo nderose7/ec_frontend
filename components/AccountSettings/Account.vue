@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full">
+  <div class="w-full px-5">
     <div
       class="vue-form form-control rounded-xl bg-white p-7 pb-6 pt-6 text-left dark:bg-midnight-900 lg:mx-0 border dark:border-midnight-100"
     >
@@ -58,9 +58,9 @@
           Are you sure you want to delete your account?
         </h2>
         <p>
-          You will instantly lose access to ManicDream.com, and any active
-          subscriptions will be removed. Remember, you can always pause or
-          cancel your subscriptions instead of deleting your account.
+          You will instantly lose access to EatClassy.com, and any active
+          membership subscriptions will be removed. Remember, you can always
+          pause or cancel your subscription instead of deleting your account.
         </p>
         <div class="flex gap-4 justify-center mt-10">
           <AccountSettingsDeleteAccount />

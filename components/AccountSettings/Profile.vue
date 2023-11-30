@@ -43,7 +43,7 @@
 
           <span
             v-if="user.confirmed"
-            class="mx-1 mt-2 inline-block font-bold text-green-600"
+            class="mx-1 mt-2 inline-block font-bold text-brand-500"
           >
             <Icon name="bx:envelope" class="icon-style" />
             Confirmed

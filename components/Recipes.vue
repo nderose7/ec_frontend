@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="recipes && recipes.length"
-    class="lg:min-w-[360px] lg:max-w-[360px] px-5 pb-4 lg:sticky lg:top-[78px] h-full lg:border-r dark:border-midnight-600"
+    class="sticky top-[78px] px-5 pb-24 h-full lg:border-r dark:border-midnight-600 lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[380px]"
   >
     <div class="">
       <ul class="xl:pr-2 pt-5">
