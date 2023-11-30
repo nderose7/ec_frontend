@@ -348,21 +348,30 @@ const fetchRecipesFromStrapi = async (isInfiniteScroll = false) => {
             recipesFromStrapi.value[group] = [];
           }
 
-          newGroupedRecipes[group].forEach((newRecipe) => {
-            if (
-              !recipesFromStrapi.value[group].some(
-                (existingRecipe) => existingRecipe.id === newRecipe.id
-              )
-            ) {
-              if (isInfiniteScroll) {
-                // Append for infinite scrolling
+          if (isInfiniteScroll) {
+            // For infinite scroll, append and then reverse each group
+            newGroupedRecipes[group].forEach((newRecipe) => {
+              if (
+                !recipesFromStrapi.value[group].some(
+                  (existingRecipe) => existingRecipe.id === newRecipe.id
+                )
+              ) {
                 recipesFromStrapi.value[group].push(newRecipe);
-              } else {
-                // Unshift for new recipe addition
+              }
+            });
+            recipesFromStrapi.value[group].reverse();
+          } else {
+            // For regular updates, unshift in reverse order
+            newGroupedRecipes[group].reverse().forEach((newRecipe) => {
+              if (
+                !recipesFromStrapi.value[group].some(
+                  (existingRecipe) => existingRecipe.id === newRecipe.id
+                )
+              ) {
                 recipesFromStrapi.value[group].unshift(newRecipe);
               }
-            }
-          });
+            });
+          }
         });
 
         setUserFavorites(userFavoritesIds.value); // Ensure the isFavorited status is set correctly
