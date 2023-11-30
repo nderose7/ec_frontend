@@ -246,7 +246,7 @@
             <button @click="showImagination = !showImagination">
               <label class="" :class="showImagination ? 'text-brand-500' : ''">
                 <Icon
-                  :name="showDietOptions ? 'bx:minus' : 'bx:plus'"
+                  :name="showImagination ? 'bx:minus' : 'bx:plus'"
                   class="icon-style"
                 />
                 Imagination Level
@@ -277,7 +277,7 @@
           class="search-bar form-control mt-5 mb-0 min-[1600px]:px-32"
         >
           <div class="flex w-full items-center">
-            <div class="w-full">
+            <div class="w-full relative">
               <input
                 type="text"
                 placeholder="Create a recipe..."
@@ -285,12 +285,22 @@
                 v-model="ingredientInput"
                 ref="inputRef"
               />
+
+              <div class="scroll-target mt-1"></div>
+              <div v-if="ingredientInput">
+                <button
+                  type="button"
+                  class="absolute right-2 top-3 text-brand-500"
+                  @click="clearAllFilters()"
+                >
+                  <Icon name="bx:x" class="icon-style" size="2rem" />
+                </button>
+              </div>
             </div>
-            <div class="scroll-target mt-1"></div>
             <div>
               <button
                 type="submit"
-                class="bg-brand-500 text-white mb-1 rounded-r-lg border-brand-500 border-r border-t border-b inline-block py-3"
+                class="bg-brand-500 text-white mb-2 rounded-r-lg border-brand-500 border-r border-t border-b inline-block py-3"
               >
                 <div class="px-4">
                   <Icon
@@ -1382,6 +1392,15 @@ const createRecipes = async () => {
     }
   }
 };
+
+function clearAllFilters() {
+  ingredientInput.value = "";
+  selectedCourseOption.value = "Any";
+  selectedDifficultyOption.value = "Any";
+  cuisineOption.value = "";
+  dietOption.value = "";
+  sliderValue.value = 3;
+}
 
 /*
 const paymentStatus = inject("paymentStatus", "none");
