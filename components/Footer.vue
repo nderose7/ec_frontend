@@ -1,5 +1,5 @@
 <template>
-  <div class="xl:w-full pt-48 pb-8 text-right">
+  <div class="xl:w-full pt-48 pb-8 lg:text-right">
     <NuxtLink to="/" class="link font-bold mr-4 text-xl">EatClassy</NuxtLink>
     <NuxtLink to="/terms" class="text-brand-500 font-medium text-base"
       >Terms</NuxtLink
