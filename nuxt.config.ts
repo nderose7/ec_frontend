@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@nuxtjs/strapi",
     "nuxt-gtag",
-    "@nuxtjs/google-adsense"
+    "@nuxtjs/google-adsense",
+    "@vercel/analytics"
   ],
 
   googleFonts: {
