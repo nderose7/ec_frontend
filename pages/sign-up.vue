@@ -1,16 +1,16 @@
 <template>
   <div id="landing-managed" class="min-h-screen lg:mx-auto">
-    <div class="grid-cols-2 items-center lg:grid lg:min-h-screen">
-      <div class="py-4 lg:min-h-screen lg:px-8 lg:pt-4 lg:pb-0">
-        <div class="mx-auto px-6 text-2xl lg:px-0 relative top-[-1px]">
+    <div class="lg:flex">
+      <div class="h-full py-4 lg:px-8 lg:pt-4 lg:pb-0 w-full">
+        <div class="px-5 lg:px-0">
           <Logo />
         </div>
         <div class="pt-3 sm:px-24 md:px-36 lg:px-0 lg:pt-20">
           <FreeSignUp />
         </div>
       </div>
-      <div class="md:px-40 md:pb-20 lg:p-12 xl:p-48 p-5">
-        <div class="">
+      <div class="min-[1600px]:px-40 md:pb-20 lg:p-12 p-5 items-center w-full">
+        <div class="sm:px-24 md:px-36 lg:px-0 lg:pt-20">
           <div class="grid grid-cols-2 gap-5">
             <img
               src="https://eatclassy.nyc3.cdn.digitaloceanspaces.com/tuscan-sun-kale-salad.jpg"
@@ -42,7 +42,7 @@
               class="rounded-lg mb-6 lg:mb-0 mt-6"
             />
           </div>
-          <p class="lead text-center mt-8 lg:px-20 font-semibold">
+          <p class="lead text-center mt-8 lg:px-20 font-semibold pb-16">
             Create recipes using our AI-powered recipe engine for any ingredient
             or dietary need, and save your favorite recipes!
           </p>
