@@ -10,7 +10,7 @@
     >
     <span class="text-slate-400 dark:text-slate-600">&nbsp;|&nbsp;</span>
     <NuxtLink to="/contact" class="text-brand-500 font-medium text-base"
-      >Contact / Support</NuxtLink
+      >Contact</NuxtLink
     >
   </div>
 </template>
