@@ -251,7 +251,7 @@ async function onSubmit() {
       },
       body: JSON.stringify({
         fullName: fullName.value,
-        email: userEmail.value,
+        //email: userEmail.value,
         username: username.value,
       }),
     });
