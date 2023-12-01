@@ -954,7 +954,7 @@ const fetchRecipeTitle = async () => {
   const cuisine = cuisineOption.value || "Any";
   const difficulty = selectedDifficultyOption.value || "Any";
   const diet = dietOption.value || "Any";
-  const uniqueness = String(sliderValue.value) || "3";
+  const uniqueness = String(sliderValue.value) || "2";
 
   //console.log("IngredientInput: ", ingredientInput.value);
 
@@ -1059,7 +1059,7 @@ const fetchRecipes = async () => {
   const cuisine = cuisineOption.value || "Any";
   const difficulty = selectedDifficultyOption.value || "Any";
   const diet = dietOption.value || "Any";
-  const uniqueness = String(sliderValue.value) || "3";
+  const uniqueness = String(sliderValue.value) || "2";
 
   //console.log("IngredientInput: ", ingredientInput.value);
 
@@ -1350,7 +1350,7 @@ async function decrementLoggedOutCredits() {
 
 // Slider for Uniquness Level
 const slider = ref(null);
-const sliderValue = ref(3); // Default value
+const sliderValue = ref(2); // Default value
 
 const updateSliderFill = () => {
   if (slider.value) {
@@ -1445,7 +1445,7 @@ function clearAllFilters() {
   selectedDifficultyOption.value = "Any";
   cuisineOption.value = "";
   dietOption.value = "";
-  sliderValue.value = 3;
+  sliderValue.value = 2;
 }
 
 /*
