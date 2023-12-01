@@ -1,25 +1,44 @@
 <template>
   <div class="form-control mb-4">
-    <input
-      type="text"
-      class="rounded-lg"
-      v-model="searchQuery"
-      @input="searchRecipes"
-      placeholder="Search recipes..."
-    />
-    <ul v-if="recipes.length" class="px-2">
-      <li v-for="recipe in recipes" :key="recipe.id">
-        <NuxtLink
-          :to="`/recipes/${recipe.attributes.uid}`"
-          @click="emitCloseMenu"
-          class="link py-1 block"
+    <div class="relative">
+      <input
+        type="text"
+        class="rounded-lg"
+        v-model="searchQuery"
+        @input="searchRecipes"
+        placeholder="Search recipes..."
+      />
+      <div v-if="searchQuery">
+        <button
+          type="button"
+          class="absolute right-2 top-3 text-brand-500"
+          @click="clearAllFilters()"
         >
-          {{ recipe.attributes.recipe_name }}</NuxtLink
-        >
-      </li>
-    </ul>
+          <Icon name="bx:x" class="icon-style bg-white" size="2rem" />
+        </button>
+      </div>
+    </div>
+    <div v-if="recipes.length" class="border-b pb-5">
+      <ul class="px-2 h-local overflow-y-scroll">
+        <li v-for="recipe in recipes" :key="recipe.id">
+          <NuxtLink
+            :to="`/recipes/${recipe.attributes.uid}`"
+            @click="emitCloseMenu"
+            class="link py-1 block"
+          >
+            {{ recipe.attributes.recipe_name }}</NuxtLink
+          >
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.h-local {
+  @apply h-[300px];
+}
+</style>
 
 <script setup>
 const searchQuery = ref("");
@@ -55,4 +74,9 @@ const searchRecipes = async () => {
     recipes.value = [];
   }
 };
+
+function clearAllFilters() {
+  searchQuery.value = "";
+  recipes.value = [];
+}
 </script>
