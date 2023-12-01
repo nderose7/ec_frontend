@@ -9,6 +9,7 @@
     <div v-show="!showMobileMenu">
       <slot />
     </div>
+    <Footer />
   </div>
 </template>
 
