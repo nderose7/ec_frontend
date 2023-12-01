@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/category/recipes",
+      "destination": "/recipes",
+      "permanent": true
+    }
+  ]
+}
