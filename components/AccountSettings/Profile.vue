@@ -94,7 +94,13 @@
             <div class="w-full">
               <h3 class="font-bold text-2xl lg:text-3xl">Upload new avatar:</h3>
               <p class="pt-0 pb-3 text-base">100x100, 1 MB limit</p>
-              <input type="file" name="files" id="files" ref="fileInput" />
+              <input
+                class="max-w-full"
+                type="file"
+                name="files"
+                id="files"
+                ref="fileInput"
+              />
               <p v-if="uploading">Uploading...</p>
               <span
                 v-if="uploadError"
