@@ -25,7 +25,7 @@
             />
             Remove your account
           </div>
-          <p class="">
+          <p class="mb-4">
             This will permanently delete your account along with all data
             associated with it. It will also cancel all existing memberships
             immediately.
@@ -48,7 +48,7 @@
       <button
         type="button"
         @click="showModal = false"
-        class="close absolute right-3 top-0 dark:hover:text-slate-300"
+        class="close absolute right-3 top-2 dark:hover:text-slate-300"
       >
         <Icon name="bx:x" size="2rem" />
       </button>
@@ -62,9 +62,12 @@
           membership subscriptions will be removed. Remember, you can always
           pause or cancel your subscription instead of deleting your account.
         </p>
-        <div class="flex gap-4 justify-center mt-10">
+        <div class="md:flex gap-4 justify-center mt-10">
           <AccountSettingsDeleteAccount />
-          <button @click="showModal = false" class="btn-white text-base">
+          <button
+            @click="showModal = false"
+            class="btn-white text-base block md:inline-block w-full mt-4 md:pt-0"
+          >
             Keep My Account
           </button>
         </div>
@@ -89,7 +92,10 @@ const showModal = ref(false);
   top: 0;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.8);
-  @apply pt-60 w-full h-full;
+  height: 100%;
+  @screen lg {
+    @apply pt-60 w-full h-full;
+  }
 }
 
 .close {
@@ -110,6 +116,9 @@ const showModal = ref(false);
   @apply dark:bg-midnight-900 bg-slate-100 p-20 rounded-lg dark:border-midnight-100 border;
   margin: 5% auto;
   padding: 50px;
-  width: 40%;
+  height: 100%;
+  @screen lg {
+    width: 40%;
+  }
 }
 </style>

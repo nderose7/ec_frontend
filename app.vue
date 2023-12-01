@@ -40,7 +40,7 @@ body {
   @apply border px-3 py-1  bg-brand-500 text-white dark:border-brand-500 border-brand-500 hover:bg-brand-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
 }
 .btn-white {
-  @apply rounded-lg dark:text-slate-400 bg-white border border-slate-300 dark:border-midnight-100 px-6 pt-[5px] pb-2 text-center text-lg font-bold  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-midnight-400 dark:hover:bg-midnight-200 dark:focus:ring-gray-800 hover:dark:text-white;
+  @apply rounded-lg dark:text-slate-400 bg-white border border-slate-300 dark:border-midnight-100 px-6 py-3  text-center text-lg font-bold  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-midnight-400 dark:hover:bg-midnight-200 dark:focus:ring-gray-800 hover:dark:text-white;
 }
 .btn-gray {
   @apply rounded-lg dark:text-slate-400 bg-slate-100 border border-slate-300 dark:border-midnight-100 px-6 pt-[5px] pb-2 text-center text-lg font-bold  hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-300 dark:bg-midnight-400 dark:hover:bg-midnight-200 dark:focus:ring-gray-800 hover:dark:text-white;

@@ -2,7 +2,7 @@
   <button
     @click="deleteAccount"
     :disabled="isDeleting"
-    class="btn-danger rounded-full"
+    class="btn-danger rounded-full block md:inline-block w-full"
   >
     {{ isDeleting ? "Deleting..." : "Delete My Account" }}
   </button>
