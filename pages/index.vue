@@ -1033,7 +1033,7 @@ const fetchRecipeTitle = async () => {
         triggerUpdate.value++;
         globalState.triggerUpdate++;
       }
-      console.log("Userrecipes complete...");
+      //console.log("Userrecipes complete...");
       return;
     } else {
       // If the recipe does not exist in Strapi, use the OpenAI generated recipe
@@ -1413,7 +1413,7 @@ const createRecipes = async () => {
       const createdRecipe = await Promise.all(creationPromises);
       //console.log(`All recipes created successfully:`, createdRecipe[0]);
       if (user.value) {
-        console.log("User exists, attempting to create userrecipes data");
+        //console.log("User exists, attempting to create userrecipes data");
         try {
           await create("userrecipes", {
             user: {
