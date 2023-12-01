@@ -293,7 +293,7 @@
                   class="absolute right-2 top-3 text-brand-500"
                   @click="clearAllFilters()"
                 >
-                  <Icon name="bx:x" class="icon-style" size="2rem" />
+                  <Icon name="bx:x" class="icon-style bg-white" size="2rem" />
                 </button>
               </div>
             </div>
