@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4">
+  <div class="container mx-auto px-4 pb-24">
     <div class="text-center mt-10 mb-8">
       <h1 class="mb-4">Create More Recipes.</h1>
       <p>Sign up for an EatClassy membership. Pause or cancel anytime.</p>

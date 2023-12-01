@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 pb-48">
+  <div class="container mx-auto px-4 pb-24">
     <div class="text-center mt-10 mb-8">
       <h1 class="mb-4">Upgrade / Downgrade</h1>
       <p class="xl:w-1/2 mx-auto md:px-32 xl:px-0">
