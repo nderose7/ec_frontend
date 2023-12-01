@@ -14,7 +14,11 @@
           <div class="font-bold text-base mb-2 text-slate-500">
             {{ currentPlan === "basic" ? "CURRENT PLAN" : "" }}
           </div>
-          <button @click="handleSubscription('basic')" class="link mb-2">
+          <button
+            @click="handleSubscription('basic')"
+            :disabled="currentPlan === 'basic'"
+            class="link mb-2"
+          >
             <h2 class="text-3xl">Lite</h2>
           </button>
           <h3 class="mb-2 text-slate-700 dark:text-slate-400">
@@ -88,7 +92,11 @@
           <div class="font-bold text-base mb-2 text-slate-500">
             {{ currentPlan === "pro" ? "CURRENT PLAN" : "" }}
           </div>
-          <button @click="handleSubscription('pro')" class="link mb-2">
+          <button
+            @click="handleSubscription('pro')"
+            :disabled="currentPlan === 'pro'"
+            class="link mb-2"
+          >
             <h2 class="text-3xl">Standard</h2>
           </button>
           <h3 class="mb-2 text-slate-700 dark:text-slate-400">
@@ -162,7 +170,11 @@
           <div class="font-bold text-base mb-2 text-slate-500">
             {{ currentPlan === "premium" ? "CURRENT PLAN" : "" }}
           </div>
-          <button @click="handleSubscription('premium')" class="link mb-2">
+          <button
+            @click="handleSubscription('premium')"
+            :disabled="currentPlan === 'premium'"
+            class="link mb-2"
+          >
             <h2 class="text-3xl">Unlimited</h2>
           </button>
           <h3 class="mb-2 text-slate-700 dark:text-slate-400">
