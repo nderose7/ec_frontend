@@ -53,7 +53,7 @@
                 required
               />
             </div>
-            <div class="form-group relative">
+            <div class="form-group relative mt-2">
               <label for="password" class="label font-bold">Password</label>
               <input
                 :type="showPassword ? 'text' : 'password'"

@@ -6,7 +6,7 @@
       class="hidden lg:block w-full"
     />
     <Recipes v-else :recipes="recipes" class="hidden lg:block w-full" />
-    <div class="w-full px-5 xl:px-10 pb-48 min-[1600px]:flex gap-10">
+    <div class="w-full px-5 xl:px-10 min-[1600px]:flex gap-10">
       <div class="recipe-search w-full xl:px-16">
         <div class="text-center mb-10 lg:pt-12 pt-4">
           <h1 class="text-center mb-5 mt-5 xl:text-5xl dark:text-slate-300">
@@ -803,6 +803,7 @@
         <SignUpOffer v-if="!user" />
         <MembershipOffer v-if="user && !user.paidMembershipTierThree" />
         <LatestRecipes />
+        <Footer />
       </div>
     </div>
   </div>

@@ -1,12 +1,14 @@
 <template>
   <div
     v-if="recipes && recipes.length"
-    class="sticky top-[78px] px-5 pb-24 h-full lg:border-r dark:border-midnight-600 lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[380px]"
+    class="h-screen-minus-header-local sticky top-[78px] pb-24 h-full lg:border-r dark:border-midnight-600 lg:min-w-[320px] lg:max-w-[360px] xl:min-w-[380px]"
   >
     <div class="">
       <ul class="xl:pr-2 pt-5">
         <h5 class="text-sm text-slate-500 mb-3 xl:pl-5">YOUR CREATIONS</h5>
-        <div class="h-screen-minus-header overflow-y-scroll xl:pl-5">
+        <div
+          class="h-screen-minus-header-local-inner overflow-y-scroll xl:pl-5"
+        >
           <li
             v-for="recipe in reversedRecipes"
             :key="recipe.recipe_number || recipe.id"
@@ -40,28 +42,28 @@
             </div>
           </li>
         </div>
-        <div
-          class="border-b-2 dark:border-midnight-200 w-1/5 mx-auto text-center"
-        ></div>
-        <div v-if="user">
-          <p class="mt-5 text-center">
-            <NuxtLink to="/favorites" class="link"
-              >Go To Favorites
-              <Icon name="mdi:arrow-right" class="icon-style" />
-            </NuxtLink>
-          </p>
-        </div>
-        <div v-else>
-          <p class="mt-3 text-center">
-            <NuxtLink to="/login" class="link">Login</NuxtLink> or
-            <NuxtLink to="/sign-up" class="link">Sign Up</NuxtLink> to save
-            recipes.
-          </p>
-        </div>
       </ul>
+    </div>
+    <div>
+      <div class="border-t">
+        <p class="mt-5 text-center sticky bottom-4">
+          <NuxtLink to="/login" class="link">Login</NuxtLink> or
+          <NuxtLink to="/sign-up" class="link">Sign Up</NuxtLink> to save
+          recipes.
+        </p>
+      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.h-screen-minus-header-local {
+  height: calc(100vh - 80px);
+}
+.h-screen-minus-header-local-inner {
+  height: calc(100vh - 208px);
+}
+</style>
 
 <script setup>
 import { slugify } from "~/utils/slugify.js";

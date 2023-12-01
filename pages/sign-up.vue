@@ -1,12 +1,60 @@
 <template>
-  <div>
-    <FreeSignUp />
+  <div id="landing-managed" class="min-h-screen lg:mx-auto">
+    <div class="grid-cols-2 items-center lg:grid lg:min-h-screen">
+      <div class="py-4 lg:min-h-screen lg:px-8 lg:pt-4 lg:pb-0">
+        <div class="mx-auto px-6 text-2xl lg:px-0 relative top-[-1px]">
+          <Logo />
+        </div>
+        <div class="pt-3 sm:px-24 md:px-36 lg:px-0 lg:pt-20">
+          <FreeSignUp />
+        </div>
+      </div>
+      <div class="md:px-40 md:pb-20 lg:p-12 xl:p-48 p-5">
+        <div class="">
+          <div class="grid grid-cols-2 gap-5">
+            <img
+              src="https://eatclassy.nyc3.cdn.digitaloceanspaces.com/tuscan-sun-kale-salad.jpg"
+              alt="tuscan sun kale salad"
+              class="rounded-lg mb-6 lg:mb-0"
+            />
+            <img
+              src="https://eatclassy.nyc3.digitaloceanspaces.com/ultimate_bacon_bomb_burger_50d016a0ce.jpg"
+              alt="ultimate bomb burger"
+              class="rounded-lg mb-6 lg:mb-0 mt-6"
+            />
+            <img
+              src="https://eatclassy.nyc3.cdn.digitaloceanspaces.com/smoky-chipotle-pineapple-pulled-pork-tacos.jpg"
+              alt="pulled pork tacos"
+              class="rounded-lg mb-6 lg:mb-0"
+            />
+            <img
+              src="https://eatclassy.nyc3.cdn.digitaloceanspaces.com/decadent-chocolate-explosion.jpg"
+              alt="decadent chocolate explosion dessert"
+              class="rounded-lg mb-6 lg:mb-0 mt-6"
+            />
+            <img
+              src="https://eatclassy.nyc3.digitaloceanspaces.com/moroccan_citrus_chicken_tagine_9c8e508cde.jpg"
+              alt="chicken tagine"
+              class="rounded-lg mb-6 lg:mb-0"
+            />
+            <img
+              src="https://eatclassy.nyc3.digitaloceanspaces.com/dance_of_the_chimichurri_chicken_07def9e6e1.jpg"
+              class="rounded-lg mb-6 lg:mb-0 mt-6"
+            />
+          </div>
+          <p class="lead text-center mt-8 lg:px-20 font-semibold">
+            Create recipes using our AI-powered recipe engine for any ingredient
+            or dietary need, and save your favorite recipes!
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
 definePageMeta({
-  //layout: "blank",
+  layout: "blank",
   middleware: ["loggedin"],
 });
 
