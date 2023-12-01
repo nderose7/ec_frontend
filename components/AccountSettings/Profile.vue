@@ -21,10 +21,9 @@
           <div class="relative">
             <input
               type="email"
-              class="rounded-lg font-semibold text-slate-500"
+              class="rounded-lg font-semibold text-slate-500 cursor-not-allowed"
               v-model="userEmail"
-              :disabled="user.provider == 'google'"
-              :class="user.provider == 'google' ? 'cursor-not-allowed' : ''"
+              disabled
             />
             <Icon
               v-if="user.provider == 'google'"
@@ -234,11 +233,11 @@ const {
 const client = useStrapiClient();
 const uploading = ref(false);
 const uploadError = ref(null);
-const token = useStrapiToken();
 
 // Upload avatar up api uploads and link to userdata avatar field
 async function onSubmit() {
   try {
+    const token = useStrapiToken();
     let userDataId;
     userDataId = getUserId.value;
 
