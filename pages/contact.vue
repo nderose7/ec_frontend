@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen container mx-auto">
+  <div class="min-h-screen container mx-auto px-5">
     <br />
     <button
       type="button"
