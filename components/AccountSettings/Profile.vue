@@ -256,6 +256,9 @@ async function onSubmit() {
           username: username.value,
         }),
       });
+      if (!response.ok) {
+        console.log("Error: ", response.error);
+      }
     } catch (error) {
       console.log("Error w/ PUT at user/me: ", error);
     }
