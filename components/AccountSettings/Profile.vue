@@ -241,7 +241,7 @@ async function onSubmit() {
     let userDataId;
     userDataId = getUserId.value;
 
-    console.log(user.value.id);
+    //console.log(user.value.id);
 
     try {
       const response = await fetch(`${strapiURL}/api/user/me`, {
@@ -257,10 +257,10 @@ async function onSubmit() {
         }),
       });
       if (!response.ok) {
-        console.log("Error: ", response);
+        console.error("Error: ", response);
       }
     } catch (error) {
-      console.log("Error w/ PUT at user/me: ", error);
+      console.error("Error w/ PUT at user/me: ", error);
     }
     const maxSize = 1 * 1024 * 1024; // 1 MB
     if (fileInput.value.files.length) {

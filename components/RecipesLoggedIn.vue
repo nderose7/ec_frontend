@@ -430,7 +430,7 @@ const setUserFavorites = (userFavorites) => {
 
 const findUserFavoriteEntry = async (userId, recipeId) => {
   try {
-    console.log("UserId, recipeId: ", userId, recipeId);
+    //console.log("UserId, recipeId: ", userId, recipeId);
     const response = await find("userfavorites", {
       populate: "*",
       filters: {
@@ -438,7 +438,7 @@ const findUserFavoriteEntry = async (userId, recipeId) => {
         recipe: recipeId,
       },
     });
-    console.log("Response from findUserFavoriteEntry: ", response);
+    //console.log("Response from findUserFavoriteEntry: ", response);
     return response.data.length > 0 ? response.data[0] : null;
   } catch (error) {
     console.error("Error fetching user favorite entry:", error);
@@ -463,7 +463,7 @@ const toggleFavorite = async (clickedRecipe) => {
         (id) => id !== recipeId
       );
     } else if (!isFavorited) {
-      console.log("Trying to favorite recipe id: ", recipeId);
+      //console.log("Trying to favorite recipe id: ", recipeId);
       // Add to favorites (create a new entry)
       await create("userfavorites", {
         recipe: {
@@ -550,7 +550,7 @@ const scrollContainer = ref(null);
 
 // Infinite scrolling
 const checkScroll = () => {
-  console.log("Scroll event detected");
+  //console.log("Scroll event detected");
   if (!scrollContainer.value) return;
 
   const { scrollTop, scrollHeight, clientHeight } = scrollContainer.value;
@@ -566,9 +566,8 @@ const checkScroll = () => {
 };
 
 onMounted(() => {
-  console.log("Component mounted");
+  //console.log("Component mounted");
   if (scrollContainer.value) {
-    console.log("Component mounted");
     scrollContainer.value.addEventListener("scroll", checkScroll);
   }
 });
