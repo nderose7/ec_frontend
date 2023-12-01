@@ -233,29 +233,32 @@ const {
 const client = useStrapiClient();
 const uploading = ref(false);
 const uploadError = ref(null);
+const token = useStrapiToken();
 
 // Upload avatar up api uploads and link to userdata avatar field
 async function onSubmit() {
   try {
-    const token = useStrapiToken();
     let userDataId;
     userDataId = getUserId.value;
 
     console.log(user.value.id);
 
-    const response = await fetch(`${strapiURL}/api/user/me`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token.value}`,
-      },
-      body: JSON.stringify({
-        fullName: fullName.value,
-        //email: userEmail.value,
-        username: username.value,
-      }),
-    });
-
+    try {
+      const response = await fetch(`${strapiURL}/api/user/me`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.value}`,
+        },
+        body: JSON.stringify({
+          fullName: fullName.value,
+          //email: userEmail.value,
+          username: username.value,
+        }),
+      });
+    } catch (error) {
+      console.log("Error w/ PUT at user/me: ", error);
+    }
     const maxSize = 1 * 1024 * 1024; // 1 MB
     if (fileInput.value.files.length) {
       const file = fileInput.value.files[0];
