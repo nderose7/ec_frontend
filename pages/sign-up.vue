@@ -1,6 +1,6 @@
 <template>
   <div id="landing-managed" class="min-h-screen lg:mx-auto">
-    <div class="lg:flex">
+    <div class="lg:flex min-h-screen">
       <div class="h-full py-4 lg:px-8 lg:pt-4 lg:pb-0 w-full">
         <div class="px-5 lg:px-0">
           <Logo />
@@ -9,9 +9,14 @@
           <FreeSignUp />
         </div>
       </div>
-      <div class="min-[1600px]:px-40 md:pb-20 lg:p-12 p-5 items-center w-full">
+      <div
+        class="min-[1600px]:px-40 md:pb-20 lg:p-12 p-5 items-center w-full bg-slate-100 dark:bg-midnight-900"
+      >
         <div class="sm:px-24 md:px-36 lg:px-0 lg:pt-20">
-          <div class="grid grid-cols-2 gap-5">
+          <p class="text-center font-bold lg:hidden text-2xl pt-6">
+            What you can create
+          </p>
+          <div class="grid grid-cols-2 gap-5 pt-10 lg:pt-0">
             <img
               src="https://eatclassy.nyc3.cdn.digitaloceanspaces.com/tuscan-sun-kale-salad.jpg"
               alt="tuscan sun kale salad"
