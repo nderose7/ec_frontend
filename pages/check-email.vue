@@ -9,7 +9,7 @@
         <h1 class="mb-5">Please confirm your email address.</h1>
         <p>
           Click the link in the email we just sent you to confirm your email
-          address.
+          address. If you do not see it, please check your spam folder.
         </p>
       </div>
     </div>
