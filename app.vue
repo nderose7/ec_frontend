@@ -152,7 +152,7 @@ button.link,
   @apply mb-6;
 }
 .h-screen-minus-header {
-  height: calc(100vh - 114px); /* Adjusted height for large screens */
+  height: calc(100vh - 107px); /* Adjusted height for large screens */
 }
 .dark .toast-style {
   @apply text-white;
