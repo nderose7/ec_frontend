@@ -1,5 +1,5 @@
 <template>
-  <div class="pb-20">
+  <div class="min-h-screen container mx-auto">
     <br />
     <button
       type="button"
@@ -10,16 +10,21 @@
     </button>
     <h1 class="mb-2">Contact Us</h1>
 
-    <h5>Phone:</h5>
-    <p>Call us at +1 (248) 891-9495</p>
-
     <h5>Support:</h5>
     <p>
       Email us at
-      <a href="mailto:support@eatclassy.com">support@eatclassy.com</a>
+      <a href="mailto:support@eatclassy.com" class="link"
+        >support@eatclassy.com</a
+      >
     </p>
   </div>
 </template>
+
+<style scoped>
+h5 {
+  @apply mt-4;
+}
+</style>
 
 <script setup>
 useHead({
