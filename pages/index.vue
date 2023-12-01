@@ -888,7 +888,7 @@ async function loadUserData() {
       // Once the data is retrieved, update the userData ref with the result
       userData.value = response.data; // Correctly update the ref value here
       freeCreditsLeft.value = userData.value[0].attributes.freeCreditsLeft;
-      console.log("freeCreditsLeft", freeCreditsLeft.value);
+      //console.log("freeCreditsLeft", freeCreditsLeft.value);
     } catch (e) {
       console.error("Failed to load user data:", e);
     }
@@ -990,37 +990,37 @@ const fetchRecipeTitle = async () => {
 
     const responseData = await response.json();
 
-    console.log("response found from GPT: ", responseData);
+    //console.log("response found from GPT: ", responseData);
     // Slugify the title from OpenAI's response
     titleFromFetch.value = responseData.recipe_name;
     const titleSlug = slugify(responseData.recipe_name); // Assuming data has a title field
-    console.log(
-      "Attempt to fetch the existing recipe from Strapi with uid: ",
-      titleSlug
-    );
+    //console.log(
+    //  "Attempt to fetch the existing recipe from Strapi with uid: ",
+    //  titleSlug
+    //);
     // Attempt to fetch the existing recipe from Strapi
     existingRecipe.value = await fetchExistingRecipeFromStrapi(titleSlug);
-    console.log("existingRecipe.value: ", existingRecipe.value);
+    //console.log("existingRecipe.value: ", existingRecipe.value);
 
     if (existingRecipe.value) {
       controller.abort();
       existingRecipeData.value = existingRecipe.value; // Use the existing recipe from Strapi
-      console.log(
+      /*console.log(
         "Recipe already exists in Strapi. Using existing recipe:",
         existingRecipeData.value
-      );
+      );*/
       isLoadingRecipes.value = false;
       updateLocalStorage();
       loadRecipes();
       decrementLoggedInCredits();
       decrementCredits();
-      console.log(
+      /*console.log(
         "Trying to connect user to existing recipe with id",
         existingRecipeData.value.id
-      );
+      );*/
 
       if (user.value) {
-        console.log("User exists, attempting to create userrecipes data");
+        //console.log("User exists, attempting to create userrecipes data");
         await create("userrecipes", {
           user: {
             connect: [user.value.id],
@@ -1037,7 +1037,7 @@ const fetchRecipeTitle = async () => {
       return;
     } else {
       // If the recipe does not exist in Strapi, use the OpenAI generated recipe
-      console.log("No existing recipe value, generating recipe...");
+      //console.log("No existing recipe value, generating recipe...");
       fetchRecipes();
     }
   } catch (error) {
@@ -1172,7 +1172,7 @@ const fetchExistingRecipeFromStrapi = async (slug) => {
     const response = await fetch(
       `${strapiURL}/api/recipes?filters[uid][$eq]=${slug}&populate=*`
     );
-    console.log("Response value:", response);
+    //console.log("Response value:", response);
     const recipes = await response.json();
 
     // This is working!!!
@@ -1183,9 +1183,9 @@ const fetchExistingRecipeFromStrapi = async (slug) => {
       recipesLength = true;
     }
 
-    console.log("Recipes.length? ", recipesLength);
+    //console.log("Recipes.length? ", recipesLength);
 
-    console.log("Response data attributes:", recipes.data[0].attributes);
+    //console.log("Response data attributes:", recipes.data[0].attributes);
     return recipesLength ? recipes.data[0] : null;
   } catch (error) {
     //console.error("Error fetching recipe from Strapi:", error);
@@ -1215,7 +1215,7 @@ function updateLocalStorage() {
   let updatedRecipes;
 
   if (!existingRecipe.value && newRecipe.value.recipe_name) {
-    console.log("Updating local storage with new recipe", newRecipe.value);
+    //console.log("Updating local storage with new recipe", newRecipe.value);
     updatedRecipes = existingRecipes.concat(newRecipe.value);
     localStorage.setItem(
       "recipes",
@@ -1224,10 +1224,10 @@ function updateLocalStorage() {
     data.value = { recipes: updatedRecipes };
   }
   if (existingRecipe.value) {
-    console.log(
+    /*console.log(
       "Updating local storage with existing recipe",
       existingRecipe.value
-    );
+    );*/
     updatedRecipes = existingRecipes.concat(existingRecipe.value.attributes);
     localStorage.setItem(
       "recipes",
@@ -1321,12 +1321,12 @@ function checkCredits() {
 
 // Function to decrement logged-in freeCreditsLeft
 async function decrementLoggedInCredits() {
-  console.log("Decrementing strapi");
+  //console.log("Decrementing strapi");
   // Check if userData is populated and has a freeCreditsLeft value
   if (userData.value && userData.value[0]?.attributes?.freeCreditsLeft > 0) {
-    console.log("More than 0");
+    //console.log("More than 0");
     try {
-      console.log("Updating userdata: ", userData.value[0].id);
+      //console.log("Updating userdata: ", userData.value[0].id);
       await update("userdatas", userData.value[0].id, {
         freeCreditsLeft: userData.value[0].attributes.freeCreditsLeft - 1,
       });
@@ -1397,7 +1397,7 @@ const createRecipes = async () => {
         },
       })
         .then((result) => {
-          console.log(`Recipe created:`, result);
+          //console.log(`Recipe created:`, result);
           return result;
         })
         .catch((error) => {
@@ -1411,7 +1411,7 @@ const createRecipes = async () => {
 
     try {
       const createdRecipe = await Promise.all(creationPromises);
-      console.log(`All recipes created successfully:`, createdRecipe[0]);
+      //console.log(`All recipes created successfully:`, createdRecipe[0]);
       if (user.value) {
         console.log("User exists, attempting to create userrecipes data");
         try {
@@ -1428,7 +1428,7 @@ const createRecipes = async () => {
           console.log("Error creating userrecipe: ", error);
         }
       }
-      console.log("Userrecipes complete...");
+      //console.log("Userrecipes complete...");
       triggerUpdate.value++;
       globalState.triggerUpdate++;
       return createdRecipe;
