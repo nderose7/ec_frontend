@@ -257,7 +257,7 @@ async function onSubmit() {
         }),
       });
       if (!response.ok) {
-        console.log("Error: ", response.error);
+        console.log("Error: ", response);
       }
     } catch (error) {
       console.log("Error w/ PUT at user/me: ", error);
