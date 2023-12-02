@@ -9,7 +9,7 @@
         <h1 class="mb-2 mt-5 text-5xl">{{ error.statusCode }} Error</h1>
         <p>{{ error.statusMessage }}</p>
 
-        <NuxtLink to="/" class="btn-primary mt-6 inline-block"
+        <NuxtLink to="/" class="btn-primary mt-6 inline-block px-5 py-3"
           ><Icon name="ion:arrow-back-circle-outline" class="icon-style" /> Back
           to Homepage</NuxtLink
         >
