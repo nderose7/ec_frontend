@@ -177,6 +177,7 @@ const fetchRecipes = async (page = 1, searchQuery = ingredientInput.value) => {
   let queryParams = {
     pagination: { page, pageSize },
     populate: ["image"],
+    sort: ["createdAt:desc"],
   };
 
   searchQueryValue.value = searchQuery;
