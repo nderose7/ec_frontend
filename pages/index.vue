@@ -328,7 +328,8 @@
               <span class="pl-1"
                 ><span v-if="user && !user.paidMembershipTierThree"
                   ><b>{{ freeCreditsLeft }}</b>
-                  {{ user.freeAccount ? "free" : "" }} recipes left</span
+                  {{ user.freeAccount ? "free" : "" }}
+                  {{ freeCreditsLeft === 1 ? "recipe" : "recipes" }} left</span
                 >
                 <CreditsAnon v-else-if="!user" />
               </span>
