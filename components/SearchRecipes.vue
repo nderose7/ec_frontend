@@ -18,7 +18,7 @@
         </button>
       </div>
     </div>
-    <div v-if="recipes.length" class="border-b pb-5">
+    <div v-if="recipes.length" class="border-b pb-5 dark:border-midnight-200">
       <ul class="px-2 h-local overflow-y-scroll">
         <li v-for="recipe in recipes" :key="recipe.id">
           <NuxtLink
