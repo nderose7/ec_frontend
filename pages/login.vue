@@ -74,11 +74,15 @@
             </div>
             <div class="mt-8 flex justify-center">
               <button
-                :disabled="email === '' || password === ''"
+                :disabled="email === '' || password === '' || loadingLogin"
                 class="btn-primary rounded-full px-10 py-3 text-xl font-bold text-white"
                 type="submit"
               >
-                Login
+                <span v-if="loadingLogin">
+                  <Icon name="svg-spinners:pulse-3" class="icon-style mr-1" />
+                  Logging in...
+                </span>
+                <span v-else> Login</span>
               </button>
             </div>
           </form>
@@ -133,6 +137,7 @@ const { Toast } = swalMixins.data();
 const route = useRoute();
 
 const recipeImportLoading = ref(false);
+const loadingLogin = ref(false);
 
 const { find, create, update } = useStrapi();
 
@@ -161,6 +166,7 @@ const router = useRouter();
 
 const loginUser = async (e) => {
   e.preventDefault();
+  loadingLogin.value = true;
   try {
     const response = await login({
       identifier: email.value,
@@ -234,6 +240,7 @@ const loginUser = async (e) => {
       router.push("/");
     }
   } catch (error) {
+    loadingLogin.value = true;
     console.error("Login error:", error);
     let errorMessage = "Login failed. Please try again.";
 

@@ -73,6 +73,12 @@
           type="submit"
           @click="onSubmit()"
           class="btn-primary px-6 py-3 mt-2 block w-full rounded-lg text-xl font-bold lg:inline-block lg:w-auto"
+          :disabled="
+            registerLoading ||
+            recipeImportLoading ||
+            email === '' ||
+            password === ''
+          "
         >
           <span v-if="registerLoading || recipeImportLoading"
             ><Icon name="svg-spinners:pulse-3" class="icon-style mr-1" />{{
