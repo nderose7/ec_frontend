@@ -14,6 +14,11 @@
       "source": "/category/:path*",
       "destination": "/recipes",
       "permanent": true
+    },
+    {
+      "source": "/recipes/ingredient/vegeterian/maple-roasted-carrots-with-cumin-quinoa-and-lemon-tahini-dressing",
+      "destination": "/recipes/maple-roasted-carrots-with-cumin-quinoa-and-lemon-tahini-dressing",
+      "permanent": true
     }
   ]
 }
