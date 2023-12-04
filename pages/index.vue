@@ -856,8 +856,8 @@ const { create, update, find } = useStrapi();
 const isLoadingRecipes = ref(false);
 const credits = ref(0);
 
-const controller = new AbortController();
-const { signal } = controller;
+//const controller = new AbortController();
+//const { signal } = controller;
 
 onMounted(() => {
   if (user.value) {
@@ -925,6 +925,8 @@ function loadRecipes() {
 const titleFromFetch = ref("");
 
 const fetchRecipeTitle = async () => {
+  const controller = new AbortController();
+  const { signal } = controller;
   showAds.value = true;
   createRecipesError.value = false;
   existingRecipeData.value = false;
@@ -987,6 +989,7 @@ const fetchRecipeTitle = async () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
+        signal,
       }
     );
 
@@ -1059,6 +1062,8 @@ const newRecipe = ref({});
 const fetchRecipes = async () => {
   // Transform 'value' strings to match expected API format if needed
   // Example: 'courseBreakfast' to 'Breakfast'
+  const controller = new AbortController();
+  const { signal } = controller;
   const title = titleFromFetch.value;
   const course = selectedCourseOption.value.replace("course", "") || "Any";
   const cuisine = cuisineOption.value || "Any";
