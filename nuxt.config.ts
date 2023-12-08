@@ -53,8 +53,8 @@ export default defineNuxtConfig({
       const recipes = await getDynamicContent();
       return recipes.map(recipe => ({
         loc: `/recipes/${recipe.uid}`,
-        img: [{
-          url: recipe.imageUrl, // The image URL
+        image: [{
+          loc: recipe.imageUrl, // The image URL
         }],
       }));
     }
