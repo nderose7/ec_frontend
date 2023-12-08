@@ -24,6 +24,7 @@
     "nuxt-gtag": "^1.1.1",
     "nuxt-icon": "^0.6.5",
     "nuxt-seo-kit": "^1.3.13",
+    "nuxt-simple-sitemap": "^4.1.10",
     "sweetalert2": "^11.9.0",
     "vee-validate": "^4.11.8",
     "vue": "^3.3.8",
@@ -31,8 +32,10 @@
     "yup": "^1.3.2"
   },
   "dependencies": {
+    "@nuxtjs/sitemap": "^2.4.0",
     "@stripe/stripe-js": "^2.1.11",
     "@vue-stripe/vue-stripe": "^4.5.0",
-    "stripe": "^14.5.0"
+    "stripe": "^14.5.0",
+    "vue3-markdown-it": "^1.0.10"
   }
 }

@@ -1,3 +1,5 @@
+import { getDynamicContent } from './services/recipes';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   //devtools: { enabled: true },
@@ -9,6 +11,7 @@ export default defineNuxtConfig({
     "@nuxtjs/strapi",
     "nuxt-gtag",
     "@nuxtjs/google-adsense",
+    'nuxt-simple-sitemap'
   ],
 
   googleFonts: {
@@ -44,5 +47,11 @@ export default defineNuxtConfig({
   },
   extends: [
     'nuxt-seo-kit'
-  ]
+  ],
+  sitemap: {
+    urls: async () => {
+      const recipes = await getDynamicContent();
+      return recipes.map(recipe => `/recipe/${recipe.uid}`); // Adjust the URL structure based on your site's routing
+    }
+  }
 })
