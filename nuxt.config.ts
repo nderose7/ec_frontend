@@ -51,7 +51,10 @@ export default defineNuxtConfig({
   sitemap: {
     urls: async () => {
       const recipes = await getDynamicContent();
-      return recipes.map(recipe => `/recipe/${recipe.uid}`); // Adjust the URL structure based on your site's routing
+      return recipes.map(recipe => ({
+        loc: `/recipes/${recipe.uid}`,
+        img: recipe.imageUrl,
+      }));
     }
   }
 })
