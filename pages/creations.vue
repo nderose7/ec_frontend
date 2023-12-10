@@ -161,7 +161,7 @@ useSeoMeta({
 
 const recipes = ref([]);
 const currentPage = ref(1);
-const pageSize = 10; // or any other number you prefer
+const pageSize = 100; // or any other number you prefer
 const totalRecipes = ref(0);
 const numberRecipesFound = ref(0);
 const totalPages = computed(() => Math.ceil(totalRecipes.value / pageSize));
@@ -242,8 +242,12 @@ const fetchRecipes = async (page = 1, searchQuery = ingredientInput.value) => {
         ],
       };
     }
-    const recipesData = await find("recipes", queryParams);
-    console.log("Data: ", recipesData);
+    try {
+      const recipesData = await find("recipes", queryParams);
+      console.log("Data: ", recipesData);
+    } catch (e) {
+      console.error("Error fetching recipes with queryParams:", error);
+    }
 
     if (recipesData) {
       recipes.value = recipesData.data.map((recipeEntity) => ({
@@ -308,8 +312,9 @@ const clearResults = () => {
 
 const fetchTotalRecipeCount = async () => {
   try {
-    const response = await find("recipes", {
+    const response = await find("userrecipes", {
       pagination: { page: 1, pageSize: 1 },
+      filters: { user: { id: user.value?.id } },
     });
     if (response && response.meta) {
       numberRecipesFound.value = response.meta.pagination.total;
