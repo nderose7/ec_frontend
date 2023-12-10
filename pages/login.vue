@@ -240,7 +240,7 @@ const loginUser = async (e) => {
       router.push("/");
     }
   } catch (error) {
-    loadingLogin.value = true;
+    loadingLogin.value = false;
     console.error("Login error:", error);
     let errorMessage = "Login failed. Please try again.";
 
