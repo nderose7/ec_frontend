@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between">
         <div>
           <h1 class="font-bold mt-4 lg:my-4 text-3xl lg:text-4xl">
-            Your Creations
+            Browse Recipes
           </h1>
         </div>
         <div
@@ -155,13 +155,13 @@
 const { find } = useStrapi();
 
 useSeoMeta({
-  title: "Browse Recipes",
-  description: "Browse all recipes created the EatClassy community.",
+  title: "Your Creations",
+  description: "Browse all recipes you have created.",
 });
 
 const recipes = ref([]);
 const currentPage = ref(1);
-const pageSize = 100; // or any other number you prefer
+const pageSize = 10; // or any other number you prefer
 const totalRecipes = ref(0);
 const numberRecipesFound = ref(0);
 const totalPages = computed(() => Math.ceil(totalRecipes.value / pageSize));
@@ -174,92 +174,42 @@ const user = useStrapiUser();
 
 const isLastPage = computed(() => currentPage.value >= totalPages.value);
 
-const fetchAllUserRecipes = async () => {
-  let page = 1;
-  let userRecipeIDs = [];
-  let hasMore = true;
-
-  while (hasMore) {
-    try {
-      const response = await find("userrecipes", {
-        filters: { user: { id: user.value?.id } },
-        populate: ["recipe"],
-        pagination: { page: page, pageSize: 25 }, // Adjust pageSize if needed
-      });
-
-      const data = response.data.map(
-        (userRecipe) => userRecipe.attributes.recipe.data.id
-      );
-      userRecipeIDs.push(...data);
-
-      hasMore =
-        response.meta.pagination.page < response.meta.pagination.pageCount;
-      page++;
-    } catch (error) {
-      console.error("Error fetching user recipes:", error);
-      hasMore = false; // Stop loop in case of an error
-    }
-  }
-
-  return userRecipeIDs;
-};
-
 const fetchRecipes = async (page = 1, searchQuery = ingredientInput.value) => {
   loadingRecipes.value = true;
-  console.log("Fetching recipes...");
-
   searchQueryValue.value = searchQuery;
 
-  try {
-    const userRecipeIDs = await fetchAllUserRecipes();
+  console.log("Fetching recipes...");
 
-    if (userRecipeIDs.length === 0) {
-      // Handle the case where no recipes are found
-      loadingRecipes.value = false;
-      return;
-    }
+  let queryParams = {
+    filters: { user: { id: user.value?.id } },
+    pagination: { page, pageSize },
+    populate: { recipe: { populate: "*" } },
+    sort: ["createdAt:desc"],
+  };
 
-    console.log("userRecipeIDs: ", userRecipeIDs);
-
-    let queryParams = {
-      pagination: { page, pageSize },
-      populate: ["image"],
-      sort: ["createdAt:desc"],
-      filters: {
-        id: userRecipeIDs, // Filter by recipe IDs
-      },
+  if (isSearchActive.value && searchQuery) {
+    queryParams.filters = {
+      $or: [
+        { recipe_name: { $containsi: searchQuery } },
+        { ingredients: { $containsi: searchQuery } },
+        { cuisine: { $containsi: searchQuery } },
+        { course: { $containsi: searchQuery } },
+        { diet_type_if_set: { $containsi: searchQuery } },
+        // Add more fields here if needed
+      ],
     };
-    if (isSearchActive.value && searchQuery) {
-      queryParams.filters = {
-        id: userRecipeIDs,
-        $or: [
-          { recipe_name: { $containsi: searchQuery } },
-          { ingredients: { $containsi: searchQuery } },
-          { cuisine: { $containsi: searchQuery } },
-          { course: { $containsi: searchQuery } },
-          { diet_type_if_set: { $containsi: searchQuery } },
-          // Add more fields here if needed
-        ],
-      };
-    }
-    try {
-      const recipesData = await find("recipes", queryParams);
-      console.log("Data: ", recipesData);
-    } catch (e) {
-      console.error("Error fetching recipes with queryParams:", error);
-    }
+  }
 
-    if (recipesData) {
-      recipes.value = recipesData.data.map((recipeEntity) => ({
-        id: recipeEntity.id,
-        ...recipeEntity.attributes,
-      }));
-      totalRecipes.value = recipesData.meta.pagination.total;
+  try {
+    const response = await find("userrecipes", queryParams);
+    //console.log("Data: ", recipesData);
 
-      // Update numberRecipesFound based on whether a search is active
-      numberRecipesFound.value = isSearchActive.value
-        ? recipesData.meta.pagination.total
-        : totalRecipes.value;
+    if (response) {
+      recipes.value = response.data.map(
+        (userRecipe) => userRecipe.attributes.recipe.data.attributes
+      );
+      totalRecipes.value = response.meta.pagination.total;
+      numberRecipesFound.value = response.meta.pagination.total;
     }
   } catch (error) {
     console.error("Error fetching recipes:", error);
@@ -313,8 +263,8 @@ const clearResults = () => {
 const fetchTotalRecipeCount = async () => {
   try {
     const response = await find("userrecipes", {
-      pagination: { page: 1, pageSize: 1 },
       filters: { user: { id: user.value?.id } },
+      pagination: { page: 1, pageSize: 1 },
     });
     if (response && response.meta) {
       numberRecipesFound.value = response.meta.pagination.total;
