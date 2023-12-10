@@ -22,6 +22,12 @@
           >
         </li>
         <li v-if="user">
+          <NuxtLink @click="emitCloseMenu" to="/creations"
+            ><Icon name="ph:folder-user-duotone" class="icon-style mr-1" /> Your
+            Creations</NuxtLink
+          >
+        </li>
+        <li v-if="user">
           <NuxtLink @click="emitCloseMenu" to="/favorites"
             ><Icon name="fluent:star-24-regular" class="icon-style mr-1" /> Your
             Favorites</NuxtLink

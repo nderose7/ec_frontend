@@ -25,6 +25,17 @@
         <div class="items-center main-nav gap-10 hidden lg:flex">
           <NuxtLink to="/">Create Recipes</NuxtLink>
           <NuxtLink to="/recipes">Browse Recipes</NuxtLink>
+          <NuxtLink v-if="userValue" to="/creations">Your Creations</NuxtLink>
+          <!--
+          <NuxtLink
+            v-if="
+              (user && user.paidMembershipTierTwo) ||
+              (user && user.paidMembershipTierThree)
+            "
+            to="/assistant"
+            >ChefMate</NuxtLink
+          >
+          -->
           <NuxtLink to="/favorites" v-if="userValue">Your Favorites</NuxtLink>
         </div>
       </div>
