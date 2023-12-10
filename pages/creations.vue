@@ -4,7 +4,7 @@
       <div class="flex items-center justify-between">
         <div>
           <h1 class="font-bold mt-4 lg:my-4 text-3xl lg:text-4xl">
-            Browse Recipes
+            Your Creations
           </h1>
         </div>
         <div
