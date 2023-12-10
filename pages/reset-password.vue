@@ -3,7 +3,7 @@
     <div class="flex min-h-screen items-center justify-center">
       <form
         @submit.prevent="onSubmit()"
-        class="max-w-md px-10 py-5 pb-10 dark:bg-midnight-700 rounded-xl border dark:border-midnight-100 bg-white"
+        class="min-w-[380px] px-10 py-5 pb-10 dark:bg-midnight-700 rounded-xl border dark:border-midnight-100 bg-white"
       >
         <div class="logo mt-4 mb-5 px-10">
           <NuxtLink to="/" class="inline-block">
@@ -14,16 +14,23 @@
 
         <div class="mb-6 text-left mt-8 form-control">
           <label for="email" class="block">New Password</label>
-          <input v-model="password" type="password" class="" required />
-          <label for="email" class="block">Confirm New Password</label>
+          <input
+            v-model="password"
+            type="password"
+            class="rounded-md"
+            required
+          />
+          <label for="email" class="block mt-2">Confirm New Password</label>
           <input
             v-model="passwordConfirmation"
             type="password"
-            class=""
+            class="rounded-md"
             required
           />
         </div>
-        <button type="submit" class="btn-primary">Set New Password</button>
+        <button type="submit" class="btn-primary px-5 py-3 font-bold">
+          Set New Password
+        </button>
       </form>
     </div>
   </div>
