@@ -9,6 +9,7 @@
         &larr; Back
       </button>
     </div>
+
     <div
       v-for="(recipe, recipeIndex) in recipes.data"
       :key="`recipe-${recipeIndex}`"
@@ -28,7 +29,26 @@
             >
               {{ recipe?.attributes.recipe_name }}
             </h1>
-            <div v-if="user" class="mb-5">
+            <div class="average-rating">
+              <span>
+                <div v-if="averageRating" class="star-rating">
+                  <span class="pr-1"><b>Rating:</b></span>
+                  <span v-for="index in 5" :key="index">
+                    <Icon
+                      :name="getStarType(index, parseFloat(averageRating))"
+                      :class="
+                        getStarType(index, parseFloat(averageRating)) ===
+                        'bx:star'
+                          ? 'text-slate-300 dark:text-slate-700 icon-style'
+                          : 'text-orange-500 icon-style'
+                      "
+                    />
+                  </span>
+                </div>
+              </span>
+              <!-- You can also display stars based on the average rating -->
+            </div>
+            <div v-if="user" class="mb-5 mt-5">
               <button
                 @click="toggleFavorite(recipe)"
                 class="flex items-center gap-2 font-semibold btn-outline"
@@ -140,6 +160,213 @@
           </li>
         </ul>
       </div>
+
+      <div class="reviews">
+        <h2 class="mt-8 mb-4">Reviews</h2>
+        <div
+          v-if="reviews.length"
+          v-for="review in reviews"
+          :key="review.id"
+          class="mb-5"
+        >
+          <div class="text-base font-bold flex items-center gap-2">
+            <img
+              v-if="
+                review.attributes.user.data.attributes.userdata.data.attributes
+                  .avatar.data
+              "
+              :src="`${review?.attributes?.user?.data?.attributes?.userdata?.data?.attributes?.avatar?.data?.attributes?.url}`"
+              alt="avatar"
+              class="h-[32px] w-[32px] cursor-pointer rounded-full"
+            />
+
+            {{
+              review.attributes.user.data.attributes.fullName ||
+              review.attributes.user.data.attributes.username
+            }}
+          </div>
+          <!-- Editable Review -->
+          <div v-if="editingReviewId === review.id" class="form-control mt-2">
+            <!-- Editable Rating -->
+            <div class="star-rating-editable">
+              <Icon
+                v-for="index in 5"
+                :key="index"
+                :name="index <= editableRating ? 'bxs:star' : 'bx:star'"
+                :class="
+                  index <= editableRating
+                    ? 'text-orange-500'
+                    : 'text-slate-300 dark:text-slate-700'
+                "
+                @click="setEditableRating(index)"
+              />
+            </div>
+            <textarea
+              v-model="editableReviewText"
+              class="edit-textarea rounded-lg mt-2"
+            ></textarea>
+            <div class="flex gap-2">
+              <button
+                @click="saveEdit(review)"
+                class="btn-primary font-bold px-3 py-1"
+              >
+                Save
+              </button>
+              <button @click="cancelEdit" class="link">Cancel</button>
+            </div>
+          </div>
+
+          <!-- Non-editable Review -->
+          <div v-else>
+            <!-- Static Star Rating Display -->
+            <div class="flex mt-2">
+              <span v-for="n in review.attributes.rating" :key="n">
+                <Icon name="bxs:star" class="text-orange-500" />
+              </span>
+              <span v-for="n in 5 - review.attributes.rating" :key="n + 5">
+                <Icon
+                  name="bx:star"
+                  class="text-slate-300 dark:text-slate-700"
+                />
+              </span>
+            </div>
+            <!-- Review Content -->
+            <div class="review-content mt-2">
+              {{ review.attributes.reviewText }}
+            </div>
+            <!-- Edit and Delete Buttons -->
+            <div
+              v-if="user && user.id === review.attributes.user.data.id"
+              class="review-actions mt-2 flex gap-2 text-base"
+            >
+              <button @click="startEdit(review)" class="link">Edit</button>
+              <!-- Delete Confirmation -->
+              <div
+                v-if="confirmingDeleteReviewId === review.id"
+                class="confirm-delete"
+              >
+                <div class="flex gap-1">
+                  <span class="p-2">Are you sure? </span>
+                  <button
+                    @click="confirmDelete(review.id)"
+                    class="yes-button link px-3 border dark:border-midnight-200 rounded-lg"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    @click="cancelDelete"
+                    class="no-button px-3 link border dark:border-midnight-200 rounded-lg"
+                  >
+                    No, cancel
+                  </button>
+                </div>
+              </div>
+
+              <!-- Delete Button -->
+              <button
+                v-else
+                @click="askDeleteConfirmation(review.id)"
+                class="link"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-else>No reviews yet.</div>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div
+        v-if="Math.ceil(totalReviews / pageSize) > 1"
+        class="pagination-controls flex items-center mb-8"
+      >
+        <button
+          @click="changePage(currentPage - 1)"
+          :disabled="currentPage <= 1"
+        >
+          <Icon
+            name="material-symbols:arrow-circle-left-rounded"
+            class="text-brand-500"
+            size="2rem"
+          />
+        </button>
+        <span class="mx-2 text-base font-bold"
+          >Page {{ currentPage }} of
+          {{ Math.ceil(totalReviews / pageSize) }}</span
+        >
+        <button
+          @click="changePage(currentPage + 1)"
+          :disabled="currentPage * pageSize >= totalReviews"
+        >
+          <Icon
+            name="material-symbols:arrow-circle-right-rounded"
+            class="text-brand-500"
+            size="2rem"
+          />
+        </button>
+      </div>
+      <div
+        v-if="user && !reviewSubmitted"
+        class="leave-review form-control mt-10 bg-slate-100 dark:bg-midnight-600 rounded-lg p-5 px-6"
+      >
+        <form @submit.prevent="submitReview()">
+          <label for="reviewText" class="mb-2 font-bold text-xl"
+            >Leave a Review</label
+          >
+          <!-- Star Rating -->
+          <div class="flex gap-1 items-center my-2">
+            <div>
+              <b>Rating: </b>
+            </div>
+            <div>
+              <div class="star-rating">
+                <Icon
+                  v-for="index in 5"
+                  :key="index"
+                  :name="index <= rating ? 'bxs:star' : 'bx:star'"
+                  :class="
+                    index <= rating
+                      ? 'text-orange-500 icon-style'
+                      : 'text-slate-400 dark:text-slate-700 icon-style'
+                  "
+                  @click="setRating(index)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <textarea
+            name="reviewText"
+            id="reviewText"
+            v-model="reviewText"
+            class="rounded-lg"
+            required
+            placeholder="Your review..."
+          />
+          <button
+            type="submit"
+            class="btn-primary inline-block px-3 py-2 font-bold"
+          >
+            Submit Review
+          </button>
+        </form>
+      </div>
+      <div v-else-if="user && reviewSubmitted">
+        <Icon
+          name="line-md:confirm-circle"
+          class="text-brand-500 icon-style mr-1"
+          size="1.5rem"
+        />
+        <b>Review submitted!</b>
+      </div>
+      <div v-else class="mt-10">
+        <p class="my-4">
+          <NuxtLink to="/login" class="link">Login</NuxtLink> or
+          <NuxtLink to="/sign-up" class="link">Sign Up</NuxtLink> to leave
+          reviews.
+        </p>
+      </div>
     </div>
     <SignUpOffer v-if="!user" />
     <MembershipOffer v-if="user && !paidMemberTierOne" />
@@ -154,13 +381,24 @@ import {
   parseNumbersToHTML,
 } from "~/utils/parseIngredients.js";
 const route = useRoute();
-const { update, find, delete: _delete, create } = useStrapi();
+const { update, find, delete: _delete, create, findOne } = useStrapi();
 
+const reviewText = ref("");
 const recipeId = ref();
 const user = useStrapiUser();
 const userFavoritesIds = ref([]);
+const reviews = ref([]);
 
 const paidMemberTierOne = ref(false);
+const reviewSubmitted = ref(false);
+
+const editingReviewId = ref(null);
+const editableReviewText = ref("");
+const confirmingDeleteReviewId = ref(null);
+
+const currentPage = ref(1);
+const pageSize = 10; // Number of reviews per page
+const totalReviews = ref(0);
 
 const {
   public: { strapiURL },
@@ -169,6 +407,57 @@ const {
 const { data: recipes } = await useFetch(
   `${strapiURL}/api/recipes?filters[uid][$eq]=${route.params.uid}&populate=*`
 );
+
+const fetchReviews = async (page = 1) => {
+  const start = (page - 1) * pageSize;
+
+  try {
+    const response = await find("reviews", {
+      populate: {
+        recipe: {
+          fields: ["id"],
+        },
+        user: {
+          fields: ["id", "username", "fullName"],
+          populate: {
+            userdata: {
+              fields: ["id"],
+              populate: {
+                avatar: true,
+              },
+            },
+          },
+        },
+      },
+      filters: {
+        recipe: recipes.value.data[0].id,
+      },
+      sort: { id: "desc" },
+      pagination: {
+        start: start,
+        limit: pageSize,
+      },
+    });
+    reviews.value = response.data;
+    totalReviews.value = response.meta.pagination.total;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+onMounted(() => {
+  fetchReviews(currentPage.value);
+});
+
+const averageRating = computed(() => {
+  if (reviews.value.length === 0) return null;
+
+  const totalRating = reviews.value.reduce((acc, review) => {
+    return acc + review.attributes.rating; // Adjust this according to your data structure
+  }, 0);
+
+  return (totalRating / reviews.value.length).toFixed(1); // Rounds to one decimal place
+});
 
 recipeId.value = recipes.value?.data[0].id;
 
@@ -295,6 +584,97 @@ watch(
   },
   { immediate: true }
 );
+
+const rating = ref(0);
+
+const setRating = (newRating) => {
+  rating.value = newRating;
+};
+
+const submitReview = async () => {
+  try {
+    await create("reviews", {
+      rating: rating.value,
+      reviewText: reviewText.value,
+      user: user.value.id,
+      recipe: recipeId.value,
+    });
+    reviewSubmitted.value = true;
+    fetchReviews();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const editableRating = ref(0);
+
+const startEdit = (review) => {
+  editingReviewId.value = review.id;
+  editableReviewText.value = review.attributes.reviewText;
+  editableRating.value = review.attributes.rating; // Load current rating for editing
+};
+
+const setEditableRating = (newRating) => {
+  editableRating.value = newRating;
+};
+
+const saveEdit = async (review) => {
+  try {
+    await update("reviews", review.id, {
+      reviewText: editableReviewText.value,
+      rating: editableRating.value,
+    });
+    // Reset editing state
+    editingReviewId.value = null;
+    fetchReviews();
+  } catch (error) {
+    console.error("Error saving review:", error);
+  }
+};
+
+const askDeleteConfirmation = (reviewId) => {
+  confirmingDeleteReviewId.value = reviewId;
+};
+
+const cancelDelete = () => {
+  confirmingDeleteReviewId.value = null;
+};
+
+const confirmDelete = async (reviewId) => {
+  confirmingDeleteReviewId.value = null;
+  try {
+    await _delete("reviews", reviewId);
+    // Reset editing state
+    editingReviewId.value = null;
+    reviewSubmitted.value = false;
+    fetchReviews();
+  } catch (error) {
+    console.error("Error deleting review:", error);
+  }
+};
+
+const cancelEdit = () => {
+  editingReviewId.value = null;
+};
+
+const changePage = (newPage) => {
+  if (newPage >= 1 && newPage <= Math.ceil(totalReviews.value / pageSize)) {
+    currentPage.value = newPage;
+    fetchReviews(currentPage.value);
+  }
+};
+
+const getStarType = (index, average) => {
+  const ratingFloor = Math.floor(average);
+  const hasHalfStar = average % 1 >= 0.5;
+
+  if (index <= ratingFloor) {
+    return "bxs:star"; // Full star
+  } else if (hasHalfStar && index === ratingFloor + 1) {
+    return "bxs:star-half"; // Half star
+  }
+  return "bx:star"; // Empty star
+};
 
 useSeoMeta({
   title: () => recipes?.value?.data[0]?.attributes?.recipe_name,
